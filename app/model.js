@@ -5,11 +5,15 @@ const Player = require("./model/player.js");
 
 class Model {
   constructor(nPlayers) {
-    this._game = new Game(nPlayers);
+    this._game = new Game();
 
     this._players = [];
-    for (let i = 0; i < nPlayers; i++)
-      this._players.push(new Player());
+    for (let i = 0; i < nPlayers; i++) {
+      this._players.push(new Player(i));
+      if (i > 0) this._players[i - 1].setNext(this._players[i]);
+      if (i === nPlayers - 1) this._players[i].setNext(this._players[0]);
+    }
+    this._currentPlayer = this._players[0];
 
     this._dealCards();
   }
@@ -26,12 +30,38 @@ class Model {
     }
   }
 
+  currentPlayer() {
+    return this._currentPlayer;
+  }
+
   players() {
     return this._players;
   }
 
   murderCase() {
     return this._game.murderCase();
+  }
+
+  suspects() {
+    return this._game.suspects();
+  }
+
+  weapons() {
+    return this._game.weapons();
+  }
+
+  rooms() {
+    return this._game.rooms();
+  }
+
+  solve(murderer, room, weapon) {
+    return this._game.isSolved(murderer, room, weapon);
+  }
+
+  ask(murderer, room, weapon) {
+    const player = this._currentPlayer;
+    this._currentPlayer = this._currentPlayer.getNext();
+    return player.ask(murderer, room, weapon);
   }
 
 }

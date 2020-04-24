@@ -1,88 +1,36 @@
 "use strict";
 
-const Person = require("./person.js");
-const Weapon = require("./weapon.js");
-const Room = require("./room.js");
-const util = require("../util");
-
-const victim = new Person("Socrates", "black");
-
-const suspects = [
-  new Person("Plato", "red"),
-  new Person("Critias", "green"),
-  new Person("Alcibiades", "yellow"),
-  new Person("Heraclitus", "purple"),
-  new Person("Charmides", "blue"),
-  new Person("Lysander", "white")
-];
-
-const weapons = [
-  new Weapon("Cup of poison"),
-  new Weapon("Dagger"),
-  new Weapon("Treachery"),
-  new Weapon("Sickle"),
-  new Weapon("Rope"),
-  new Weapon("Bow")
-];
-
-const rooms = [
-  new Room("Agora"),
-  new Room("Altar"),
-  new Room("Diogenes' barrel"),
-  new Room("Hill of the Muses"),
-  new Room("Library"),
-  new Room("Panthenon"),
-  new Room("Sitting rock under a tree"),
-  new Room("Theater"),
-  new Room("Temple")
-];
+const Board = require("./board.js");
+const Cards = require("./cards.js");
 
 class Game {
-  constructor(nPlayers) {
-    this._murderer = util.randomElement(suspects);
-    this._weapon = util.randomElement(weapons);
-    this._room = util.randomElement(rooms);
+  constructor() {
     this._board = new Board();
-
-
-    this._victim = victim;
-    this._availableCards = [
-      ...this._availableWeapons(),
-      ...this._availableSuspects(),
-      ...this._availableRooms()
-    ];
+    this._cards = new Cards();
   }
 
   murderCase() {
-    return {
-      victim: this._victim,
-      murderer: this._murderer,
-      weapon: this._weapon,
-      room: this._room
-    };
+    return this._cards.murderCase();
+  }
+
+  suspects() {
+    return this._cards.suspects();
+  }
+
+  weapons() {
+    return this._cards.weapons();
+  }
+
+  rooms() {
+    return this._cards.rooms();
   }
 
   availableCards() {
-    return this._availableCards;
+    return this._cards.availableCards();
   }
 
   randomAvailableCard() {
-    const card = util.randomElement(this._availableCards);
-    this._availableCards =
-      this._availableCards.filter((i) => i.name !== card.name);
-    return card;
-  }
-
-  _availableSuspects() {
-    return suspects.filter((i) => i.name !== this._murderer.name);
-  }
-
-  _availableWeapons() {
-    return weapons.filter((i) => i.name !== this._weapon.name);
-  }
-
-  _availableRooms() {
-    return rooms.filter((i) => i.name !== this._room.name);
+    return this._cards.randomAvailableCard();
   }
 
   print() {
@@ -92,6 +40,17 @@ class Game {
       ` with a ${murder.weapon.name.toLowerCase()}` +
       ` in the ${murder.room.name.toLowerCase()}.`
     );
+  }
+
+  isSolved(murderer, room, weapon) {
+    console.log(murderer);
+    console.log(room);
+    console.log(weapon);
+    const cs = this._cards.murderCase();
+    console.log(cs);
+    return cs.murderer.name === murderer[0] &&
+      cs.room.name === room[0] &&
+      cs.weapon.name === weapon[0];
   }
 }
 

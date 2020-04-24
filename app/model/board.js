@@ -1,22 +1,27 @@
 "use strict";
 
 const fs = require("fs");
-const Tile = require("./tile.js");
-
+const Tile = require("./board/tile.js");
 
 class Board {
   constructor() {
-    this._adjacenyMatrix = JSON.parse(fs.readFileSync("board.json", "utf8"));
+    this._adjacenyMatrix = JSON.parse(
+      fs.readFileSync("model/board/board.json", "utf8")
+    );
     this._legend = this._initLegend();
     this._board = this._initBoard();
   }
 
   _initLegend() {
-    let leg = JSON.parse(fs.readFileSync("board_legend.json", "utf8"));
+    let leg = JSON.parse(
+      fs.readFileSync("model/board/board_legend.json", "utf8")
+    );
+
     let legend = {};
     for (let i = 0; i < leg.length; i++) {
       legend[leg[i].legend] = leg[i].room;
     }
+
     return legend;
   }
 
@@ -29,6 +34,7 @@ class Board {
         board[i][j] = new Tile(el[0], this._legend[el[0]],  i, j, el[1] || null);
       }
     }
+
     for (let i = 0; i < this._adjacenyMatrix.length; i++) {
       for (let j = 0; j < this._adjacenyMatrix[i].length; j++) {
         if (i > 0)
@@ -41,6 +47,7 @@ class Board {
           board[i][j].neighbors.right = board[i][j + 1] || null;
       }
     }
+
     return board;
   }
 
@@ -49,4 +56,4 @@ class Board {
   }
 }
 
-new Board();
+module.exports =  Board;
