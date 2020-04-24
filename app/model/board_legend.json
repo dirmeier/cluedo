@@ -1,0 +1,17 @@
+[
+  {"legend": "A",  "room": "Agora"},
+  {"legend": "B",  "room": "Altar"},
+  {"legend": "D",  "room": "Diogenes' barrel"},
+  {"legend": "H",  "room": "Hill of the Muses"},
+  {"legend": "L",  "room": "Library"},
+  {"legend": "P",  "room": "Panthenon"},
+  {"legend": "S",  "room": "Sitting rock under a tree"},
+  {"legend": "T",  "room": "Theater"},
+  {"legend": "U",  "room": "Temple"},
+  {"legend": "_",  "room": "_"},
+  {"legend": ">",  "room": "Gate"},
+  {"legend": "<",  "room": "Gate"},
+  {"legend": "^",  "room": "Gate"},
+  {"legend": "v",  "room": "Gate"},
+  {"legend": ".",  "room": "Path"}
+]
