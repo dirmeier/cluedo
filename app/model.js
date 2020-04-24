@@ -6,11 +6,14 @@ const Player = require("./model/player.js");
 class Model {
   constructor(nPlayers) {
     this._game = new Game(nPlayers);
+
     this._players = [];
     for (let i = 0; i < nPlayers; i++)
       this._players.push(new Player());
+
     this._dealCards();
   }
+
   _dealCards() {
     while (1) {
       for (let i = 0; i < this._players.length; i++) {

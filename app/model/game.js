@@ -42,6 +42,9 @@ class Game {
     this._murderer = util.randomElement(suspects);
     this._weapon = util.randomElement(weapons);
     this._room = util.randomElement(rooms);
+    this._board = new Board();
+
+
     this._victim = victim;
     this._availableCards = [
       ...this._availableWeapons(),
