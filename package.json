@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "play": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -18,5 +19,8 @@
     "eslint-plugin-standard": "^4.0.1",
     "prettier": "^2.0.5",
     "prettier-eslint": "^9.0.1"
+  },
+  "dependencies": {
+    "lodash": "^4.17.15"
   }
 }
