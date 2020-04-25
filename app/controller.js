@@ -95,6 +95,7 @@ class Controller {
           this._model.nextPlayer();
           let holds = this._model.ask(
             answers.murderer, answers.room, answers.weapon);
+          console.log(holds);
           this._model.nextPlayer();
           this._run();
         });

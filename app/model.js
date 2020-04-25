@@ -25,7 +25,7 @@ class Model {
   }
 
   _dealCards() {
-    while (1) {
+    while (this._players.length) {
       for (let i = 0; i < this._players.length; i++) {
         if (this._game.availableCards.length) {
             this._players[i].addCard(this._game.randomAvailableCard());
@@ -37,6 +37,8 @@ class Model {
   }
 
   nextPlayer() {
+    if (this._players.length === 0)
+      return;
     this._currentPlayer = this._currentPlayer.next;
   }
 
@@ -73,7 +75,12 @@ class Model {
   }
 
   removeCurrentPlayer() {
+    if (this._players.length === 0) {
+      return;
+    }
+
     const cards = this._currentPlayer.cards;
+    this._game.availableCards = cards;
 
     const ne = this._currentPlayer.next;
     const pre = this._currentPlayer.prev;
@@ -83,7 +90,6 @@ class Model {
     this._players = this._players.filter(
       (i) => i.name !== this._currentPlayer.name);
 
-    this._game.availableCards = cards;
     this._dealCards();
   }
 
