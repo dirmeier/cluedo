@@ -2,10 +2,12 @@
 
 const Board = require("./board.js");
 const Cards = require("./cards.js");
+const Dice = require("./dice.js");
 
 class Game {
-  constructor() {
-    this._board = new Board();
+  constructor(nSuspects) {
+    this._board = new Board(nSuspects);
+    this._dice = new Dice();
     this._cards = new Cards();
   }
 
@@ -35,6 +37,10 @@ class Game {
 
   randomAvailableCard() {
     return this._cards.randomAvailableCard();
+  }
+
+  castDie() {
+    return this._dice.cast();
   }
 
   print() {

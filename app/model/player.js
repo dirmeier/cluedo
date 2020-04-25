@@ -1,8 +1,9 @@
 class Player {
-  constructor(i) {
+  constructor(i, suspect) {
     this.name = i;
     this._next = null;
     this._prev = null;
+    this._suspect = suspect;
     this._cards = [];
   }
 
@@ -33,15 +34,12 @@ class Player {
   ask(murderer, place, weapon) {
     let player = this._next;
     while (player !== this) {
-      let hasMurder = player.holds(murderer);
-      let hasPlace = player.holds(place);
-      let hasWeapon = player.holds(weapon);
-
-      if (hasMurder || hasPlace || hasWeapon)
-        return [player.name,
-          hasMurder ? murderer : null,
-          hasPlace ? place : null,
-          hasWeapon ? weapon : null];
+      if (player.holds(murderer))
+        return [player.name, murderer, null, null];
+      else if (player.holds(place))
+        return [player.name, null, place, null];
+      else if (player.holds(weapon))
+        return [player.name, null, weapon];
       else
         player = player.next;
     }
@@ -51,11 +49,17 @@ class Player {
   holds(item) {
     return this._cards.filter((i) => i.name === item).length > 0;
   }
+
+  position() {
+    // tODO
+    this._suspect.tile;
+  }
+
 }
 
 Player.prototype.toString = function () {
   const crds = this._cards.join("\n\t");
-  return `[Player \n\t${crds}\n]`;
+  return `[Player ${this.name} \n\t${crds}\n]`;
 };
 
 module.exports = Player;

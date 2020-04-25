@@ -5,32 +5,37 @@ const Player = require("./model/player.js");
 
 class Model {
   constructor(nPlayers) {
-    this._game = new Game();
-
-    this._players = [];
-    for (let i = 0; i < nPlayers; i++) {
-      this._players.push(new Player(i));
-      if (i > 0) {
-        this._players[i - 1].next = this._players[i];
-        this._players[i].prev = this._players[i - 1];
-      }
-      if (i === nPlayers - 1) {
-        this._players[i].next = this._players[0];
-        this._players[0].prev = this._players[i];
-      }
-    }
+    this._game = new Game(nPlayers);
+    // tODO: add positions to players
+    this._players = this._initPlayers(nPlayers);
     this._currentPlayer = this._players[0];
 
     this._dealCards();
+  }
+
+  _initPlayers(nPlayers) {
+    let players = [];
+    for (let i = 0; i < nPlayers; i++) {
+      players.push(new Player(i));
+      if (i > 0) {
+        players[i - 1].next = players[i];
+        players[i].prev = players[i - 1];
+      }
+      if (i === nPlayers - 1) {
+        players[i].next = players[0];
+        players[0].prev = players[i];
+      }
+    }
+    return players;
   }
 
   _dealCards() {
     while (this._players.length) {
       for (let i = 0; i < this._players.length; i++) {
         if (this._game.availableCards.length) {
-            this._players[i].addCard(this._game.randomAvailableCard());
+          this._players[i].addCard(this._game.randomAvailableCard());
         } else {
-          return
+          return;
         }
       }
     }
@@ -94,6 +99,5 @@ class Model {
   }
 
 }
-
 
 module.exports = Model;
