@@ -30,15 +30,18 @@ class Player {
     this._prev = prev;
   }
 
-  ask(murderer, room, weapon) {
+  ask(murderer, place, weapon) {
     let player = this._next;
     while (player !== this) {
       let hasMurder = player.holds(murderer);
-      let hasRoom = player.holds(room);
+      let hasPlace = player.holds(place);
       let hasWeapon = player.holds(weapon);
 
-      if (hasMurder || hasRoom || hasWeapon)
-        return [player.i, hasMurder, hasRoom, hasWeapon];
+      if (hasMurder || hasPlace || hasWeapon)
+        return [player.name,
+          hasMurder ? murderer : null,
+          hasPlace ? place : null,
+          hasWeapon ? weapon : null];
       else
         player = player.next;
     }

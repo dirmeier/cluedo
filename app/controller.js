@@ -59,9 +59,6 @@ class Controller {
     ];
   }
 
-  _askCase() {
-  }
-
   _run() {
     if (this._model.players.length === 0) {
       console.log("You all lost. Great job.");
@@ -78,7 +75,7 @@ class Controller {
       if (answers.solve) {
         inquirer.prompt(this._questions()).then(answers => {
           const isSolved = this._model.solve(
-            answers.murderer, answers.place, answers.weapon
+            answers.murderer[0], answers.place[0], answers.weapon[0]
           );
           if (isSolved) {
             console.log("Congrats! You won!");
@@ -92,9 +89,8 @@ class Controller {
         });
       } else {
         inquirer.prompt(this._questions()).then(answers => {
-          this._model.nextPlayer();
           let holds = this._model.ask(
-            answers.murderer, answers.room, answers.weapon);
+            answers.murderer[0], answers.place[0], answers.weapon[0]);
           console.log(holds);
           this._model.nextPlayer();
           this._run();

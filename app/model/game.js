@@ -48,9 +48,9 @@ class Game {
 
   isSolved(murderer, place, weapon) {
     const cs = this._cards.murderCase();
-    return cs.murderer.name === murderer[0] &&
-      cs.place.name === place[0] &&
-      cs.weapon.name === weapon[0];
+    return cs.murderer.name === murderer &&
+      cs.place.name === place &&
+      cs.weapon.name === weapon;
   }
 }
 

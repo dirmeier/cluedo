@@ -33,7 +33,7 @@ class Board {
     );
     let legend = {};
     for (let i = 0; i < leg.length; i++)
-      legend[leg[i].legend] = leg[i].room;
+      legend[leg[i].legend] = leg[i].place;
     return legend;
   }
 
