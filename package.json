@@ -1,10 +1,10 @@
 {
-  "name": "clue.js",
+  "name": "cluedo.js",
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "play": "node app.js",
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -16,9 +16,7 @@
     "eslint-plugin-import": "^2.20.2",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.1",
-    "prettier": "^2.0.5",
-    "prettier-eslint": "^9.0.1"
+    "eslint-plugin-standard": "^4.0.1"
   },
   "dependencies": {
     "inquirer": "^7.1.0",

@@ -1,20 +1,20 @@
 "use strict";
 
 const util = require("../util");
-const Person = require("./cards/person.js");
+const Suspect = require("./cards/suspect.js");
 const Weapon = require("./cards/weapon.js");
-const Room = require("./cards/room.js");
+const Place = require("./cards/place.js");
 
-const victim = new Person("Socrates", "black");
+const victim = new Suspect("Socrates");
 
 const suspects = [
-  new Person("Plato", "red"),
-  new Person("Critias", "green"),
-  new Person("Alcibiades", "yellow"),
-  new Person("Heraclitus", "purple"),
-  new Person("Charmides", "blue"),
-  new Person("Lysander", "white")
-];
+  new Suspect("Plato"),
+  new Suspect("Critias"),
+  new Suspect("Alcibiades"),
+  new Suspect("Heraclitus"),
+  new Suspect("Charmides"),
+  new Suspect("Lysander")
+].sort();
 
 const weapons = [
   new Weapon("Cup of poison"),
@@ -23,31 +23,31 @@ const weapons = [
   new Weapon("Sickle"),
   new Weapon("Rope"),
   new Weapon("Bow")
-];
+].sort();
 
-const rooms = [
-  new Room("Agora"),
-  new Room("Altar"),
-  new Room("Diogenes' barrel"),
-  new Room("Hill of the Muses"),
-  new Room("Library"),
-  new Room("Panthenon"),
-  new Room("Sitting rock under a tree"),
-  new Room("Theater"),
-  new Room("Temple")
-];
+const places = [
+  new Place("Agora"),
+  new Place("Altar"),
+  new Place("Diogenes' barrel"),
+  new Place("Hill of the Muses"),
+  new Place("Library"),
+  new Place("Panthenon"),
+  new Place("Sitting rock under a tree"),
+  new Place("Theater"),
+  new Place("Temple")
+].sort();
 
 class Cards {
   constructor() {
     this._murderer = util.randomElement(suspects);
     this._weapon = util.randomElement(weapons);
-    this._room = util.randomElement(rooms);
+    this._place = util.randomElement(places);
     this._victim = victim;
 
     this._availableCards = [
       ...this._availableWeapons(),
       ...this._availableSuspects(),
-      ...this._availableRooms()
+      ...this._availablePlaces()
     ];
   }
 
@@ -55,8 +55,8 @@ class Cards {
     return {
       victim: this._victim,
       murderer: this._murderer,
-      weapon: this._weapon,
-      room: this._room
+      place: this._place,
+      weapon: this._weapon
     };
   }
 
@@ -68,8 +68,8 @@ class Cards {
     return weapons;
   }
 
-  rooms() {
-    return rooms;
+  places() {
+    return places;
   }
 
   randomAvailableCard() {
@@ -79,8 +79,12 @@ class Cards {
     return card;
   }
 
-  availableCards() {
+  get availableCards() {
     return this._availableCards;
+  }
+
+  set availableCards(cards) {
+    this._availableCards = cards;
   }
 
   _availableSuspects() {
@@ -91,8 +95,8 @@ class Cards {
     return weapons.filter((i) => i.name !== this._weapon.name);
   }
 
-  _availableRooms() {
-    return rooms.filter((i) => i.name !== this._room.name);
+  _availablePlaces() {
+    return places.filter((i) => i.name !== this._place.name);
   }
 }
 

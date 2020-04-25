@@ -10,8 +10,14 @@ class Model {
     this._players = [];
     for (let i = 0; i < nPlayers; i++) {
       this._players.push(new Player(i));
-      if (i > 0) this._players[i - 1].setNext(this._players[i]);
-      if (i === nPlayers - 1) this._players[i].setNext(this._players[0]);
+      if (i > 0) {
+        this._players[i - 1].next = this._players[i];
+        this._players[i].prev = this._players[i - 1];
+      }
+      if (i === nPlayers - 1) {
+        this._players[i].next = this._players[0];
+        this._players[0].prev = this._players[i];
+      }
     }
     this._currentPlayer = this._players[0];
 
@@ -21,7 +27,7 @@ class Model {
   _dealCards() {
     while (1) {
       for (let i = 0; i < this._players.length; i++) {
-        if (this._game.availableCards().length) {
+        if (this._game.availableCards.length) {
             this._players[i].addCard(this._game.randomAvailableCard());
         } else {
           return
@@ -30,11 +36,15 @@ class Model {
     }
   }
 
-  currentPlayer() {
+  nextPlayer() {
+    this._currentPlayer = this._currentPlayer.next;
+  }
+
+  get currentPlayer() {
     return this._currentPlayer;
   }
 
-  players() {
+  get players() {
     return this._players;
   }
 
@@ -50,18 +60,31 @@ class Model {
     return this._game.weapons();
   }
 
-  rooms() {
-    return this._game.rooms();
+  places() {
+    return this._game.places();
   }
 
-  solve(murderer, room, weapon) {
-    return this._game.isSolved(murderer, room, weapon);
+  solve(murderer, place, weapon) {
+    return this._game.isSolved(murderer, place, weapon);
   }
 
-  ask(murderer, room, weapon) {
-    const player = this._currentPlayer;
-    this._currentPlayer = this._currentPlayer.getNext();
-    return player.ask(murderer, room, weapon);
+  ask(murderer, place, weapon) {
+    return this._currentPlayer.ask(murderer, place, weapon);
+  }
+
+  removeCurrentPlayer() {
+    const cards = this._currentPlayer.cards;
+
+    const ne = this._currentPlayer.next;
+    const pre = this._currentPlayer.prev;
+    pre.next = ne;
+    ne.prev = pre;
+
+    this._players = this._players.filter(
+      (i) => i.name !== this._currentPlayer.name);
+
+    this._game.availableCards = cards;
+    this._dealCards();
   }
 
 }

@@ -8,15 +8,13 @@ class Controller {
   constructor(nPlayers) {
     if (typeof nPlayers === "undefined" || nPlayers < 2)
       throw "Please provide nPlayers";
-    this._nPlayers = nPlayers;
     this._model = new Model(nPlayers);
-    this._printSetup();
     this._run();
   }
 
   _printSetup() {
-    for (let i = 0; i < this._nPlayers; i++)
-      console.log(this._model.players()[i]);
+    for (let i = 0; i < this._model.players.length; i++)
+      console.log(this._model.players[i].toString());
     console.log(this._model.murderCase());
   }
 
@@ -36,9 +34,9 @@ class Controller {
       },
       {
         type: 'checkbox',
-        name: 'room',
+        name: 'place',
         message: "Wheredunnit?",
-        choices: this._model.rooms(),
+        choices: this._model.places(),
         validate: function (answer) {
           if (answer.length !== 1) {
             return 'You must choose exactly one place.';
@@ -53,7 +51,7 @@ class Controller {
         choices: this._model.weapons(),
         validate: function (answer) {
           if (answer.length !== 1) {
-            return 'You must choose exactly one weapons.';
+            return 'You must choose exactly one weapon.';
           }
           return true;
         }
@@ -62,10 +60,15 @@ class Controller {
   }
 
   _askCase() {
-
   }
 
   _run() {
+    if (this._model.players.length === 0) {
+      console.log("You all lost. Great job.");
+      process.exit(0);
+    }
+    this._printSetup();
+    console.log(`\nPlayer ${this._model.currentPlayer.name}'s turn`);
     inquirer.prompt({
       type: 'confirm',
       name: 'solve',
@@ -74,31 +77,30 @@ class Controller {
     }).then(answers => {
       if (answers.solve) {
         inquirer.prompt(this._questions()).then(answers => {
-          console.log(answers);
           const isSolved = this._model.solve(
-            answers.murderer, answers.room, answers.weapon
+            answers.murderer, answers.place, answers.weapon
           );
           if (isSolved) {
             console.log("Congrats! You won!");
             process.exit(0);
           } else {
             console.log("Boo! You are out!");
-            process.exit(1);
+            this._model.removeCurrentPlayer();
+            this._model.nextPlayer();
+            this._run();
           }
         });
       } else {
         inquirer.prompt(this._questions()).then(answers => {
-          console.log(answers);
+          this._model.nextPlayer();
           let holds = this._model.ask(
             answers.murderer, answers.room, answers.weapon);
-          console.log(holds);
+          this._model.nextPlayer();
           this._run();
         });
       }
     });
   }
 }
-
-new Controller(5);
 
 module.exports = Controller;

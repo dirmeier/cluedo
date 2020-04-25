@@ -21,12 +21,16 @@ class Game {
     return this._cards.weapons();
   }
 
-  rooms() {
-    return this._cards.rooms();
+  places() {
+    return this._cards.places();
   }
 
-  availableCards() {
-    return this._cards.availableCards();
+  get availableCards() {
+    return this._cards.availableCards;
+  }
+
+  set availableCards(cards) {
+    this._cards.availableCards = cards;
   }
 
   randomAvailableCard() {
@@ -42,14 +46,10 @@ class Game {
     );
   }
 
-  isSolved(murderer, room, weapon) {
-    console.log(murderer);
-    console.log(room);
-    console.log(weapon);
+  isSolved(murderer, place, weapon) {
     const cs = this._cards.murderCase();
-    console.log(cs);
     return cs.murderer.name === murderer[0] &&
-      cs.room.name === room[0] &&
+      cs.place.name === place[0] &&
       cs.weapon.name === weapon[0];
   }
 }

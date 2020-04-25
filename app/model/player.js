@@ -1,7 +1,8 @@
 class Player {
   constructor(i) {
-    this.i = i;
+    this.name = i;
     this._next = null;
+    this._prev = null;
     this._cards = [];
   }
 
@@ -9,12 +10,24 @@ class Player {
     this._cards.push(card);
   }
 
-  getNext() {
+  get cards() {
+    return this._cards;
+  }
+
+  get next() {
     return this._next;
   }
 
-  setNext(next) {
+  set next(next) {
     this._next = next;
+  }
+
+  get prev() {
+    return this._prev;
+  }
+
+  set prev(prev) {
+    this._prev = prev;
   }
 
   ask(murderer, room, weapon) {
@@ -27,8 +40,7 @@ class Player {
       if (hasMurder || hasRoom || hasWeapon)
         return [player.i, hasMurder, hasRoom, hasWeapon];
       else
-        player = player.getNext();
-
+        player = player.next;
     }
     return [null, false, false, false];
   }
@@ -39,8 +51,8 @@ class Player {
 }
 
 Player.prototype.toString = function () {
-  const crds = this.cards.join("\n\t");
-  return `[Player \n\t${crds}]\n`;
+  const crds = this._cards.join("\n\t");
+  return `[Player \n\t${crds}\n]`;
 };
 
 module.exports = Player;

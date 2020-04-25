@@ -1,28 +1,48 @@
 "use strict";
 
 const fs = require("fs");
+const $ = require("lodash");
+
 const Tile = require("./board/tile.js");
+const Place = require("./board/place.js");
+
+// const victim = new Suspect("Socrates");
+//
+// const suspects = [
+//   new Suspect("Plato", "red"),
+//   new Suspect("Critias", "green"),
+//   new Suspect("Alcibiades", "yellow"),
+//   new Suspect("Heraclitus", "purple"),
+//   new Suspect("Charmides", "blue"),
+//   new Suspect("Lysander", "white")
+// ];
+
 
 class Board {
   constructor() {
     this._adjacenyMatrix = JSON.parse(
-      fs.readFileSync("model/board/board.json", "utf8")
+      fs.readFileSync("./app/model/board/board.json", "utf8")
     );
-    this._legend = this._initLegend();
+    this._places = this._initPlaces();
     this._board = this._initBoard();
   }
 
   _initLegend() {
     let leg = JSON.parse(
-      fs.readFileSync("model/board/board_legend.json", "utf8")
+      fs.readFileSync("./app/model/board/board_legend.json", "utf8")
     );
-
     let legend = {};
-    for (let i = 0; i < leg.length; i++) {
+    for (let i = 0; i < leg.length; i++)
       legend[leg[i].legend] = leg[i].room;
-    }
-
     return legend;
+  }
+
+  _initPlaces() {
+    const legend = this._initLegend();
+    let places = {};
+    for (let i in legend)
+      places[i] = new Place(legend[i], i);
+    return places;
   }
 
   _initBoard() {
@@ -30,8 +50,10 @@ class Board {
     for (let i = 0; i < this._adjacenyMatrix.length; i++) {
       board[i] = [];
       for (let j = 0; j < this._adjacenyMatrix[i].length; j++) {
-        let el = this._adjacenyMatrix[i][j].split("");
-        board[i][j] = new Tile(el[0], this._legend[el[0]],  i, j, el[1] || null);
+        const el = this._adjacenyMatrix[i][j].split("");
+        const room = this._places[el[0]];
+        board[i][j] = new Tile(el[0], room, i, j, el[1] || null);
+        room.add(board[i][j]);
       }
     }
 
@@ -56,4 +78,4 @@ class Board {
   }
 }
 
-module.exports =  Board;
+module.exports = Board;
