@@ -1,18 +1,30 @@
 "use strict";
 
-const _ = require("lodash");
+define(function (require) {
+  function shuffle(a) {
+    for (let i = a.length - 1; i > 0; i--) {
+      let j = Math.floor(Math.random() * (i + 1));
+      let x = a[i];
+      a[i] = a[j];
+      a[j] = x;
+    }
+    return a;
+  }
 
-function randomElement(array) {
-  return randomElements(array, 1)[0];
-}
+  function randomElements(array, cnt) {
+    if (cnt > array.length)
+      throw "array length < sample count";
+    const shuffled = shuffle(array);
+    return shuffled.slice(0, cnt);
+  }
 
-function randomElements(array, cnt) {
-  if (cnt > array.length)
-    throw "array length < sample count";
-  return _.sampleSize(array, cnt);
-}
+  function randomElement(array) {
+    return randomElements(array, 1)[0];
+  }
 
-module.exports = {
-  randomElement,
-  randomElements
-};
+  return {
+    randomElement,
+    randomElements,
+    shuffle
+  };
+});

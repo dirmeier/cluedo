@@ -1,16 +1,18 @@
 "use strict";
 
-const utils = require("../util.js");
+define(function (require) {
+  const utl = require("util");
 
-class Dice {
-  constructor() {
-    this._die = [1, 2, 3, 4, 5, 6];
+  class Dice {
+    constructor() {
+      this._die = [1, 2, 3, 4, 5, 6];
+    }
+
+    cast() {
+      return utl.randomElement(this._die) +
+        utl.randomElement(this._die);
+    }
   }
 
-  cast() {
-    return utils.randomElement(this._die) +
-      utils.randomElement(this._die);
-  }
-}
-
-module.exports = Dice;
+  return Dice;
+});
