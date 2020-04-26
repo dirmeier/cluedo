@@ -40,6 +40,9 @@ class Model {
       }
     }
   }
+  get board() {
+    return this._game.board;
+  }
 
   nextPlayer() {
     if (this._players.length === 0)

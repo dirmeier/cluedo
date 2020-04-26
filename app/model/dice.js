@@ -12,3 +12,5 @@ class Dice {
       utils.randomElement(this._die);
   }
 }
+
+module.exports = Dice;

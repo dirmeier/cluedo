@@ -8,5 +8,10 @@ class Weapon extends Item {
   }
 }
 
+Weapon.prototype.toString = function()
+{
+  return `[Weapon ${this._name}]`;
+};
+
 module.exports = Weapon;
 

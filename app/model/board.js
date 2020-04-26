@@ -92,6 +92,7 @@ class Board {
     for (let i = 0; i < this._suspects.length; i++) {
       const tile = this._getFreeTile(places[i]);
       this._suspects[i].position(places[i], tile);
+      tile.occupyWith(this._suspects[i]);
     }
   }
 
@@ -101,6 +102,7 @@ class Board {
     for (let i = 0; i < this._weapons.length; i++) {
       const tile = this._getFreeTile(places[i]);
       this._weapons[i].position(places[i], tile);
+      tile.occupyWith(this._weapons[i]);
     }
   }
 
@@ -116,7 +118,7 @@ class Board {
     }
   }
 
-  board() {
+  get board() {
     return this._board;
   }
 }

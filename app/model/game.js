@@ -43,6 +43,10 @@ class Game {
     return this._dice.cast();
   }
 
+  get board() {
+    return this._board.board;
+  }
+
   print() {
     const murder = this.murderCase();
     console.log(

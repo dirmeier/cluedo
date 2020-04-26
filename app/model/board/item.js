@@ -15,5 +15,10 @@ class Item {
 
 }
 
+Item.prototype.toString = function()
+{
+  return `[Item ${this._name}]`;
+};
+
 module.exports = Item;
 

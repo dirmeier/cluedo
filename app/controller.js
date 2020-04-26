@@ -9,6 +9,7 @@ class Controller {
     if (typeof nPlayers === "undefined" || nPlayers < 2)
       throw "Please provide nPlayers";
     this._model = new Model(nPlayers);
+    this._view = new View(this._model);
     this._run();
   }
 

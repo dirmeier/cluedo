@@ -3,7 +3,7 @@
 const _ = require("lodash");
 
 function randomElement(array) {
-  return randomElements(array, 1);
+  return randomElements(array, 1)[0];
 }
 
 function randomElements(array, cnt) {

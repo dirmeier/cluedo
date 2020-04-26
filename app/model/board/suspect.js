@@ -9,5 +9,10 @@ class Suspect extends Item {
   }
 }
 
+Suspect.prototype.toString = function()
+{
+  return `[Suspect ${this._name}]`;
+};
+
 module.exports = Suspect;
 
