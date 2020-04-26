@@ -1,13 +1,16 @@
-class Card {
-  constructor (name) {
-    this.name = name;
+"use strict";
+
+define(function () {
+
+  class Card {
+    constructor(name) {
+      this._name = name;
+    }
   }
-}
 
-Card.prototype.toString = function()
-{
-  return `[Card ${this.name}]`;
-};
+  Card.prototype.toString = function () {
+    return `[${this.constructor.name} ${this._name}]`;
+  };
 
-module.exports = Card;
-
+  return Card;
+});

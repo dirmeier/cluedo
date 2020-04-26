@@ -67,7 +67,8 @@ define(function () {
         this._neighbors.right._gate === null) {
         draw += "|";
       } else draw += ",";
-      process.stdout.write(draw);
+
+      return draw;
     }
   }
 

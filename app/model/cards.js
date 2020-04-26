@@ -103,6 +103,5 @@ define(function(require) {
   }
 
   return Cards;
-
 });
 

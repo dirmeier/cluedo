@@ -1,6 +1,9 @@
-const Card =  require("./card.js");
+"use strict";
 
-class Suspect extends Card  {}
+define(function(require) {
+  const Card = require("model/cards/card");
 
-module.exports = Suspect;
+  class Suspect extends Card {}
 
+  return Suspect;
+});
