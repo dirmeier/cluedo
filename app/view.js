@@ -3,8 +3,11 @@
 define(function () {
   class View {
     constructor(model) {
+      this._width = 650;
+      this._height = 650;
       this._app = this._getElement('#app');
       this._model = model;
+      this._board = this._model.board;
       this._initBoard();
     }
 
@@ -13,39 +16,45 @@ define(function () {
     }
 
     _createElement(tag) {
-      var svgns = "http://www.w3.org/2000/svg";
+      const svgns = "http://www.w3.org/2000/svg";
       return document.createElementNS(svgns, tag);
     }
 
-    _initBoard() {
+    _svg() {
+      const svg = this._createElement("svg");
+      this._app.appendChild(svg);
+      svg.setAttribute("width", this._width - 5);
+      svg.setAttribute("height", 10);
+      return svg;
+    }
 
-      // create the svg element
-      const svg1 = this._createElement("svg");
-
-
-      // set width and height
-      svg1.setAttribute("width", "100");
-      svg1.setAttribute("height", "100");
-
-      // create a circle
+    _rect(row) {
       const rect = this._createElement("rect");
-      rect.setAttributeNS(null, 'height', '50');
-      rect.setAttributeNS(null, 'width', '50');
-      rect.setAttributeNS(null, 'fill', 'red');
-    //<rect x="50" y="50" width="50" height="50" fill="black" />
+      rect.setAttribute("width", (this._width - 5) / this._board[row].length);
+      rect.setAttribute("height", 20);
+      rect.setAttribute("x", ((this._width - 15) / this._board[row].length) * row);
+      return rect;
+    }
 
-      const rect2 = this._createElement("rect");
-      rect2.setAttributeNS(null, 'x', '50');
-      rect2.setAttributeNS(null, 'height', '50');
-      rect2.setAttributeNS(null, 'width', '50');
-      rect2.setAttributeNS(null, 'fill', 'red');
+    _initBoard() {
+      const board = this._model.board;
+      for (let i = 0; i < board.length; i++) {
+        const svg = this._svg();
+        for (let j = 0; j < board[i].length; j++) {
+          const tile = board[i][j].draw();
+          const rect = this._rect(i);
+          svg.append(rect);
+        }
+      }
+
+      // const rect2 = this._createElement("rect");
+      // rect2.setAttributeNS(null, 'x', '50');
+      // rect2.setAttributeNS(null, 'height', '50');
+      // rect2.setAttributeNS(null, 'width', '50');
 
       // attach it to the container
-      svg1.appendChild(rect);
-      svg1.appendChild(rect2);
-
-      // attach container to document
-      this._app.appendChild(svg1);
+      // svg.appendChild(rect);
+      // svg.appendChild(rect2);
 
     }
 
