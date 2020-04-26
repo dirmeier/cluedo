@@ -1,17 +1,17 @@
 "use strict";
 
-const Item = require("./item.js");
+define(function (require) {
+  const Item = require("model/board/item");
 
-class Weapon extends Item {
-  constructor(name) {
-    super(name);
+  class Weapon extends Item.Item {
+    constructor(name) {
+      super(name);
+    }
   }
-}
 
-Weapon.prototype.toString = function()
-{
-  return `[Weapon ${this._name}]`;
-};
+  Weapon.prototype.toString = function () {
+    return `[Weapon ${this._name}]`;
+  };
 
-module.exports = Weapon;
-
+  return Weapon;
+});

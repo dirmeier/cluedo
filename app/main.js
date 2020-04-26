@@ -1,5 +1,4 @@
 define(function (require) {
-  const controller = require('./controller.js');
-  s = new controller.Simon();
-  s.print();
+  const controller = require('./controller');
+  //new controller.Controller();
 });

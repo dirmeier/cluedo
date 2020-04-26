@@ -1,18 +1,18 @@
 "use strict";
 
-const Item = require("./item.js");
+define(function (require) {
+  const Item = require("model/board/item");
 
-class Suspect extends Item {
-  constructor(name, color) {
-    super(name);
-    this._color = color;
+  class Suspect extends Item.Item {
+    constructor(name, color) {
+      super(name);
+      this._color = color;
+    }
   }
-}
 
-Suspect.prototype.toString = function()
-{
-  return `[Suspect ${this._name}]`;
-};
+  Suspect.prototype.toString = function () {
+    return `[Suspect ${this._name}]`;
+  };
 
-module.exports = Suspect;
-
+  return Suspect;
+});

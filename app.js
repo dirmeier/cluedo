@@ -1,10 +1,7 @@
 "use strict";
 
 requirejs.config({
-  baseUrl: 'node_modules',
-  paths: {
-    app: '../app'
-  }
+  baseUrl: 'app'
 });
 
-requirejs(['app/main']);
+requirejs(['main']);

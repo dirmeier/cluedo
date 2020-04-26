@@ -2,11 +2,8 @@
 
 
 define(function (require) {
-
-  const inquirer = require('inquirer/lib/inquirer');
-  // const Model = require("model");
-  // const View = require("view");
-
+  const Model = require("model");
+  //const View = require("./view");
 });
 
 //
