@@ -45,7 +45,7 @@ define(function (require) {
     }
 
     get board() {
-      return this._board.board;
+      return this._board;
     }
 
     print() {

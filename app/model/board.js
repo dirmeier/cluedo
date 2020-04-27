@@ -17,33 +17,32 @@ define(function (require) {
     new Suspect("Alcibiades", "yellow"),
     new Suspect("Heraclitus", "purple"),
     new Suspect("Charmides", "blue"),
-    new Suspect("Lysander", "white")
+    new Suspect("Lysander", "orange")
   ].sort();
 
   const weapons = [
-    new Weapon("Cup of poison"),
-    new Weapon("Dagger"),
-    new Weapon("Treachery"),
-    new Weapon("Sickle"),
-    new Weapon("Rope"),
-    new Weapon("Bow")
+    new Weapon("Cup of poison", "green"),
+    new Weapon("Dagger", "purple"),
+    new Weapon("Treachery", "red"),
+    new Weapon("Sickle", "black"),
+    new Weapon("Rope", "brown"),
+    new Weapon("Bow", "yellow")
   ].sort();
 
   class Board {
     constructor(nSuspects) {
-      this._adjacenyMatrix = this._initAdjacency();
       this._places = this._initPlaces();
-      this._board = this._initBoard();
+      this._adjacenyMatrix = this._initBoard();
 
-      this._suspects = utl.randomElements(suspects, nSuspects);
+      this._suspects = utl.randomElements(suspects, nSuspects).sort();
       this._weapons = Array.from(weapons);
 
       this._distributeSuspectsToRooms();
-      this._distributePiecesToRooms();
+      this._distributeWeaponsToRooms();
     }
 
-    _initAdjacency() {
-      return board;
+    get adjacency() {
+      return this._adjacenyMatrix;
     }
 
     _initPlaces() {
@@ -55,31 +54,31 @@ define(function (require) {
     }
 
     _initBoard() {
-      let board = [];
-      for (let i = 0; i < this._adjacenyMatrix.length; i++) {
-        board[i] = [];
-        for (let j = 0; j < this._adjacenyMatrix[i].length; j++) {
-          const el = this._adjacenyMatrix[i][j].split("");
+      let adj = [];
+      for (let i = 0; i < board.length; i++) {
+        adj[i] = [];
+        for (let j = 0; j < board[i].length; j++) {
+          const el = board[i][j].split("");
           const place = this._places[el[0]];
-          board[i][j] = new Tile(el[0], place, i, j, el[1] || null);
-          place.add(board[i][j]);
+          adj[i][j] = new Tile(el[0], place, i, j, el[1] || null);
+          place.add(adj[i][j]);
         }
       }
 
-      for (let i = 0; i < this._adjacenyMatrix.length; i++) {
-        for (let j = 0; j < this._adjacenyMatrix[i].length; j++) {
+      for (let i = 0; i < board.length; i++) {
+        for (let j = 0; j < board[i].length; j++) {
           if (i > 0)
-            board[i][j].neighbors.up = board[i - 1][j] || null;
-          if (i < this._adjacenyMatrix.length - 1)
-            board[i][j].neighbors.down = board[i + 1][j] || null;
+            adj[i][j].neighbors.up = adj[i - 1][j] || null;
+          if (i < board.length - 1)
+            adj[i][j].neighbors.down = adj[i + 1][j] || null;
           if (j > 0)
-            board[i][j].neighbors.left = board[i][j - 1] || null;
-          if (j < this._adjacenyMatrix[i].length - 1)
-            board[i][j].neighbors.right = board[i][j + 1] || null;
+            adj[i][j].neighbors.left = adj[i][j - 1] || null;
+          if (j < board[i].length - 1)
+            adj[i][j].neighbors.right = adj[i][j + 1] || null;
         }
       }
 
-      return board;
+      return adj;
     }
 
     _distributeSuspectsToRooms() {
@@ -92,7 +91,7 @@ define(function (require) {
       }
     }
 
-    _distributePiecesToRooms() {
+    _distributeWeaponsToRooms() {
       let places = this._getPlaces();
       places = utl.randomElements(places, this._weapons.length);
       for (let i = 0; i < this._weapons.length; i++) {
@@ -100,6 +99,18 @@ define(function (require) {
         this._weapons[i].position(places[i], tile);
         tile.occupyWith(this._weapons[i]);
       }
+    }
+
+    get pieces() {
+      return this._suspects.concat(this._weapons);
+    }
+
+    get suspects() {
+      return this._suspects;
+    }
+
+    get weapons() {
+      return this._weapons;
     }
 
     _getPlaces() {
@@ -114,9 +125,6 @@ define(function (require) {
       }
     }
 
-    get board() {
-      return this._board;
-    }
   }
 
   return Board;

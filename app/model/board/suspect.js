@@ -5,8 +5,15 @@ define(function (require) {
 
   class Suspect extends Item.Item {
     constructor(name, color) {
-      super(name);
-      this._color = color;
+      super(name, color);
+    }
+
+    get c() {
+      return "s";
+    }
+
+    get style() {
+       return "circle";
     }
   }
 

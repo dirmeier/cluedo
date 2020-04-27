@@ -3,11 +3,11 @@
 define(function () {
 
   class Tile {
-    constructor(name, room, i, j, gate) {
+    constructor(name, room, x, y, gate) {
       this._name = name;
       this._room = room;
-      this._i = i;
-      this._j = j;
+      this._x = x;
+      this._y = y;
       this._direction = {
         '>': false,
         '<': false,
@@ -20,6 +20,14 @@ define(function () {
       this._isOccupied = false;
       this._occupant = null;
       this._neighbors = {up: null, down: null, left: null, right: null};
+    }
+
+    get x() {
+      return this._x;
+    }
+
+    get y() {
+      return this._y;
     }
 
     get name() {
@@ -83,7 +91,7 @@ define(function () {
     isGateLeft() {
       return this._direction["<"];
     }
-    
+
     isNoGate(neighbor) {
       return neighbor !== null && this.gate === null && neighbor.gate === null;
     }

@@ -11,7 +11,7 @@ define(function (require) {
         throw "Please provide nPlayers";
       this._model = new Model(nPlayers);
       this._view = new View(this._model);
-      //this._run();
+      this._run();
     }
 
     _printSetup() {
@@ -75,8 +75,7 @@ define(function (require) {
 
     _checkExit() {
       if (this._model.players.length === 0) {
-        console.log("You all lost. Great job.");
-        process.exit(0);
+        this._view.drawExit();
       }
     }
 
@@ -120,11 +119,11 @@ define(function (require) {
     //   });
     // }
 
-    // _run() {
-    //   this._checkExit();
-    //   this._printSetup();
-    //   console.log(`\nPlayer ${this._model.currentPlayer.name}'s turn`);
-    //
+    _run() {
+      this._checkExit();
+      this._printSetup();
+      // console.log(`\nPlayer ${this._model.currentPlayer.name}'s turn`);
+
     //   inquirer.prompt({
     //     type: 'confirm',
     //     name: 'cast',
@@ -141,7 +140,7 @@ define(function (require) {
     //     }
     //     this._askToSolve();
     //   });
-    // }
+    }
   }
 
   return Controller;

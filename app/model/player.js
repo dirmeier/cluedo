@@ -2,8 +2,8 @@
 
 define(function () {
   class Player {
-    constructor(i, suspect) {
-      this.name = i;
+    constructor(name, suspect) {
+      this.name = name;
       this._next = null;
       this._prev = null;
       this._suspect = suspect;
@@ -53,9 +53,8 @@ define(function () {
       return this._cards.filter((i) => i.name === item).length > 0;
     }
 
-    position() {
-      // tODO
-      this._suspect.tile;
+    tile() {
+      return this._suspect.tile;
     }
 
   }

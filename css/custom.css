@@ -4,28 +4,59 @@
     box-sizing: border-box
 }
 
+.row {
+    width: 1200px;
+    margin: auto auto auto;
+    text-align: center;
+}
+
+.column {
+    float: left;
+    margin: 50px auto auto;
+    min-height: 650px;
+    min-width: 200px;
+}
+
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
 html {
+    background-color: whitesmoke;
     font-family: serif;
     font-size: 1rem;
-    color: #444;
 }
 
-
-#app {
-    margin: 50px auto auto;
+h1, h2 {
+    text-align: center;
 }
 
-rect {
-    fill: lightgray;
+h3, ul {
+    text-align: left;
+}
+
+#board, #help {
+    margin-left: 15px;
 }
 
 svg {
     padding: 1px;
-    display: flex;
 }
 
 polyline {
-    stroke:black;
+    stroke: black;
     stroke-width: 2px;
     stroke-opacity: 1;
+}
+
+.well {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+    padding: 10px;
+
+    margin: 15px;
+    vertical-align: top;
+    text-align: center;
 }
