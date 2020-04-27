@@ -40,8 +40,7 @@ define(function (require) {
         .attr("width", (this._width - 1) / (this._board[row].length) - 1)
         .attr("height", (this._height - 1) / (this._board.length) - 1)
         .attr("x", ((this._width) / this._board[row].length) * col)
-        .attr("row", row)
-        .attr("col", col);
+        .attr("id", "id" + row + "_" + col);
     }
 
     _text(el, rect, row, col) {
@@ -111,7 +110,18 @@ define(function (require) {
       }
     }
 
-    
+    _initPlayers() {
+      for (let player of this._players) {
+        console.log("asd");
+        const tile = player.tile;
+        const x = player.tile.x;
+        const y = player.tile.y;
+        const rect = d3.selectAll("#" + "id" + 2 + "_" + 2)
+          .style("fill", "red");
+
+        ;
+      }
+    }
 
     _draw() {
       const board = this._model.board;

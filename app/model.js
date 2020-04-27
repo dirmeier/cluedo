@@ -7,7 +7,6 @@ define(function (require) {
   class Model {
     constructor(nPlayers) {
       this._game = new Game(nPlayers);
-      // tODO: add positions to players
       this._players = this._initPlayers(nPlayers);
       this._currentPlayer = this._players[0];
 
