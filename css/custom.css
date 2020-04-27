@@ -26,6 +26,6 @@ svg {
 
 polyline {
     stroke:black;
-    stroke-width: 1px;
+    stroke-width: 2px;
     stroke-opacity: 1;
 }
