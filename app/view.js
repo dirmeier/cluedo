@@ -5,8 +5,8 @@ define(function (require) {
 
   class View {
     constructor(model) {
-      this._width = 600;
-      this._height = 600;
+      this._width = 700;
+      this._height = 700;
       this._app = this._getApp();
       this._model = model;
       this._board = this._model.board;
@@ -16,14 +16,14 @@ define(function (require) {
     _getApp() {
       return d3.select("#app")
         .attr("align", "center")
-        .style("width", this._width)
+        .style("width", this._width + 10)
         .style("height", this._height);
     }
 
     _svg() {
       return this._app
         .append("svg")
-        .attr("width", this._width )
+        .attr("width", this._width + 5)
         .attr("height", this._height / this._board.length);
     }
 
@@ -34,8 +34,8 @@ define(function (require) {
     _rect(el, row, col) {
       return el
         .append("rect")
-        .attr("width", (this._width - 5) / (this._board[row].length))
-        .attr("height", this._height / (this._board.length))
+        .attr("width", (this._width - 1 ) / (this._board[row].length) - 1)
+        .attr("height", (this._height - 1) / (this._board.length) - 1)
         .attr("x", ((this._width) / this._board[row].length) * col);
       //attr("points", "0,50 150,50 150,150 50,150");
     }
@@ -53,11 +53,21 @@ define(function (require) {
     }
 
     _path(el, rect, row, col) {
-      if (col !== 0)
-        return;
-      return el
-        .append("polyline")
-        .attr("points", rect.attr('x') + ",0 0," + rect.attr("height") );
+      const x = parseFloat(rect.attr('x'));
+      const w = parseFloat(rect.attr('width'));
+      const h = parseFloat(rect.attr('height'));
+      if (col === 0)
+        el.append("polyline").attr(
+          "points", "0.5,0 0.5," + h);
+      else if (col === this._board[row].length - 1)
+        el.append("polyline").attr(
+          "points", (x + w) + ",0 " +  (x + w) + "," + h);
+      if (row === 0)
+        el.append("polyline").attr(
+          "points", x + ",0.5 "+ (x + w) + ",0.5");
+      else if (row === this._board.length - 1)
+        el.append("polyline").attr(
+          "points", x + ",  " + (h - 1.5)  + " " + (x + w) + "," + (h - 1.5));
     }
 
     _initBoard() {
@@ -70,20 +80,6 @@ define(function (require) {
           const text = this._text(g, rect, i, j);
           const path = this._path(g, rect, i, j);
         }
-      }
-    }
-
-    _draw() {
-      const board = this._model.board;
-      for (let i = 0; i < board.length; i++) {
-        let draws = "";
-        let holds = "";
-        for (let j = 0; j < board[i].length; j++) {
-          draws += board[i][j].draw();
-          if (board[i][j].occupied)
-            holds += board[i][j].occupant;
-        }
-        console.log(draws + "\t" + holds);
       }
     }
   }
