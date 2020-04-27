@@ -63,6 +63,8 @@ define(function (require) {
 
     _rect(el,tile, row, col) {
       return el
+        .append("svg")
+        .attr("id", "id_" + row + "_" + col)
         .append("rect")
         .attr("width", (this._width - 1) / (this._adj[row].length) - 1)
         .attr("height", (this._height - 1) / (this._adj.length) - 1)
@@ -73,12 +75,18 @@ define(function (require) {
     _circle(el, row, col) {
       const w = ((this._width / this._adj[row].length)) - 1;
       return el
-        .append("circle")
-        .attr("cx", ((this._width) / this._adj[row].length) * col + w / 2)
-        .attr("cy", ((this._height - 1) / (this._adj.length) - 1) / 2)
-        .attr("r", 10)
-        .attr("fill", "transparent")
-        .attr("id", "s_id_" + row + "_" + col);
+        // .append("circle")
+        // .attr("cx", ((this._width) / this._adj[row].length) * col + w / 2)
+        // .attr("cy", ((this._height - 1) / (this._adj.length) - 1) / 2)
+        // .attr("r", 10)
+        // .attr("fill", "transparent")
+        // .attr("id", "s_id_" + row + "_" + col)
+        .append("svg:image")
+        .attr('x', ((this._width) / this._adj[row].length) * col + w / 2)
+        .attr('y', -12)
+        .attr('width', 20)
+        .attr('height', 24)
+        .attr("xlink:href", "app/view/alcibiades.jpg");
     }
 
     _smallRect(el, row, col) {
@@ -153,8 +161,8 @@ define(function (require) {
           const tile = this._adj[i][j];
           const g = this._g(svg, i, j);
           const rect = this._rect(g,tile, i, j);
-          const circle = this._circle(g, i, j);
-          const smallrect = this._smallRect(g, i, j);
+          // const circle = this._circle(g, i, j);
+          // const smallrect = this._smallRect(g, i, j);
           //this._text(g, rect, i, j);
           this._path(g, rect, tile);
         }
@@ -166,8 +174,14 @@ define(function (require) {
         .style("width", this._width + 10);
       for (let piece of this._board.pieces) {
         const tile = piece.tile;
-        d3.select("#" + piece.c + "_" + "id_" + tile.x + "_" + tile.y)
-          .style("fill", piece.color);
+        d3.select("#id_" + tile.x + "_" + tile.y)
+          // .style("fill", piece.color);
+          .append("svg:image")
+          .attr('x', ((this._width) / this._adj[tile.x].length) * tile.y)
+          // .attr('y', -12)
+          .attr('width', 20)
+          .attr('height', 24)
+          .attr("xlink:href", "app/view/alcibiades.jpg");
         ul.append("li")
           .append("span")
           .text(piece.clazz + " " + piece.name + " ")
