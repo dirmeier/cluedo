@@ -17,8 +17,8 @@ define(function (require) {
       this._initLegend();
       this._initHelp();
       this._initBoard();
-      this._initPieces();
 
+      this._paintedTiles = [];
     }
 
     _init() {
@@ -49,6 +49,24 @@ define(function (require) {
       return d3.select("#board");
     }
 
+    _initBoard() {
+      this._initTiles();
+      this._drawPieces("Suspects", this._board.suspects);
+      this._drawPieces("Weapons", this._board.weapons);
+    }
+
+    _initTiles() {
+      for (let i = 0; i < this._adj.length; i++) {
+        const svg = this._svg();
+        for (let j = 0; j < this._adj[i].length; j++) {
+          const tile = this._adj[i][j];
+          const g = this._g(svg, i, j);
+          const rect = this._rect(g, tile, i, j);
+          this._path(g, rect, tile);
+        }
+      }
+    }
+
     _svg() {
       return this._app
         .append("svg")
@@ -58,18 +76,19 @@ define(function (require) {
     }
 
     _g(svg, row, col) {
-      return svg.append("g");
+      return svg.append("g").attr("id", "id_" + row + "_" + col);
     }
 
     _rect(el, tile, row, col) {
       return el
-        .append("svg")
-        .attr("id", "id_" + row + "_" + col)
         .append("rect")
+        .attr("id", "id_r_" + row + "_" + col)
         .attr("width", (this._width - 1) / (this._adj[row].length) - 1)
         .attr("height", (this._height - 1) / (this._adj.length) - 1)
         .attr("fill", "lightgray")
-        .attr("x", ((this._width) / this._adj[row].length) * col);
+        .attr("x", ((this._width) / this._adj[row].length) * col)
+        .attr("row", row)
+        .attr("col", col);
     }
 
     _path(el, rect, tile) {
@@ -112,39 +131,50 @@ define(function (require) {
           "points", x + ",  " + (h - 2) + " " + (x + w) + "," + (h - 2));
     }
 
-    _initBoard() {
-      for (let i = 0; i < this._adj.length; i++) {
-        const svg = this._svg();
-        for (let j = 0; j < this._adj[i].length; j++) {
-          const tile = this._adj[i][j];
-          const g = this._g(svg, i, j);
-          const rect = this._rect(g, tile, i, j);
-          this._path(g, rect, tile);
-        }
+    _drawPieces(piecesHeader, arr) {
+      for (let piece of arr) {
+        const tile = piece.tile;
+        this.drawPiece(tile, piece);
       }
     }
 
-    _initPieces() {
-      this._drawPieces("Suspects", this._board.suspects);
-      this._drawPieces("Weapons", this._board.weapons);
+    drawPiece(tile, piece) {
+      d3.select("#id_" + tile.x + "_" + tile.y)
+        .append("svg:image")
+        .attr('x', ((this._width) / this._adj[tile.x].length) * tile.y)
+        .attr("width", (this._width - 1) / (this._adj[tile.x].length) - 1)
+        .attr("height", (this._height - 1) / (this._adj.length) - 1)
+        .attr("xlink:href", piece.path);
     }
 
-    _drawPieces(legend, arr) {
+    removePiece(tile) {
+      alert(tile);
+      d3.select("#id_" + tile.x + "_" + tile.y)
+        .selectAll("image")
+        .remove();
+    }
+
+    _initLegend() {
+      const legend = d3.select("#legend")
+        .append("h3")
+        .style("width", this._width + 10)
+        .html("Legend");
+      this._initLegendForPieces("Suspects", this._board.suspects);
+      this._initLegendForPieces("Weapons", this._board.weapons);
+    }
+
+    _initLegendForPieces(piecesHeader, arr) {
       d3.select('#legend')
         .append('h4')
-        .html(legend)
+        .html(piecesHeader)
         .style("width", this._width + 10);
+
       const ul = d3.select('#legend')
         .append('ul')
         .style("width", this._width + 10);
+
       for (let piece of arr) {
         const tile = piece.tile;
-        d3.select("#id_" + tile.x + "_" + tile.y)
-          .append("svg:image")
-          .attr('x', ((this._width) / this._adj[tile.x].length) * tile.y)
-          .attr("width", (this._width - 1) / (this._adj[tile.x].length) - 1)
-          .attr("height", (this._height - 1) / (this._adj.length) - 1)
-          .attr("xlink:href", piece.path);
         ul.append("li")
           .append("span")
           .text(piece.clazz + " " + piece.name + " ")
@@ -158,17 +188,38 @@ define(function (require) {
       }
     }
 
-    _initLegend() {
-      const legend = d3.select("#legend")
-        .append("h3")
-        .style("width", this._width + 10)
-        .html("Legend");
+    _initHelp() {
+      const help = d3.select("#help").style("width", this._width + 10);
+      help.append("h3").html("Help");
+
+      help.append("div")
+        .attr("id", "player")
+        .append("p")
+        .append("u");
+
+      let div = help.append("div").attr("id", "cast_or_stay");
+      div.append("p")
+        .attr("id", "cast_or_stay_text")
+        .text("Do you want to cast a die or stay in the room?");
+
+      div = div
+        .append("div")
+        .attr("id", "cast_or_stay_buttons");
+      div.append("input")
+        .attr("id", "cast_die")
+        .attr("type", "submit")
+        .attr("value", "Cast die");
+      div.append("input")
+        .attr("id", "stay_in_room")
+        .attr("type", "submit")
+        .attr("value", "Stay");
     }
 
-    _initHelp() {
-      const help = d3.select("#help")
-        .style("width", this._width + 10)
-        .html("<h3>Help</h3>");
+    printPlayer() {
+      d3.select("#player")
+        .select("p")
+        .select("u")
+        .text(`\n${this._model.currentPlayer.suspect.name}'s turn`);
     }
 
     drawExit() {
@@ -180,42 +231,34 @@ define(function (require) {
         .text("You all lost. Good job.");
     }
 
-    _removeHelpDivs() {
-      d3.select("#help")
-        .selectAll("div")
-        .remove();
+    hasCast(pips) {
+      d3.select("#cast_or_stay_text").text(`You cast: ${pips}`);
+      d3.select("#cast_or_stay_buttons").style("display", "none");
     }
 
-    printPlayer() {
-      this._removeHelpDivs();
-      d3.select("#help")
-        .append("div")
-        .append("p")
-        .append("u")
-        .text(`\n${this._model.currentPlayer.suspect.name}'s turn`);
+    drawTiles(tiles) {
+      for (let tile of this._paintedTiles)
+        this._paintTile(tile.x, tile.y, "lightgray");
+      for (let tile of tiles)
+        this._paintTile(tile.x, tile.y, "#C79999");
     }
 
-    askToRoll(cast, stay) {
-      const remove = this._removeHelpDivs;
-      d3.select("#help")
-        .append("p")
-        .text(`Do you want to cast the dice or stay in the room?`);
-      const div = d3.select("#help").append("div");
-      div.append("input")
-        .attr("type", "submit")
-        .attr("value", "Cast die")
-        .on("click", function () {
-          // remove();
-          cast();
-        });
-      div.append("input")
-        .attr("type", "submit")
-        .attr("id", "stay_in_room")
-        .attr("value", "Stay")
-        .on("click", function () {
-          // remove();
-          stay();
-        });
+    _paintTile(row, col, color) {
+      return d3.select("#id_r_" + row + "_" + col).style("fill", color);
+    }
+
+    bindCast(handler) {
+      d3.select("#cast_die").on("click", handler);
+    }
+
+    bindStay(handler) {
+      d3.select("#stay_in_room").on("click", handler);
+    }
+
+    bindMove(handler) {
+      d3.selectAll("rect").on("click", function () {
+        handler(d3.select(this).attr("row"), d3.select(this).attr("col"));
+      });
     }
   }
 

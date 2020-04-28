@@ -113,6 +113,36 @@ define(function (require) {
       return this._weapons;
     }
 
+    computePaths(pips, tile) {
+      let stack = [tile];
+      let neis = [];
+      tile.distance = 0;
+
+      for (let i = 0; i < board.length; i++) {
+        for (let j = 0; j < board[i].length; j++) {
+          this._adjacenyMatrix[i][j].visited = false;
+        }
+      }
+
+      while (stack.length) {
+        let node =  stack.shift();
+        neis.push(node);
+        for (let nei of  Object.values(node.neighbors)) {
+          if (nei !== null &&
+            !nei.occupied &&
+            !nei.visited &&
+            node.canReach(nei)) {
+            nei.distance = node.distance + 1;
+            nei.visited = true;
+            if (nei.distance <= pips)
+              stack.push(nei)
+          }
+        }
+      }
+      return neis;
+    }
+
+
     _getPlaces() {
       return Object.values(this._places)
         .filter((v) => v.type === "place");

@@ -1,31 +1,48 @@
 "use strict";
 
-define(function (require) {
-  const Model = require("model");
-  const View = require("view");
-
+define(function () {
   class Controller {
-    constructor(nPlayers) {
+    constructor(nPlayers, model, view) {
       if (typeof nPlayers === "undefined" || nPlayers < 2)
         throw "Please provide nPlayers";
-      this._model = new Model(nPlayers);
-      this._view = new View(this._model);
+
+      this._model = model;
+      this._board = this._model.board;
+      this._adj = this._board.adjacency;
+
+      this._view = view;
+      this._view.controller = this;
+      this._view.bindCast(this.castDie);
+      this._view.bindStay(this.stay);
+      this._view.bindMove(this.move);
+
       this._run();
     }
 
-    castDie() {
-      alert(this);
-    }
+    castDie = () => {
+      const pips = this._model.castDie();
+      this._view.hasCast(pips);
+      const tiles = this._model.computePaths(pips);
+      this._view.drawTiles(tiles);
+    };
 
-    stay() {
-      alert("asdasd");
-    }
+    stay = () => {
+      console.log("asdasd");
+    };
 
-    _printSetup() {
+    move = (row, col) => {
+      const tile = this._adj[row][col];
+      const oldTile = this._model.currentPlayer.tile;
+      this._view.drawPiece(tile, this._model.currentPlayer.suspect);
+      this._model.currentPlayer.updatePosition(tile);
+      this._view.removePiece(oldTile);
+    };
+
+    _printSetup = () => {
       for (let i = 0; i < this._model.players.length; i++)
         console.log(this._model.players[i].toString());
       console.log(this._model.murderCase());
-    }
+    };
 
     _who() {
       return {
@@ -126,11 +143,10 @@ define(function (require) {
     //   });
     // }
 
-    _run() {
+    _run = () => {
       this._checkExit();
       this._printSetup();
       this._view.printPlayer();
-      this._view.askToRoll(this.castDie, this.stay);
       //   inquirer.prompt({
       //     type: 'confirm',
       //     name: 'cast',

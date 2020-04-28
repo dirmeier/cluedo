@@ -20,6 +20,24 @@ define(function () {
       this._isOccupied = false;
       this._occupant = null;
       this._neighbors = {up: null, down: null, left: null, right: null};
+      this._distance = 0;
+      this._visited = false;
+    }
+
+    get visited() {
+      return this._visited;
+    }
+
+    set visited(v) {
+      this._visited = v;
+    }
+
+    get distance() {
+      return this._distance;
+    }
+
+    set distance(d) {
+      this._distance = d;
     }
 
     get x() {
@@ -55,6 +73,11 @@ define(function () {
       this._isOccupied = true;
     }
 
+    deoccupy() {
+      this._occupant = null;
+      this._isOccupied = false;
+    }
+
     get occupant() {
       return this._occupant;
     }
@@ -69,7 +92,7 @@ define(function () {
 
     isOtherRoomAndNoNeighborVerticalGate(neighbor) {
       return this.isOtherRoom(neighbor)
-         && neighbor.isVerticalGate();
+        && neighbor.isVerticalGate();
     }
 
     isOtherRoom(neighbor) {
@@ -95,6 +118,12 @@ define(function () {
     isNoGate(neighbor) {
       return neighbor !== null && this.gate === null && neighbor.gate === null;
     }
+
+    canReach(neighbor) {
+      return neighbor !== null && (this._name === neighbor._name ||
+        this.isGate() || neighbor.isGate());
+    }
+
   }
 
   return Tile;

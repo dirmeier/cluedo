@@ -25,6 +25,10 @@ define(function () {
           this._tile.occupied = true;
         }
 
+        set tile(tile) {
+          this._tile = tile;
+        }
+
         get tile() {
           return this._tile;
         }

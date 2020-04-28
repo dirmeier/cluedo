@@ -13,12 +13,7 @@ define(function (require) {
       this._dealCards();
     }
 
-    dice() {
-      alert('asdas');
-      return this._game.dice;
-    }
-
-      _initPlayers(nPlayers) {
+    _initPlayers(nPlayers) {
       let players = [];
       for (let i = 0; i < nPlayers; i++) {
         players.push(new Player(i, this._game.board.suspects[i]));
@@ -46,8 +41,16 @@ define(function (require) {
       }
     }
 
+    castDie() {
+      return this._game.dice.cast();
+    }
+
     get board() {
       return this._game.board;
+    }
+
+    computePaths(pips) {
+      return this._game.computePaths(pips, this.currentPlayer.suspect.tile);
     }
 
     nextPlayer() {

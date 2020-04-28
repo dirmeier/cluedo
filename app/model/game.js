@@ -55,6 +55,11 @@ define(function (require) {
         cs.place.name === place &&
         cs.weapon.name === weapon;
     }
+
+    computePaths(pips, tile) {
+      return this._board.computePaths(pips, tile);
+    }
+
   }
 
   return Game;

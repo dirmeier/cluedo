@@ -57,8 +57,15 @@ define(function () {
       return this._cards.filter((i) => i.name === item).length > 0;
     }
 
-    tile() {
+    get tile() {
       return this._suspect.tile;
+    }
+
+    updatePosition(tile) {
+      const oldTile = this._suspect.tile;
+      this._suspect.tile = tile;
+      tile.occupyWith(this._suspect);
+      oldTile.deoccupy();
     }
 
   }
