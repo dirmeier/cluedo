@@ -111,7 +111,7 @@ define(function (require) {
       return this._weapons;
     }
 
-    computePaths(pips, tile) {
+    computeNeighbors(pips, tile) {
       let stack = [tile];
       let neis = [];
       tile.distance = 0;
@@ -123,9 +123,9 @@ define(function (require) {
       }
 
       while (stack.length) {
-        let node =  stack.shift();
+        let node = stack.shift();
         neis.push(node);
-        for (let nei of  Object.values(node.neighbors)) {
+        for (let nei of Object.values(node.neighbors)) {
           if (nei !== null &&
             !nei.occupied &&
             !nei.visited &&
@@ -133,11 +133,58 @@ define(function (require) {
             nei.distance = node.distance + 1;
             nei.visited = true;
             if (nei.distance <= pips)
-              stack.push(nei)
+              stack.push(nei);
           }
         }
       }
       return neis;
+    }
+
+    computePath(oldTile, tile) {
+      this._dijkstra(oldTile, tile);
+      let path = [];
+      let u = tile;
+      while (u !== oldTile) {
+        path.push(u);
+        u = u.previous;
+      }
+      return path.reverse();
+    }
+
+    _dijkstra(oldTile, tile) {
+      const dist = [];
+      const prev = {};
+      let Q = [];
+      for (let i = 0; i < this._adjacenyMatrix.length; i++) {
+        for (let j = 0; j < this._adjacenyMatrix[i].length; j++) {
+          dist.push(this._adjacenyMatrix[i][j]);
+          this._adjacenyMatrix[i][j].distance = 10000;
+          this._adjacenyMatrix[i][j].previous = null;
+          Q.push(this._adjacenyMatrix[i][j]);
+        }
+      }
+      oldTile.distance = 0;
+
+      while (Q.length) {
+        const u = Q.reduce(function (i, j) {
+          return i.distance < j.distance ? i : j;
+        });
+        Q = Q.filter(function (i) {return u.x !== i.x || i.y !== u.y;});
+
+        if (u === tile) {
+          return {"d": dist, "p": prev};
+        }
+
+        for (let v of Object.values(u.neighbors)) {
+          if (v !== null && !v.occupied && u.canReach(v)) {
+            const alt = u.distance + 1;
+            if (alt < v.distance) {
+              v.distance = alt;
+              v.previous = u;
+            }
+          }
+        }
+      }
     }
 
     _getPlaces() {

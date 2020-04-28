@@ -49,8 +49,13 @@ define(function (require) {
       return this._game.board;
     }
 
-    computePaths(pips) {
-      return this._game.computePaths(pips, this.currentPlayer.suspect.tile);
+    computeNeighbors(distance) {
+      return this._game.computeNeighbors(distance,
+        this.currentPlayer.suspect.tile);
+    }
+
+    computePath(oldTile, tile) {
+      return this._game.computePath(oldTile, tile);
     }
 
     nextPlayer() {

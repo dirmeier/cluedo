@@ -22,6 +22,15 @@ define(function () {
       this._neighbors = {up: null, down: null, left: null, right: null};
       this._distance = 0;
       this._visited = false;
+      this._previous = null
+    }
+
+    get previous() {
+      return this._previous;
+    }
+
+    set previous(p) {
+      this._previous = p;
     }
 
     get visited() {

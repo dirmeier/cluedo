@@ -16,13 +16,15 @@ define(function () {
       this._view.bindStay(this.stay);
       this._view.bindMove(this.move);
 
+      this._isMove = false;
       this._run();
     }
 
     castDie = () => {
+      this._isMove = true;
       const pips = this._model.castDie();
       this._view.hasCast(pips);
-      const tiles = this._model.computePaths(pips);
+      const tiles = this._model.computeNeighbors(pips);
       this._view.drawTiles(tiles);
     };
 
@@ -31,10 +33,15 @@ define(function () {
     };
 
     move = (row, col) => {
-      const tile = this._adj[row][col];
+      if (!this._isMove)
+        return;
       const oldTile = this._model.currentPlayer.tile;
-      this._view.makeMove(tile, this._model.currentPlayer, oldTile);
+      const tile = this._adj[row][col];
+      const path = this._model.computePath(oldTile, tile);
+
+      this._view.makeMove(tile, this._model.currentPlayer, oldTile, path);
       this._model.currentPlayer.updatePosition(tile);
+      this._isMove = false;
     };
 
     _printSetup = () => {

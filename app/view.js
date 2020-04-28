@@ -153,11 +153,27 @@ define(function (require) {
         .remove();
     }
 
-    makeMove(tile, player, oldTile) {
-      this._drawPiece(tile, this._model.currentPlayer.suspect);
-      this._removePiece(oldTile);
-      for (let tile of this._paintedTiles)
-        this._paintTile(tile.x, tile.y, "lightgray");
+    _sleep(milliseconds) {
+      return new Promise(resolve => setTimeout(resolve, milliseconds));
+    }
+
+    async makeMove(tile, player, oldTile, path) {
+      for (let tile of this._paintedTiles) {
+        const ind = path.filter(
+          function (i) {return i.x === tile.x & i.y === tile.y;});
+        if (!ind.length) {
+          this._paintTile(tile.x, tile.y, "lightgray");
+        }
+      }
+      await this._sleep(500);
+      let lastTile = oldTile;
+      for (let mv of path) {
+        this._drawPiece(mv, this._model.currentPlayer.suspect);
+        this._removePiece(lastTile);
+        lastTile = mv;
+        this._paintTile(lastTile.x, lastTile.y, "lightgray");
+        await this._sleep(1000);
+      }
     }
 
     _initLegend() {

@@ -56,8 +56,12 @@ define(function (require) {
         cs.weapon.name === weapon;
     }
 
-    computePaths(pips, tile) {
-      return this._board.computePaths(pips, tile);
+    computeNeighbors(pips, tile) {
+      return this._board.computeNeighbors(pips, tile);
+    }
+
+    computePath(oldTile, tile) {
+      return  this._board.computePath(oldTile, tile);
     }
 
   }
