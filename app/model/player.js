@@ -10,6 +10,10 @@ define(function () {
       this._cards = [];
     }
 
+    get suspect() {
+      return this._suspect;
+    }
+
     addCard(card) {
       this._cards.push(card);
     }

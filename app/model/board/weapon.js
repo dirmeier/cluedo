@@ -4,16 +4,8 @@ define(function (require) {
   const Item = require("model/board/item");
 
   class Weapon extends Item.Item {
-    constructor(name, color) {
-      super(name, color);
-    }
-
-    get c() {
-      return "w";
-    }
-
-    get style() {
-      return "rect";
+    constructor(name, color, path) {
+      super(name, color, path);
     }
   }
 

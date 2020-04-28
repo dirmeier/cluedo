@@ -33,7 +33,7 @@ h1, h2 {
     text-align: center;
 }
 
-h3, ul {
+h4, ul {
     text-align: left;
 }
 
@@ -59,4 +59,9 @@ polyline {
     margin: 15px;
     vertical-align: top;
     text-align: center;
+}
+
+p {
+    width: 200px;
+    text-align: left;
 }

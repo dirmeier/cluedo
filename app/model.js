@@ -13,10 +13,15 @@ define(function (require) {
       this._dealCards();
     }
 
-    _initPlayers(nPlayers) {
+    dice() {
+      alert('asdas');
+      return this._game.dice;
+    }
+
+      _initPlayers(nPlayers) {
       let players = [];
       for (let i = 0; i < nPlayers; i++) {
-        players.push(new Player(i));
+        players.push(new Player(i, this._game.board.suspects[i]));
         if (i > 0) {
           players[i - 1].next = players[i];
           players[i].prev = players[i - 1];

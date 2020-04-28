@@ -1,6 +1,5 @@
 "use strict";
 
-
 define(function (require) {
   const Model = require("model");
   const View = require("view");
@@ -12,6 +11,14 @@ define(function (require) {
       this._model = new Model(nPlayers);
       this._view = new View(this._model);
       this._run();
+    }
+
+    castDie() {
+      alert(this);
+    }
+
+    stay() {
+      alert("asdasd");
     }
 
     _printSetup() {
@@ -122,24 +129,24 @@ define(function (require) {
     _run() {
       this._checkExit();
       this._printSetup();
-      // console.log(`\nPlayer ${this._model.currentPlayer.name}'s turn`);
-
-    //   inquirer.prompt({
-    //     type: 'confirm',
-    //     name: 'cast',
-    //     message: 'Do you want to cast the dies or stay in the room?',
-    //     default: false
-    //   }).then(answers => {
-    //     if (answers.cast) {
-    //
-    //     }
-    //     if (this._model.currentPlayer.position.type === "place") {
-    //       inquirer.prompt(this._suggestion()).then(answers => {
-    //         this._makeSuggestion(answers);
-    //       });
-    //     }
-    //     this._askToSolve();
-    //   });
+      this._view.printPlayer();
+      this._view.askToRoll(this.castDie, this.stay);
+      //   inquirer.prompt({
+      //     type: 'confirm',
+      //     name: 'cast',
+      //     message: 'Do you want to cast the dies or stay in the room?',
+      //     default: false
+      //   }).then(answers => {
+      //     if (answers.cast) {
+      //
+      //     }
+      //     if (this._model.currentPlayer.position.type === "place") {
+      //       inquirer.prompt(this._suggestion()).then(answers => {
+      //         this._makeSuggestion(answers);
+      //       });
+      //     }
+      //     this._askToSolve();
+      //   });
     }
   }
 

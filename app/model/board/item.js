@@ -3,11 +3,12 @@
 define(function () {
     return {
       Item: class Item {
-        constructor(name, color) {
+        constructor(name, color, path) {
           this._name = name;
           this._color = color;
           this._place = null;
           this._tile = null;
+          this._path = path;
         }
 
         get color() {
@@ -28,15 +29,13 @@ define(function () {
           return this._tile;
         }
 
-        get c() {
-          return "i";
-        }
-
         get clazz() {
           return this.constructor.name;
         }
 
-        get style(){};
+        get path() {
+          return this._path;
+        }
       }
     };
   }

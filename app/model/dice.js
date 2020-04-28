@@ -9,6 +9,7 @@ define(function (require) {
     }
 
     cast() {
+      alert('asdas');
       return utl.randomElement(this._die) +
         utl.randomElement(this._die);
     }

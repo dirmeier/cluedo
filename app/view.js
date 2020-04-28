@@ -61,7 +61,7 @@ define(function (require) {
       return svg.append("g");
     }
 
-    _rect(el,tile, row, col) {
+    _rect(el, tile, row, col) {
       return el
         .append("svg")
         .attr("id", "id_" + row + "_" + col)
@@ -72,49 +72,7 @@ define(function (require) {
         .attr("x", ((this._width) / this._adj[row].length) * col);
     }
 
-    _circle(el, row, col) {
-      const w = ((this._width / this._adj[row].length)) - 1;
-      return el
-        // .append("circle")
-        // .attr("cx", ((this._width) / this._adj[row].length) * col + w / 2)
-        // .attr("cy", ((this._height - 1) / (this._adj.length) - 1) / 2)
-        // .attr("r", 10)
-        // .attr("fill", "transparent")
-        // .attr("id", "s_id_" + row + "_" + col)
-        .append("svg:image")
-        .attr('x', ((this._width) / this._adj[row].length) * col + w / 2)
-        .attr('y', -12)
-        .attr('width', 20)
-        .attr('height', 24)
-        .attr("xlink:href", "app/view/alcibiades.jpg");
-    }
-
-    _smallRect(el, row, col) {
-      const w = ((this._width / this._adj[row].length)) - 1;
-      return el
-        .append("rect")
-        .attr("width", ((this._width - 1) / (this._adj[row].length) - 1) / 2)
-        .attr("height", ((this._height - 1) / (this._adj.length) - 1) / 2)
-        .attr("x", ((this._width) / this._adj[row].length) * col + w / 4)
-        .attr("y", ((this._height - 1) / (this._adj.length) - 1) / 4)
-        .attr("fill", "transparent")
-        .attr("id", "w_id_" + row + "_" + col);
-    }
-
-    _text(el, rect, row, col) {
-      const w = ((this._width / this._adj[row].length)) / 8;
-      return el
-        .append("text")
-        .text("(" + row + "," + col + ")")
-        .attr('fill', 'black')
-        .attr("x", parseFloat(rect.attr('x')) + w)
-        .attr("y", rect.attr('y') + 12)
-        .attr('font-size', '8')
-        .attr('fill', 'black');
-    }
-
     _path(el, rect, tile) {
-
       const x = parseFloat(rect.attr('x'));
       const w = parseFloat(rect.attr('width'));
       const h = parseFloat(rect.attr('height'));
@@ -160,49 +118,51 @@ define(function (require) {
         for (let j = 0; j < this._adj[i].length; j++) {
           const tile = this._adj[i][j];
           const g = this._g(svg, i, j);
-          const rect = this._rect(g,tile, i, j);
-          // const circle = this._circle(g, i, j);
-          // const smallrect = this._smallRect(g, i, j);
-          //this._text(g, rect, i, j);
+          const rect = this._rect(g, tile, i, j);
           this._path(g, rect, tile);
         }
       }
     }
 
     _initPieces() {
-      const ul = d3.select('#legend').append('ul')
+      this._drawPieces("Suspects", this._board.suspects);
+      this._drawPieces("Weapons", this._board.weapons);
+    }
+
+    _drawPieces(legend, arr) {
+      d3.select('#legend')
+        .append('h4')
+        .html(legend)
         .style("width", this._width + 10);
-      for (let piece of this._board.pieces) {
+      const ul = d3.select('#legend')
+        .append('ul')
+        .style("width", this._width + 10);
+      for (let piece of arr) {
         const tile = piece.tile;
         d3.select("#id_" + tile.x + "_" + tile.y)
-          // .style("fill", piece.color);
           .append("svg:image")
           .attr('x', ((this._width) / this._adj[tile.x].length) * tile.y)
-          // .attr('y', -12)
-          .attr('width', 20)
-          .attr('height', 24)
-          .attr("xlink:href", "app/view/alcibiades.jpg");
+          .attr("width", (this._width - 1) / (this._adj[tile.x].length) - 1)
+          .attr("height", (this._height - 1) / (this._adj.length) - 1)
+          .attr("xlink:href", piece.path);
         ul.append("li")
           .append("span")
           .text(piece.clazz + " " + piece.name + " ")
           .append("svg")
-          .attr("height", 15)
-          .attr("width", 15)
-          .style("vertical-align", "bottom")
-          .append(piece.style)
-          .attr("height", 15)
-          .attr("width", 15)
-          .attr("cx", 6)
-          .attr("cy", 7)
-          .attr("r", 6)
-          .attr('fill', piece.color);
+          .attr("width", (this._width - 1) / (this._adj[tile.x].length) - 1)
+          .attr("height", (this._height - 1) / (this._adj.length) - 1)
+          .append("svg:image")
+          .attr("width", (this._width - 1) / (this._adj[tile.x].length) - 1)
+          .attr("height", (this._height - 1) / (this._adj.length) - 1)
+          .attr("xlink:href", piece.path);
       }
     }
 
     _initLegend() {
       const legend = d3.select("#legend")
+        .append("h3")
         .style("width", this._width + 10)
-        .html("<h3>Legend</h3>");
+        .html("Legend");
     }
 
     _initHelp() {
@@ -213,11 +173,49 @@ define(function (require) {
 
     drawExit() {
       d3.select("#help")
-        .selectAll()
+        .selectAll("div")
         .remove();
       d3.select("#help")
         .append("div")
         .text("You all lost. Good job.");
+    }
+
+    _removeHelpDivs() {
+      d3.select("#help")
+        .selectAll("div")
+        .remove();
+    }
+
+    printPlayer() {
+      this._removeHelpDivs();
+      d3.select("#help")
+        .append("div")
+        .append("p")
+        .append("u")
+        .text(`\n${this._model.currentPlayer.suspect.name}'s turn`);
+    }
+
+    askToRoll(cast, stay) {
+      const remove = this._removeHelpDivs;
+      d3.select("#help")
+        .append("p")
+        .text(`Do you want to cast the dice or stay in the room?`);
+      const div = d3.select("#help").append("div");
+      div.append("input")
+        .attr("type", "submit")
+        .attr("value", "Cast die")
+        .on("click", function () {
+          // remove();
+          cast();
+        });
+      div.append("input")
+        .attr("type", "submit")
+        .attr("id", "stay_in_room")
+        .attr("value", "Stay")
+        .on("click", function () {
+          // remove();
+          stay();
+        });
     }
   }
 

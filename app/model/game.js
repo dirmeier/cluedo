@@ -12,20 +12,20 @@ define(function (require) {
       this._cards = new Cards();
     }
 
+    get dice() {
+      return this._dice;
+    }
+
+    get cards() {
+      return this._cards;
+    }
+
+    get board() {
+      return this._board;
+    }
+
     murderCase() {
       return this._cards.murderCase();
-    }
-
-    suspects() {
-      return this._cards.suspects();
-    }
-
-    weapons() {
-      return this._cards.weapons();
-    }
-
-    places() {
-      return this._cards.places();
     }
 
     get availableCards() {
@@ -38,14 +38,6 @@ define(function (require) {
 
     randomAvailableCard() {
       return this._cards.randomAvailableCard();
-    }
-
-    castDie() {
-      return this._dice.cast();
-    }
-
-    get board() {
-      return this._board;
     }
 
     print() {
