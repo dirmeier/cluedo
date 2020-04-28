@@ -33,8 +33,16 @@ h1, h2 {
     text-align: center;
 }
 
-h4, ul {
+h4, ul, h5, h6 {
     text-align: left;
+    padding: 0px;
+}
+
+ul{
+    margin-top: 0;
+    padding-left: 10px;
+    padding-top: 0;
+    padding-bottom: 0;
 }
 
 #board, #help {
@@ -64,4 +72,8 @@ polyline {
 p {
     width: 200px;
     text-align: left;
+}
+
+li, p {
+    font-size: 12px;
 }

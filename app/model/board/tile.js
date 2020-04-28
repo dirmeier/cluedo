@@ -3,9 +3,9 @@
 define(function () {
 
   class Tile {
-    constructor(name, room, x, y, gate) {
+    constructor(name, place, x, y, gate) {
       this._name = name;
-      this._room = room;
+      this._place = place;
       this._x = x;
       this._y = y;
       this._direction = {
@@ -23,6 +23,10 @@ define(function () {
       this._distance = 0;
       this._visited = false;
       this._previous = null
+    }
+
+    get place() {
+      return this._place;
     }
 
     get previous() {

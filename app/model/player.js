@@ -10,6 +10,10 @@ define(function () {
       this._cards = [];
     }
 
+    get isInPlace() {
+        return this._suspect.tile.place.type === "place";
+    }
+
     get suspect() {
       return this._suspect;
     }

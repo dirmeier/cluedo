@@ -29,7 +29,7 @@ define(function () {
     };
 
     stay = () => {
-      console.log("asdasd");
+
     };
 
     move = (row, col) => {
@@ -42,7 +42,14 @@ define(function () {
       this._view.makeMove(tile, this._model.currentPlayer, oldTile, path);
       this._model.currentPlayer.updatePosition(tile);
       this._isMove = false;
+
+      if (this._model.currentPlayer.isInPlace)
+          this._view.ask();
     };
+
+    _ask(){
+
+    }
 
     _printSetup = () => {
       for (let i = 0; i < this._model.players.length; i++)

@@ -132,10 +132,8 @@ define(function (require) {
     }
 
     _drawPieces(piecesHeader, arr) {
-      for (let piece of arr) {
-        const tile = piece.tile;
-        this._drawPiece(tile, piece);
-      }
+      for (let piece of arr)
+        this._drawPiece(piece.tile, piece);
     }
 
     _drawPiece(tile, piece) {
@@ -172,7 +170,7 @@ define(function (require) {
         this._removePiece(lastTile);
         lastTile = mv;
         this._paintTile(lastTile.x, lastTile.y, "lightgray");
-        await this._sleep(1000);
+        await this._sleep(500);
       }
     }
 
@@ -187,7 +185,7 @@ define(function (require) {
 
     _initLegendForPieces(piecesHeader, arr) {
       d3.select('#legend')
-        .append('h4')
+        .append('h5')
         .html(piecesHeader)
         .style("width", this._width + 10);
 
@@ -214,12 +212,13 @@ define(function (require) {
       const help = d3.select("#help").style("width", this._width + 10);
       help.append("h3").html("Help");
 
-      help.append("div")
-        .attr("id", "player")
+      let div = help.append("div");
+      div.attr("id", "player")
         .append("p")
         .append("u");
+      div.append("ul");
 
-      let div = help.append("div").attr("id", "cast_or_stay");
+      div = help.append("div").attr("id", "cast_or_stay");
       div.append("p")
         .attr("id", "cast_or_stay_text")
         .text("Do you want to cast a die or stay in the room?");
@@ -235,6 +234,31 @@ define(function (require) {
         .attr("id", "stay_in_room")
         .attr("type", "submit")
         .attr("value", "Stay");
+
+      div = help.append("div")
+        .attr("id", "ask_a_question")
+        .style("display", "none");
+      div.append("p")
+        .attr("id", "ask_a_question_text")
+        .text("Do you want to accuse somebody or make a suggestion?");
+      div = div
+        .append("div")
+        .attr("id", "accusation_buttons");
+      div.append("input")
+        .attr("id", "accuse_button")
+        .attr("type", "submit")
+        .attr("value", "Accuse");
+      div.append("input")
+        .attr("id", "suggest_button")
+        .attr("type", "submit")
+        .attr("value", "Suggest");
+
+      div = help.append("div")
+        .attr("id", "finish_move")
+        .append("input")
+        .attr("id", "finish_move_button")
+        .attr("type", "submit")
+        .attr("value", "Finish move");
     }
 
     printPlayer() {
@@ -242,6 +266,18 @@ define(function (require) {
         .select("p")
         .select("u")
         .text(`\n${this._model.currentPlayer.suspect.name}'s turn`);
+      d3.select("#player")
+        .select("ul")
+        .selectAll("li")
+        .remove();
+      const ul = d3.select("#player")
+        .select("ul");
+      for (let card of this._model.currentPlayer.cards) {
+        ul.append("li")
+          .append("span")
+          .text(card.name);
+      }
+
     }
 
     drawExit() {
@@ -254,7 +290,7 @@ define(function (require) {
     }
 
     hasCast(pips) {
-      d3.select("#cast_or_stay_text").text(`You cast: ${pips}`);
+      d3.select("#cast_or_stay_text").text(`You cast: ${pips}. Make a move by clicking a field.`);
       d3.select("#cast_or_stay_buttons").style("display", "none");
     }
 
@@ -264,6 +300,12 @@ define(function (require) {
       for (let tile of tiles)
         this._paintTile(tile.x, tile.y, "#C79999");
       this._paintedTiles = tiles;
+
+    }
+
+    ask() {
+      d3.select("#cast_or_stay").style("display", "none");
+      d3.select("#ask_a_question").style("display", "inline");
     }
 
     _paintTile(row, col, color) {

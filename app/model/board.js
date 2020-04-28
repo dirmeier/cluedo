@@ -152,12 +152,9 @@ define(function (require) {
     }
 
     _dijkstra(oldTile, tile) {
-      const dist = [];
-      const prev = {};
       let Q = [];
       for (let i = 0; i < this._adjacenyMatrix.length; i++) {
         for (let j = 0; j < this._adjacenyMatrix[i].length; j++) {
-          dist.push(this._adjacenyMatrix[i][j]);
           this._adjacenyMatrix[i][j].distance = 10000;
           this._adjacenyMatrix[i][j].previous = null;
           Q.push(this._adjacenyMatrix[i][j]);
@@ -172,7 +169,7 @@ define(function (require) {
         Q = Q.filter(function (i) {return u.x !== i.x || i.y !== u.y;});
 
         if (u === tile) {
-          return {"d": dist, "p": prev};
+          return
         }
 
         for (let v of Object.values(u.neighbors)) {
