@@ -62,10 +62,7 @@ define(function () {
     }
 
     updatePosition(tile) {
-      const oldTile = this._suspect.tile;
-      this._suspect.tile = tile;
-      tile.occupyWith(this._suspect);
-      oldTile.deoccupy();
+      this._suspect.putOn(tile);
     }
 
   }

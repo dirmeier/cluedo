@@ -86,8 +86,7 @@ define(function (require) {
       places = utl.randomElements(places, this._suspects.length);
       for (let i = 0; i < this._suspects.length; i++) {
         const tile = this._getFreeTile(places[i]);
-        this._suspects[i].position(places[i], tile);
-        tile.occupyWith(this._suspects[i]);
+        this._suspects[i].putOn(tile);
       }
     }
 
@@ -96,8 +95,7 @@ define(function (require) {
       places = utl.randomElements(places, this._weapons.length);
       for (let i = 0; i < this._weapons.length; i++) {
         const tile = this._getFreeTile(places[i]);
-        this._weapons[i].position(places[i], tile);
-        tile.occupyWith(this._weapons[i]);
+        this._weapons[i].putOn(tile);
       }
     }
 
@@ -141,7 +139,6 @@ define(function (require) {
       }
       return neis;
     }
-
 
     _getPlaces() {
       return Object.values(this._places)

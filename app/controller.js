@@ -33,9 +33,8 @@ define(function () {
     move = (row, col) => {
       const tile = this._adj[row][col];
       const oldTile = this._model.currentPlayer.tile;
-      this._view.drawPiece(tile, this._model.currentPlayer.suspect);
+      this._view.makeMove(tile, this._model.currentPlayer, oldTile);
       this._model.currentPlayer.updatePosition(tile);
-      this._view.removePiece(oldTile);
     };
 
     _printSetup = () => {

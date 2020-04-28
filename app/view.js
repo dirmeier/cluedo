@@ -134,11 +134,11 @@ define(function (require) {
     _drawPieces(piecesHeader, arr) {
       for (let piece of arr) {
         const tile = piece.tile;
-        this.drawPiece(tile, piece);
+        this._drawPiece(tile, piece);
       }
     }
 
-    drawPiece(tile, piece) {
+    _drawPiece(tile, piece) {
       d3.select("#id_" + tile.x + "_" + tile.y)
         .append("svg:image")
         .attr('x', ((this._width) / this._adj[tile.x].length) * tile.y)
@@ -147,11 +147,17 @@ define(function (require) {
         .attr("xlink:href", piece.path);
     }
 
-    removePiece(tile) {
-      alert(tile);
+    _removePiece(tile) {
       d3.select("#id_" + tile.x + "_" + tile.y)
         .selectAll("image")
         .remove();
+    }
+
+    makeMove(tile, player, oldTile) {
+      this._drawPiece(tile, this._model.currentPlayer.suspect);
+      this._removePiece(oldTile);
+      for (let tile of this._paintedTiles)
+        this._paintTile(tile.x, tile.y, "lightgray");
     }
 
     _initLegend() {
@@ -241,6 +247,7 @@ define(function (require) {
         this._paintTile(tile.x, tile.y, "lightgray");
       for (let tile of tiles)
         this._paintTile(tile.x, tile.y, "#C79999");
+      this._paintedTiles = tiles;
     }
 
     _paintTile(row, col, color) {

@@ -6,7 +6,6 @@ define(function () {
         constructor(name, color, path) {
           this._name = name;
           this._color = color;
-          this._place = null;
           this._tile = null;
           this._path = path;
         }
@@ -19,10 +18,11 @@ define(function () {
           return this._name;
         }
 
-        position(place, tile) {
-          this._place = place;
+        putOn(tile) {
+          if (this._tile !== null)
+            this._tile.deoccupy();
           this._tile = tile;
-          this._tile.occupied = true;
+          this._tile.occupyWith(this);
         }
 
         set tile(tile) {
