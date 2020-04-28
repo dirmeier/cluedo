@@ -12,21 +12,21 @@ define(function (require) {
   const legend = require("model/board/board_legend");
 
   const suspects = [
-    new Suspect("Plato", "red"),
-    new Suspect("Critias", "green"),
-    new Suspect("Alcibiades", "yellow"),
-    new Suspect("Heraclitus", "purple"),
-    new Suspect("Charmides", "blue"),
-    new Suspect("Lysander", "orange")
+    new Suspect("Plato", "red", "app/view/plato.jpeg"),
+    new Suspect("Critias", "green", "app/view/critias.jpeg"),
+    new Suspect("Alcibiades", "yellow", "app/view/alcibiades.jpeg"),
+    new Suspect("Heraclitus", "purple", "app/view/heraclitus.jpeg"),
+    new Suspect("Charmides", "blue", "app/view/charmides.jpeg"),
+    new Suspect("Lysander", "orange", "app/view/lysander.jpeg")
   ].sort();
 
   const weapons = [
-    new Weapon("Cup of poison", "green"),
-    new Weapon("Dagger", "purple"),
-    new Weapon("Treachery", "red"),
-    new Weapon("Sickle", "black"),
-    new Weapon("Rope", "brown"),
-    new Weapon("Bow", "yellow")
+    new Weapon("Cup of poison", "green", "app/view/poison.jpeg"),
+    new Weapon("Dagger", "purple", "app/view/dagger.png"),
+    new Weapon("Treachery", "red", "app/view/treachery.png"),
+    new Weapon("Sickle", "black", "app/view/sickle.jpeg"),
+    new Weapon("Rope", "brown", "app/view/rope.jpeg"),
+    new Weapon("Bow", "yellow", "app/view/bow.png")
   ].sort();
 
   class Board {
