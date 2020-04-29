@@ -85,17 +85,21 @@ define(function (require) {
       let places = this._getPlaces();
       places = utl.randomElements(places, this._suspects.length);
       for (let i = 0; i < this._suspects.length; i++) {
-        const tile = this._getFreeTile(places[i]);
-        this._suspects[i].putOn(tile);
+        this.putOnRandomTile(this._suspects[i], places[i]);
       }
+    }
+
+    putOnRandomTile(piece, place) {
+      const tile = this.getFreeTile(place);
+      piece.putOn(tile);
+      return tile;
     }
 
     _distributeWeaponsToRooms() {
       let places = this._getPlaces();
       places = utl.randomElements(places, this._weapons.length);
       for (let i = 0; i < this._weapons.length; i++) {
-        const tile = this._getFreeTile(places[i]);
-        this._weapons[i].putOn(tile);
+        this.putOnRandomTile(this._weapons[i], places[i]);
       }
     }
 
@@ -169,7 +173,7 @@ define(function (require) {
         Q = Q.filter(function (i) {return u.x !== i.x || i.y !== u.y;});
 
         if (u === tile) {
-          return
+          return;
         }
 
         for (let v of Object.values(u.neighbors)) {
@@ -189,13 +193,24 @@ define(function (require) {
         .filter((v) => v.type === "place");
     }
 
-    _getFreeTile(place) {
+    getFreeTile(place) {
       const tls = utl.shuffle(place.tiles);
       for (let tl of tls) {
         if (!tl.occupied) return tl;
       }
     }
 
+    movePiece(piece, place) {
+      return this.putOnRandomTile(piece, place);
+    }
+
+    getPiece(name) {
+      for (let piece of this.pieces) {
+        if (piece.name === name)
+          return piece;
+      }
+      return null;
+    }
   }
 
   return Board;

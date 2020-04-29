@@ -106,6 +106,9 @@ define(function (require) {
 
       this._dealCards();
     }
+
+
+
   }
 
   return Model;

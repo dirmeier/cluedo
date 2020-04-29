@@ -10,7 +10,6 @@ define(function (require) {
       this._model = model;
       this._board = this._model.board;
       this._adj = this._board.adjacency;
-      this._players = this._model.players;
 
       this._buttonsId = "buttons";
       this._infoText = "info_text";
@@ -40,6 +39,7 @@ define(function (require) {
       this._initBoard();
       this._initLegend();
       this._initHelp();
+      this._printPlayer();
 
       this._paintedTiles = [];
     }
@@ -182,7 +182,7 @@ define(function (require) {
       const legend = d3.select("#legend")
         .append("h3")
         .html("Legend");
-      this._initLegendForPieces("Suspects", this._board.suspects);
+      this._initLegendForPieces("Players", this._board.suspects);
       this._initLegendForPieces("Weapons", this._board.weapons);
       this._initButtonDescription();
     }
@@ -222,7 +222,7 @@ define(function (require) {
         "Cast die: throw two dice and move your figure on the board",
         "Accuse: name a suspect/place/weapon and possibly end the game",
         "Suggest: ask your co-players for a suspect/place/weapon card",
-        "Finish move: finish move and start next player's turn"
+        "Next player: finish move and start next player's turn"
       ];
 
       ul.selectAll("li")
@@ -230,16 +230,15 @@ define(function (require) {
         .enter()
         .append("li")
         .text(function (d) {return d;});
-
     }
 
     _initHelp() {
-      const help = d3.select("#help").style("width", this._width + 10);
+      const help = d3.select("#help")
+        .style("width", this._width + 10);
       help.append("h3").html("Help");
 
       let div = help.append("div");
-      div
-        .attr("id", "player")
+      div.attr("id", "player")
         .append("p")
         .append("u");
       div.append("input")
@@ -251,11 +250,15 @@ define(function (require) {
         .attr("id", this._playerCardsList)
         .style("display", "none");
 
-      div = help.append("div").attr("id", "info");
-      div.append("p").attr("id", this._infoText);
+      div = help.append("div")
+        .attr("id", "info");
+      div
+        .append("p").attr("id", this._infoText);
       this._showInfo("You have the following options:");
 
-      div = div.append("div").attr("id", this._buttonsId);
+      div = div
+        .append("div")
+        .attr("id", this._buttonsId);
 
       div.append("div")
         .append("input")
@@ -279,7 +282,7 @@ define(function (require) {
         .append("input")
         .attr("id", this._finishMoveButtonId)
         .attr("type", "submit")
-        .attr("value", "Finish move");
+        .attr("value", "Next player");
 
       d3.select("#info")
         .append("div")
@@ -338,7 +341,7 @@ define(function (require) {
         .text(function (d) {return d.name; });
     }
 
-    printPlayer() {
+    _printPlayer() {
       d3.select("#player")
         .select("p")
         .select("u")
@@ -349,7 +352,7 @@ define(function (require) {
         .remove();
 
       const ul = d3.select("#" + this._playerCardsList);
-      for (let card of this._model.currentPlayer.cards) {
+      for (let card of this._model.currentPlayer.cards.sort()) {
         ul.append("li")
           .append("span")
           .text(card.name);
@@ -362,16 +365,11 @@ define(function (require) {
         .remove();
       d3.select("#help")
         .append("div")
-        .text("You all lost. Good job.");
+        .text("You all lost. Good job.\nReload to play again.");
     }
 
-    printCastMessage(pips) {
-      d3.select("#info")
-        .select("p")
-        .text(`You cast: ${pips}. Make a move by clicking a field.`);
-    }
-
-    drawTiles(tiles) {
+    drawTiles(tiles, pips) {
+      this._showInfo(`You cast: ${pips}. Make a move by clicking a field.`);
       for (let tile of this._paintedTiles)
         this._paintTile(tile.x, tile.y, "lightgray");
       for (let tile of tiles)
@@ -424,7 +422,6 @@ define(function (require) {
         this._showInline(this._suggestButtonId);
       this._showInline(this._accuseButtonId);
       this._showInline(this._finishMoveButtonId);
-      this._showInfo("You have the following options:");
     }
 
     _showInfo(text) {
@@ -481,6 +478,10 @@ define(function (require) {
       this._showInline(this._finishMoveButtonId);
     }
 
+    updatePiece(removePiece, newTile) {
+
+    }
+
     makeAccusation(isSolved) {
       this._hide(this._suspectsSelectDiv);
       this._hide(this._weaponsSelectDiv);
@@ -493,8 +494,17 @@ define(function (require) {
           " Restart the game by reloading the page.");
       else {
         this._showInfo("Boo! You are out!");
-        this._showInline()
+        this._showInline(this._finishMoveButtonId);
       }
+    }
+
+    nextPlayer() {
+      this._printPlayer();
+      this._showInfo("You have the following options:");
+      this._showInline(this._castButtonId);
+      this._showInline(this._suggestButtonId);
+      this._showInline(this._accuseButtonId);
+      this._showInline(this._finishMoveButtonId);
     }
 
     bindCast(handler) {
@@ -538,6 +548,10 @@ define(function (require) {
           handler(get(sl), get(wl), get(pl));
         }
       );
+    }
+
+    bindNextPlayer(handler) {
+      d3.select("#" + this._finishMoveButtonId).on("click", handler);
     }
 
   }

@@ -11,7 +11,6 @@ define(function () {
       this._adj = this._board.adjacency;
 
       this._view = view;
-      this._view.controller = this;
       this._view.bindShowCards(this.showCards);
       this._view.bindCast(this.castDie);
       this._view.bindMove(this.move);
@@ -19,9 +18,10 @@ define(function () {
       this._view.bindMakeSuggestion(this.makeSuggestion);
       this._view.bindAccuse(this.accuse);
       this._view.bindMakeAccusation(this.makeAccusation);
+      this._view.bindNextPlayer(this.nextPlayer);
 
       this._isMove = false;
-      this._run();
+      this._log();
     }
 
     showCards = () => {
@@ -31,9 +31,8 @@ define(function () {
     castDie = () => {
       this._isMove = true;
       const pips = this._model.castDie();
-      this._view.printCastMessage(pips);
       const tiles = this._model.computeNeighbors(pips);
-      this._view.drawTiles(tiles);
+      this._view.drawTiles(tiles, pips);
       this._view.hideButtons();
     };
 
@@ -58,7 +57,18 @@ define(function () {
     makeSuggestion = (suspect, weapon) => {
       let holds = this._model.ask(
         suspect, this._model.currentPlayer.tile.place.name, weapon);
-      this._view.showHolds(holds);
+
+      // const suspectPiece = this._model.board.getPiece(suspect);
+      // const weaponPiece = this._model.board.getPiece(weapon);
+
+      // const newSuspectTile = this._model.board.movePiece(
+      //   suspectPiece, this._model.currentPlayer.tile.place);
+      // const newWeaponTile = this._model.board.movePiece(
+      //   weaponPiece, this._model.currentPlayer.tile.place);
+
+      this._view.showHolds(holds, this._model.currentPlayer.tile.place);
+      // this._view.updatePiece(weaponPiece, newWeaponTile);
+      // this._view.updatePiece(suspectPiece, newSuspectTile);
     };
 
     accuse = () => {
@@ -70,12 +80,15 @@ define(function () {
       let isSolved = this._model.solve(
         suspect, place, weapon);
       this._view.makeAccusation(isSolved);
+      if (!isSolved)
+        this._model.removeCurrentPlayer();
+      this._checkExit();
     };
 
-    _printSetup = () => {
-      for (let i = 0; i < this._model.players.length; i++)
-        console.log(this._model.players[i].toString());
-      console.log(this._model.murderCase());
+    nextPlayer = () => {
+      this._model.nextPlayer();
+      this._view.nextPlayer();
+      this._log();
     };
 
     _checkExit = () => {
@@ -84,11 +97,12 @@ define(function () {
       }
     };
 
-    _run = () => {
-      this._checkExit();
-      this._printSetup();
-      this._view.printPlayer();
-    }
+    _log = () => {
+      console.log("------- new turn -------");
+      for (let i = 0; i < this._model.players.length; i++)
+        console.log(this._model.players[i].toString());
+      console.log(this._model.murderCase());
+    };
   }
 
   return Controller;
