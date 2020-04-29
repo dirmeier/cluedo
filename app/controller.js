@@ -12,14 +12,19 @@ define(function () {
 
       this._view = view;
       this._view.controller = this;
-      this._view.bindCast(this.castDie);
-      this._view.bindStay(this.stay);
-      this._view.bindMove(this.move);
       this._view.bindShowCards(this.showCards);
+      this._view.bindCast(this.castDie);
+      this._view.bindMove(this.move);
+      this._view.bindSuggest(this.suggest);
+      this._view.bindMakeSuggestion(this.makeSuggestion);
 
       this._isMove = false;
       this._run();
     }
+
+    showCards = () => {
+      this._view.showCards();
+    };
 
     castDie = () => {
       this._isMove = true;
@@ -28,14 +33,6 @@ define(function () {
       const tiles = this._model.computeNeighbors(pips);
       this._view.drawTiles(tiles);
       this._view.hideButtons();
-    };
-
-    stay = () => {
-
-    };
-
-    showCards = () => {
-      this._view.showCards();
     };
 
     move = (row, col) => {
@@ -50,9 +47,16 @@ define(function () {
       this._isMove = false;
     };
 
-    _ask(){
+    suggest = () => {
+      this._view.hideButtons();
+      this._view.showSuggestions();
+    };
 
-    }
+    makeSuggestion = (suspect, weapon) => {
+      let holds = this._model.ask(
+        suspect, this._model.currentPlayer.tile.place.name, weapon);
+      this._view.showHolds(holds);
+    };
 
     _printSetup = () => {
       for (let i = 0; i < this._model.players.length; i++)
@@ -60,64 +64,11 @@ define(function () {
       console.log(this._model.murderCase());
     };
 
-    _who() {
-      return {
-        type: 'checkbox',
-        name: 'murderer',
-        message: "Whodunnit?",
-        choices: this._model.suspects(),
-        validate: function (answer) {
-          if (answer.length !== 1) {
-            return 'You must choose exactly one suspect.';
-          }
-          return true;
-        }
-      };
-    }
-
-    _where() {
-      return {
-        type: 'checkbox',
-        name: 'place',
-        message: "Wheredunnit?",
-        choices: this._model.places(),
-        validate: function (answer) {
-          if (answer.length !== 1) {
-            return 'You must choose exactly one place.';
-          }
-          return true;
-        }
-      };
-    }
-
-    _what() {
-      return {
-        type: 'checkbox',
-        name: 'weapon',
-        message: "Withwhatdunnit?",
-        choices: this._model.weapons(),
-        validate: function (answer) {
-          if (answer.length !== 1) {
-            return 'You must choose exactly one weapon.';
-          }
-          return true;
-        }
-      };
-    }
-
-    _suggestion() {
-      return [this._who(), this._what()];
-    }
-
-    _accusation() {
-      return [this._who(), this._where(), this._what()];
-    }
-
-    _checkExit() {
+    _checkExit = () => {
       if (this._model.players.length === 0) {
         this._view.drawExit();
       }
-    }
+    };
 
     // _solve(answers) {
     //   const isSolved = this._model.solve(
@@ -134,15 +85,7 @@ define(function () {
     //   }
     // }
     //
-    // _makeSuggestion(answers) {
-    //   let holds = this._model.ask(
-    //     answers.murderer[0],
-    //     this._model.currentPlayer.position,
-    //     answers.weapon[0]);
-    //   console.log(holds);
-    //   this._model.nextPlayer();
-    //   this._run();
-    // }
+
     //
     // _askToSolve() {
     //   inquirer.prompt({

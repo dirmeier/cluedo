@@ -13,6 +13,10 @@ define(function (require) {
       this._dealCards();
     }
 
+    get cards() {
+      return this._game.cards;
+    }
+
     _initPlayers(nPlayers) {
       let players = [];
       for (let i = 0; i < nPlayers; i++) {
@@ -74,18 +78,6 @@ define(function (require) {
 
     murderCase() {
       return this._game.murderCase();
-    }
-
-    suspects() {
-      return this._game.suspects();
-    }
-
-    weapons() {
-      return this._game.weapons();
-    }
-
-    places() {
-      return this._game.places();
     }
 
     solve(murderer, place, weapon) {

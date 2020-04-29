@@ -20,6 +20,10 @@ define(function () {
     get tiles() {
       return this._tiles;
     }
+
+    get name(){
+      return this._name;
+  }
   }
 
   return Place;

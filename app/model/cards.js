@@ -10,22 +10,22 @@ define(function(require) {
   const victim = new Suspect("Socrates");
 
   const suspects = [
-    new Suspect("Plato"),
-    new Suspect("Critias"),
+    new Suspect("Charmides"),
     new Suspect("Alcibiades"),
     new Suspect("Heraclitus"),
-    new Suspect("Charmides"),
-    new Suspect("Lysander")
-  ].sort();
+    new Suspect("Critias"),
+    new Suspect("Lysander"),
+    new Suspect("Plato")
+  ];
 
   const weapons = [
+    new Weapon("Bow"),
     new Weapon("Cup of poison"),
-    new Weapon("Dagger"),
-    new Weapon("Treachery"),
     new Weapon("Sickle"),
+    new Weapon("Dagger"),
     new Weapon("Rope"),
-    new Weapon("Bow")
-  ].sort();
+    new Weapon("Treachery")
+  ];
 
   const places = [
     new Place("Agora"),
@@ -35,9 +35,9 @@ define(function(require) {
     new Place("Library"),
     new Place("Panthenon"),
     new Place("Sitting rock under a tree"),
-    new Place("Theater"),
-    new Place("Temple")
-  ].sort();
+    new Place("Temple"),
+    new Place("Theater")
+  ];
 
   class Cards {
     constructor() {
@@ -62,15 +62,15 @@ define(function(require) {
       };
     }
 
-    suspects() {
+    get suspects() {
       return suspects;
     }
 
-    weapons() {
+    get weapons() {
       return weapons;
     }
 
-    places() {
+    get places() {
       return places;
     }
 

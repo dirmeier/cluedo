@@ -13,12 +13,17 @@ define(function (require) {
       this._players = this._model.players;
 
       this._buttonsId = "buttons";
+      this._infoText = "info_text";
+      this._divId = "div_id";
       this._playerCardsList = "player_card_list";
       this._showCardsButton = "show_cards_button";
       this._castButtonId = "cast_die_button";
       this._accuseButtonId = "accuse_button";
       this._suggestButtonId = "suggest_button";
       this._finishMoveButtonId = "finish_move_button";
+      this._suspectsSelectList = "suspects_select_list";
+      this._weaponsSelectList = "weapons_select_list";
+      this._selectButtonId = "select_suggest_button";
 
       this._init();
       this._app = this._getApp();
@@ -235,8 +240,10 @@ define(function (require) {
       div.append("ul")
         .attr("id", this._playerCardsList)
         .style("display", "none");
+
       div = help.append("div").attr("id", "info");
-      div.append("p").text("You have the following options:");
+      div.append("p").attr("id", this._infoText);
+      this._showInfo("You have the following options:");
 
       div = div.append("div").attr("id", this._buttonsId);
 
@@ -263,6 +270,38 @@ define(function (require) {
         .attr("id", this._finishMoveButtonId)
         .attr("type", "submit")
         .attr("value", "Finish move");
+
+      d3.select("#info")
+        .append("div")
+        .attr("id", this._divId)
+        .style("text-align", "left")
+        .style("display", "none");
+
+      this._initSelectLists(
+        "Suspects", this._suspectsSelectList, this._model.cards.suspects);
+      this._initSelectLists(
+        "Weapons", this._weaponsSelectList, this._model.cards.weapons);
+
+      d3.select("#info")
+        .append("div")
+        .append("input")
+        .attr("id", this._selectButtonId)
+        .attr("type", "submit")
+        .attr("value", "Suggest")
+        .style("display", "none");
+    }
+
+    _initSelectLists(text, listID, cards) {
+      const div = d3.select("#" + this._divId).append("div");
+      div.append("label").attr("for", listID).text(text + ": ");
+      const select = div.append("select").attr("id", listID);
+
+      select
+        .selectAll("option")
+        .data(cards.sort())
+        .enter()
+        .append("option")
+        .text(function (d) {return d.name; });
     }
 
     printPlayer() {
@@ -281,7 +320,6 @@ define(function (require) {
           .append("span")
           .text(card.name);
       }
-
     }
 
     drawExit() {
@@ -322,8 +360,12 @@ define(function (require) {
       }
     }
 
-    _showButton(id) {
+    _showInline(id) {
       d3.select("#" + id).style("display", "inline");
+    }
+
+    _hide(id) {
+      d3.select("#" + id).style("display", "none");
     }
 
     async makeMove(tile, player, oldTile, path) {
@@ -345,30 +387,50 @@ define(function (require) {
       }
 
       if (this._model.currentPlayer.isInPlace)
-        this._showButton(this._suggestButtonId);
-      this._showButton(this._accuseButtonId);
-      this._showButton(this._finishMoveButtonId);
+        this._showInline(this._suggestButtonId);
+      this._showInline(this._accuseButtonId);
+      this._showInline(this._finishMoveButtonId);
+      this._showInfo("You have the following options:");
+    }
+
+    _showInfo(text) {
+      d3.select("#" + this._infoText).text(text);
     }
 
     showCards() {
-        const cardsButton = d3.select("#" + this._showCardsButton);
-        const list = d3.select("#" + this._playerCardsList);
-        if (list.style("display") === "none") {
-          list.style("display", "block");
-          cardsButton.attr("value", "Hide cards");
+      const cardsButton = d3.select("#" + this._showCardsButton);
+      const list = d3.select("#" + this._playerCardsList);
+      if (list.style("display") === "none") {
+        list.style("display", "block");
+        cardsButton.attr("value", "Hide cards");
+      } else {
+        list.style("display", "none");
+        cardsButton.attr("value", "Show cards");
+      }
+    }
+
+    showSuggestions() {
+      this._showInfo("Select a suspect and a weapon:");
+      d3.select("#" + this._divId).style("display", "block");
+      d3.select("#" + this._selectButtonId).style("display", "inline");
+    }
+
+    showHolds(holds) {
+      this._hide(this._divId);
+      this._hide(this._selectButtonId);
+      if (holds[0] !== null) {
+        let c = null;
+        for (let i = 1; i < holds.length; i++) {
+          if (holds[i] !== null) c = holds[i];
         }
-        else {
-          list.style("display", "none");
-          cardsButton.attr("value", "Show cards");
-        }
+        this._showInfo(
+          `${this._model.players[holds[0]].suspect.name} shows you card: ${c}`
+        );
+      }
     }
 
     bindCast(handler) {
       d3.select("#" + this._castButtonId).on("click", handler);
-    }
-
-    bindStay(handler) {
-      //d3.select("#stay_in_room").on("click", handler);
     }
 
     bindMove(handler) {
@@ -379,6 +441,27 @@ define(function (require) {
 
     bindShowCards(handler) {
       d3.select("#" + this._showCardsButton).on("click", handler);
+    }
+
+    bindSuggest(handler) {
+      d3.select("#" + this._suggestButtonId).on("click", handler);
+    }
+
+    bindMakeSuggestion(handler) {
+      const sl = this._suspectsSelectList;
+      const wl = this._weaponsSelectList;
+      d3.select("#" + this._selectButtonId).on("click", function () {
+          const suspect = d3
+            .select("#" + sl)
+            .select("option:checked")
+            .text();
+          const weapon = d3
+            .select("#" + wl)
+            .select("option:checked")
+            .text();
+          handler(suspect, weapon);
+        }
+      );
     }
   }
 

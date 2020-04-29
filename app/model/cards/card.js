@@ -10,10 +10,11 @@ define(function () {
     get name() {
       return this._name;
     }
+
   }
 
   Card.prototype.toString = function () {
-    return `[${this.constructor.name} ${this._name}]`;
+    return `[Card ${this._name}]`;
   };
 
   return Card;

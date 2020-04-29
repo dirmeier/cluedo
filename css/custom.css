@@ -14,7 +14,7 @@
     float: left;
     margin: 50px auto auto;
     min-height: 650px;
-    min-width: 200px;
+    min-width: 250px;
 }
 
 .row:after {
@@ -68,12 +68,12 @@ polyline {
     text-align: center;
 }
 
-p {
-    width: 200px;
+label,p {
+
     text-align: left;
 }
 
-li, p {
+li, p,label {
     font-size: 12px;
     width: 200px;
 }
