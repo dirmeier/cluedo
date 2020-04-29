@@ -1,6 +1,7 @@
 "use strict";
 
 define(function (require) {
+  const utl = require("util");
   const Game = require("model/game");
   const Player = require("model/player");
 
@@ -19,8 +20,10 @@ define(function (require) {
 
     _initPlayers(nPlayers) {
       let players = [];
+      const randomSuspects = utl.randomElements(
+        this._game.board.suspects, nPlayers);
       for (let i = 0; i < nPlayers; i++) {
-        players.push(new Player(i, this._game.board.suspects[i]));
+        players.push(new Player(i, randomSuspects[i]));
         if (i > 0) {
           players[i - 1].next = players[i];
           players[i].prev = players[i - 1];
@@ -106,8 +109,6 @@ define(function (require) {
 
       this._dealCards();
     }
-
-
 
   }
 

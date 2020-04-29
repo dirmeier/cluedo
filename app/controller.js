@@ -58,17 +58,19 @@ define(function () {
       let holds = this._model.ask(
         suspect, this._model.currentPlayer.tile.place.name, weapon);
 
-      // const suspectPiece = this._model.board.getPiece(suspect);
-      // const weaponPiece = this._model.board.getPiece(weapon);
+      const suspectPiece = this._model.board.getPiece(suspect);
+      const weaponPiece = this._model.board.getPiece(weapon);
+      const oldSuspectTile = suspectPiece.tile;
+      const oldWeaponTile = weaponPiece.tile;
 
-      // const newSuspectTile = this._model.board.movePiece(
-      //   suspectPiece, this._model.currentPlayer.tile.place);
-      // const newWeaponTile = this._model.board.movePiece(
-      //   weaponPiece, this._model.currentPlayer.tile.place);
+      const newSuspectTile = this._model.board.movePiece(
+        suspectPiece, this._model.currentPlayer.tile.place);
+      const newWeaponTile = this._model.board.movePiece(
+        weaponPiece, this._model.currentPlayer.tile.place);
 
       this._view.showHolds(holds, this._model.currentPlayer.tile.place);
-      // this._view.updatePiece(weaponPiece, newWeaponTile);
-      // this._view.updatePiece(suspectPiece, newSuspectTile);
+      this._view.updatePiece(oldWeaponTile, newWeaponTile);
+      this._view.updatePiece(oldSuspectTile, newSuspectTile);
     };
 
     accuse = () => {

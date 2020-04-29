@@ -34,7 +34,7 @@ define(function (require) {
       this._places = this._initPlaces();
       this._adjacenyMatrix = this._initBoard();
 
-      this._suspects = utl.randomElements(suspects, nSuspects).sort();
+      this._suspects = Array.from(suspects);
       this._weapons = Array.from(weapons);
 
       this._distributeSuspectsToRooms();

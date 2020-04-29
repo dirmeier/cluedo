@@ -182,8 +182,10 @@ define(function (require) {
       const legend = d3.select("#legend")
         .append("h3")
         .html("Legend");
-      this._initLegendForPieces("Players", this._board.suspects);
-      this._initLegendForPieces("Weapons", this._board.weapons);
+      this._initLegendForPieces("Players",
+        this._model.players.map(function (i) {return i.suspect;}));
+      this._initLegendForPieces("Suspects", this._board.suspects.sort());
+      this._initLegendForPieces("Weapons", this._board.weapons.sort());
       this._initButtonDescription();
     }
 
@@ -199,7 +201,7 @@ define(function (require) {
         const tile = piece.tile;
         ul.append("li")
           .append("span")
-          .text(piece.clazz + " " + piece.name + " ")
+          .text(piece.name + " ")
           .append("svg")
           .attr("width", (this._width - 1) / (this._adj[tile.x].length) - 1)
           .attr("height", (this._height - 1) / (this._adj.length) - 1)
@@ -365,7 +367,7 @@ define(function (require) {
         .remove();
       d3.select("#help")
         .append("div")
-        .text("You all lost. Good job.\nReload to play again.");
+        .text("You all lost. Good job");
     }
 
     drawTiles(tiles, pips) {
@@ -478,8 +480,9 @@ define(function (require) {
       this._showInline(this._finishMoveButtonId);
     }
 
-    updatePiece(removePiece, newTile) {
-
+    updatePiece(oldTile, newTile) {
+      this._drawPiece(newTile, newTile.occupant);
+      this._removePiece(oldTile);
     }
 
     makeAccusation(isSolved) {

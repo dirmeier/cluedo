@@ -73,7 +73,7 @@ define(function () {
 
   Player.prototype.toString = function () {
     const crds = this._cards.join("\n\t");
-    return `[Player ${this.name} \n\t${crds}\n]`;
+    return `[Player ${this._suspect.name} \n\t${crds}\n]`;
   };
 
   return Player;
