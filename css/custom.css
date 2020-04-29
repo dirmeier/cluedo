@@ -38,7 +38,7 @@ h4, ul, h5, h6 {
     padding: 0px;
 }
 
-ul{
+ul {
     padding-left: 10px;
     padding-top: 0;
     padding-bottom: 0;
@@ -68,16 +68,19 @@ polyline {
     text-align: center;
 }
 
-label,p {
-
+label, p {
     text-align: left;
 }
 
-li, p,label {
+li, p, label {
     font-size: 12px;
     width: 200px;
 }
 
 input {
     width: 175px;
+}
+
+select {
+    width: 150px;
 }

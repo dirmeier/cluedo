@@ -14,16 +14,26 @@ define(function (require) {
 
       this._buttonsId = "buttons";
       this._infoText = "info_text";
-      this._divId = "div_id";
+
       this._playerCardsList = "player_card_list";
       this._showCardsButton = "show_cards_button";
+
       this._castButtonId = "cast_die_button";
       this._accuseButtonId = "accuse_button";
       this._suggestButtonId = "suggest_button";
       this._finishMoveButtonId = "finish_move_button";
+
+      this._selectListsId = "card_list";
+
+      this._suspectsSelectDiv = "suspects_select_div";
       this._suspectsSelectList = "suspects_select_list";
+      this._weaponsSelectDiv = "weapons_select_div";
       this._weaponsSelectList = "weapons_select_list";
-      this._selectButtonId = "select_suggest_button";
+      this._placesSelectDiv = "places_select_div";
+      this._placeSelectList = "places_select_list";
+
+      this._selectSuggestButtonId = "select_suggest_button";
+      this._selectAccuseButtonId = "select_accuse_button";
 
       this._init();
       this._app = this._getApp();
@@ -255,15 +265,15 @@ define(function (require) {
 
       div.append("div")
         .append("input")
-        .attr("id", this._accuseButtonId)
-        .attr("type", "submit")
-        .attr("value", "Accuse");
-
-      div.append("div")
-        .append("input")
         .attr("id", this._suggestButtonId)
         .attr("type", "submit")
         .attr("value", "Suggest");
+
+      div.append("div")
+        .append("input")
+        .attr("id", this._accuseButtonId)
+        .attr("type", "submit")
+        .attr("value", "Accuse");
 
       div.append("div")
         .append("input")
@@ -273,28 +283,52 @@ define(function (require) {
 
       d3.select("#info")
         .append("div")
-        .attr("id", this._divId)
-        .style("text-align", "left")
-        .style("display", "none");
+        .attr("id", this._selectListsId)
+        .style("text-align", "left");
 
       this._initSelectLists(
-        "Suspects", this._suspectsSelectList, this._model.cards.suspects);
+        "Suspects: ",
+        this._suspectsSelectDiv,
+        this._suspectsSelectList,
+        this._model.cards.suspects);
       this._initSelectLists(
-        "Weapons", this._weaponsSelectList, this._model.cards.weapons);
+        "Weapons: ",
+        this._weaponsSelectDiv,
+        this._weaponsSelectList,
+        this._model.cards.weapons);
+      this._initSelectLists(
+        "Places:",
+        this._placesSelectDiv,
+        this._placeSelectList,
+        this._model.cards.places);
 
       d3.select("#info")
         .append("div")
         .append("input")
-        .attr("id", this._selectButtonId)
+        .attr("id", this._selectSuggestButtonId)
         .attr("type", "submit")
         .attr("value", "Suggest")
         .style("display", "none");
+
+      d3.select("#info")
+        .append("div")
+        .append("input")
+        .attr("id", this._selectAccuseButtonId)
+        .attr("type", "submit")
+        .attr("value", "Accuse")
+        .style("display", "none");
     }
 
-    _initSelectLists(text, listID, cards) {
-      const div = d3.select("#" + this._divId).append("div");
-      div.append("label").attr("for", listID).text(text + ": ");
-      const select = div.append("select").attr("id", listID);
+    _initSelectLists(text, divID, listID, cards) {
+      const div = d3
+        .select("#" + this._selectListsId)
+        .append("div")
+        .attr("id", divID)
+        .style("display", "none");
+
+      div.append("label").attr("for", listID).text(text);
+      const select = div
+        .append("select").attr("id", listID);
 
       select
         .selectAll("option")
@@ -397,6 +431,13 @@ define(function (require) {
       d3.select("#" + this._infoText).text(text);
     }
 
+    _getCheckedOption(id) {
+      return d3
+        .select("#" + id)
+        .select("option:checked")
+        .text();
+    }
+
     showCards() {
       const cardsButton = d3.select("#" + this._showCardsButton);
       const list = d3.select("#" + this._playerCardsList);
@@ -411,21 +452,48 @@ define(function (require) {
 
     showSuggestions() {
       this._showInfo("Select a suspect and a weapon:");
-      d3.select("#" + this._divId).style("display", "block");
-      d3.select("#" + this._selectButtonId).style("display", "inline");
+      d3.select("#" + this._suspectsSelectDiv).style("display", "block");
+      d3.select("#" + this._weaponsSelectDiv).style("display", "block");
+      d3.select("#" + this._selectSuggestButtonId).style("display", "inline");
+    }
+
+    showAccusations() {
+      this._showInfo("Select a suspect, weapon and place:");
+      d3.select("#" + this._suspectsSelectDiv).style("display", "block");
+      d3.select("#" + this._weaponsSelectDiv).style("display", "block");
+      d3.select("#" + this._placesSelectDiv).style("display", "block");
+      d3.select("#" + this._selectAccuseButtonId).style("display", "inline");
     }
 
     showHolds(holds) {
-      this._hide(this._divId);
-      this._hide(this._selectButtonId);
+      this._hide(this._suspectsSelectDiv);
+      this._hide(this._weaponsSelectDiv);
+      this._hide(this._selectSuggestButtonId);
+
       if (holds[0] !== null) {
-        let c = null;
-        for (let i = 1; i < holds.length; i++) {
-          if (holds[i] !== null) c = holds[i];
-        }
+        let c = holds.filter(function (i) {return i !== null;});
         this._showInfo(
-          `${this._model.players[holds[0]].suspect.name} shows you card: ${c}`
+          `${this._model.players[c[0]].suspect.name} shows you card:\n'${c[1]}'.
+          You have the following options:`
         );
+      }
+      this._showInline(this._accuseButtonId);
+      this._showInline(this._finishMoveButtonId);
+    }
+
+    makeAccusation(isSolved) {
+      this._hide(this._suspectsSelectDiv);
+      this._hide(this._weaponsSelectDiv);
+      this._hide(this._placesSelectDiv);
+      this._hide(this._selectAccuseButtonId);
+
+      if (isSolved)
+        this._showInfo("Congrats! You won!" +
+          " You saved the open society against its opponents." +
+          " Restart the game by reloading the page.");
+      else {
+        this._showInfo("Boo! You are out!");
+        this._showInline()
       }
     }
 
@@ -450,19 +518,28 @@ define(function (require) {
     bindMakeSuggestion(handler) {
       const sl = this._suspectsSelectList;
       const wl = this._weaponsSelectList;
-      d3.select("#" + this._selectButtonId).on("click", function () {
-          const suspect = d3
-            .select("#" + sl)
-            .select("option:checked")
-            .text();
-          const weapon = d3
-            .select("#" + wl)
-            .select("option:checked")
-            .text();
-          handler(suspect, weapon);
+      const get = this._getCheckedOption;
+      d3.select("#" + this._selectSuggestButtonId).on("click", function () {
+          handler(get(sl), get(wl));
         }
       );
     }
+
+    bindAccuse(handler) {
+      d3.select("#" + this._accuseButtonId).on("click", handler);
+    }
+
+    bindMakeAccusation(handler) {
+      const sl = this._suspectsSelectList;
+      const wl = this._weaponsSelectList;
+      const pl = this._placeSelectList;
+      const get = this._getCheckedOption;
+      d3.select("#" + this._selectAccuseButtonId).on("click", function () {
+          handler(get(sl), get(wl), get(pl));
+        }
+      );
+    }
+
   }
 
   return View;

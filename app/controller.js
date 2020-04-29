@@ -17,6 +17,8 @@ define(function () {
       this._view.bindMove(this.move);
       this._view.bindSuggest(this.suggest);
       this._view.bindMakeSuggestion(this.makeSuggestion);
+      this._view.bindAccuse(this.accuse);
+      this._view.bindMakeAccusation(this.makeAccusation);
 
       this._isMove = false;
       this._run();
@@ -38,6 +40,7 @@ define(function () {
     move = (row, col) => {
       if (!this._isMove)
         return;
+
       const oldTile = this._model.currentPlayer.tile;
       const tile = this._adj[row][col];
       const path = this._model.computePath(oldTile, tile);
@@ -58,6 +61,17 @@ define(function () {
       this._view.showHolds(holds);
     };
 
+    accuse = () => {
+      this._view.hideButtons();
+      this._view.showAccusations();
+    };
+
+    makeAccusation = (suspect, weapon, place) => {
+      let isSolved = this._model.solve(
+        suspect, place, weapon);
+      this._view.makeAccusation(isSolved);
+    };
+
     _printSetup = () => {
       for (let i = 0; i < this._model.players.length; i++)
         console.log(this._model.players[i].toString());
@@ -70,58 +84,10 @@ define(function () {
       }
     };
 
-    // _solve(answers) {
-    //   const isSolved = this._model.solve(
-    //     answers.murderer[0], answers.place[0], answers.weapon[0]
-    //   );
-    //   if (isSolved) {
-    //     console.log("Congrats! You won!");
-    //     process.exit(0);
-    //   } else {
-    //     console.log("Boo! You are out!");
-    //     this._model.removeCurrentPlayer();
-    //     this._model.nextPlayer();
-    //     this._run();
-    //   }
-    // }
-    //
-
-    //
-    // _askToSolve() {
-    //   inquirer.prompt({
-    //     type: 'confirm',
-    //     name: 'solve',
-    //     message: 'Do you want to solve?',
-    //     default: false
-    //   }).then(answers => {
-    //     if (answers.solve) {
-    //       inquirer.prompt(this._accusation()).then(answers => {
-    //         this._solve(answers);
-    //       });
-    //     }
-    //   });
-    // }
-
     _run = () => {
       this._checkExit();
       this._printSetup();
       this._view.printPlayer();
-      //   inquirer.prompt({
-      //     type: 'confirm',
-      //     name: 'cast',
-      //     message: 'Do you want to cast the dies or stay in the room?',
-      //     default: false
-      //   }).then(answers => {
-      //     if (answers.cast) {
-      //
-      //     }
-      //     if (this._model.currentPlayer.position.type === "place") {
-      //       inquirer.prompt(this._suggestion()).then(answers => {
-      //         this._makeSuggestion(answers);
-      //       });
-      //     }
-      //     this._askToSolve();
-      //   });
     }
   }
 
