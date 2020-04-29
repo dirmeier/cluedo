@@ -12,13 +12,23 @@ define(function (require) {
       this._adj = this._board.adjacency;
       this._players = this._model.players;
 
+      this._buttonsId = "buttons";
+      this._castButtonId = "cast_die_button";
+      this._accuseButtonId = "accuse_button";
+      this._suggestButtonId = "suggest_button";
+      this._finishMoveButtonId = "finish_move_button";
+
       this._init();
       this._app = this._getApp();
+      this._initBoard();
       this._initLegend();
       this._initHelp();
-      this._initBoard();
 
       this._paintedTiles = [];
+    }
+
+    _sleep(milliseconds) {
+      return new Promise(resolve => setTimeout(resolve, milliseconds));
     }
 
     _init() {
@@ -151,47 +161,22 @@ define(function (require) {
         .remove();
     }
 
-    _sleep(milliseconds) {
-      return new Promise(resolve => setTimeout(resolve, milliseconds));
-    }
-
-    async makeMove(tile, player, oldTile, path) {
-      for (let tile of this._paintedTiles) {
-        const ind = path.filter(
-          function (i) {return i.x === tile.x & i.y === tile.y;});
-        if (!ind.length) {
-          this._paintTile(tile.x, tile.y, "lightgray");
-        }
-      }
-      await this._sleep(500);
-      let lastTile = oldTile;
-      for (let mv of path) {
-        this._drawPiece(mv, this._model.currentPlayer.suspect);
-        this._removePiece(lastTile);
-        lastTile = mv;
-        this._paintTile(lastTile.x, lastTile.y, "lightgray");
-        await this._sleep(500);
-      }
-    }
-
     _initLegend() {
       const legend = d3.select("#legend")
         .append("h3")
-        .style("width", this._width + 10)
         .html("Legend");
       this._initLegendForPieces("Suspects", this._board.suspects);
       this._initLegendForPieces("Weapons", this._board.weapons);
+      this._initButtonDescription();
     }
 
     _initLegendForPieces(piecesHeader, arr) {
       d3.select('#legend')
         .append('h5')
-        .html(piecesHeader)
-        .style("width", this._width + 10);
+        .html(piecesHeader);
 
       const ul = d3.select('#legend')
-        .append('ul')
-        .style("width", this._width + 10);
+        .append('ul');
 
       for (let piece of arr) {
         const tile = piece.tile;
@@ -208,6 +193,29 @@ define(function (require) {
       }
     }
 
+    _initButtonDescription() {
+      d3.select('#legend')
+        .append('h5')
+        .html("Buttons");
+
+      const ul = d3.select('#legend')
+        .append('ul');
+
+      const els = [
+        "Cast die: throw two dice and move your figure on the board",
+        "Accuse: name a suspect/room/weapon and possibly end the game",
+        "Suggest: ask your co-players for a suspect/room/weapon card",
+        "Finish move: finish move and start next player's turn"
+      ];
+
+      ul.selectAll("li")
+        .data(els)
+        .enter()
+        .append("li")
+        .text(function (d) {return d;});
+
+    }
+
     _initHelp() {
       const help = d3.select("#help").style("width", this._width + 10);
       help.append("h3").html("Help");
@@ -218,45 +226,32 @@ define(function (require) {
         .append("u");
       div.append("ul");
 
-      div = help.append("div").attr("id", "cast_or_stay");
-      div.append("p")
-        .attr("id", "cast_or_stay_text")
-        .text("Do you want to cast a die or stay in the room?");
+      div = help.append("div").attr("id", "info");
+      div.append("p").text("You have the following options:");
 
-      div = div
-        .append("div")
-        .attr("id", "cast_or_stay_buttons");
-      div.append("input")
-        .attr("id", "cast_die")
+      div = div.append("div").attr("id", this._buttonsId);
+
+      div.append("div")
+        .append("input")
+        .attr("id", this._castButtonId)
         .attr("type", "submit")
         .attr("value", "Cast die");
-      div.append("input")
-        .attr("id", "stay_in_room")
-        .attr("type", "submit")
-        .attr("value", "Stay");
 
-      div = help.append("div")
-        .attr("id", "ask_a_question")
-        .style("display", "none");
-      div.append("p")
-        .attr("id", "ask_a_question_text")
-        .text("Do you want to accuse somebody or make a suggestion?");
-      div = div
-        .append("div")
-        .attr("id", "accusation_buttons");
-      div.append("input")
-        .attr("id", "accuse_button")
+      div.append("div")
+        .append("input")
+        .attr("id", this._accuseButtonId)
         .attr("type", "submit")
         .attr("value", "Accuse");
-      div.append("input")
-        .attr("id", "suggest_button")
+
+      div.append("div")
+        .append("input")
+        .attr("id", this._suggestButtonId)
         .attr("type", "submit")
         .attr("value", "Suggest");
 
-      div = help.append("div")
-        .attr("id", "finish_move")
+      div.append("div")
         .append("input")
-        .attr("id", "finish_move_button")
+        .attr("id", this._finishMoveButtonId)
         .attr("type", "submit")
         .attr("value", "Finish move");
     }
@@ -289,9 +284,10 @@ define(function (require) {
         .text("You all lost. Good job.");
     }
 
-    hasCast(pips) {
-      d3.select("#cast_or_stay_text").text(`You cast: ${pips}. Make a move by clicking a field.`);
-      d3.select("#cast_or_stay_buttons").style("display", "none");
+    printCastMessage(pips) {
+      d3.select("#info")
+        .select("p")
+        .text(`You cast: ${pips}. Make a move by clicking a field.`);
     }
 
     drawTiles(tiles) {
@@ -300,24 +296,69 @@ define(function (require) {
       for (let tile of tiles)
         this._paintTile(tile.x, tile.y, "#C79999");
       this._paintedTiles = tiles;
-
-    }
-
-    ask() {
-      d3.select("#cast_or_stay").style("display", "none");
-      d3.select("#ask_a_question").style("display", "inline");
     }
 
     _paintTile(row, col, color) {
       return d3.select("#id_r_" + row + "_" + col).style("fill", color);
     }
 
+    hideButtons() {
+      for (let el of [
+        this._castButtonId,
+        this._accuseButtonId,
+        this._suggestButtonId,
+        this._finishMoveButtonId
+      ]) {
+        d3.select("#" + el).style("display", "none");
+      }
+    }
+
+    _showButton(id) {
+      d3.select("#" + id).style("display", "inline");
+    }
+
+    showSuggestionButton() {
+      this._showButton(this._suggestButtonId);
+    }
+
+    showAccusationButton() {
+      this._showButton(this._accuseButtonId);
+    }
+
+    showFinishMoveButton() {
+      this._showButton(this._finishMoveButtonId);
+    }
+
+    async makeMove(tile, player, oldTile, path) {
+      for (let tile of this._paintedTiles) {
+        const ind = path.filter(
+          function (i) {return i.x === tile.x & i.y === tile.y;});
+        if (!ind.length) {
+          this._paintTile(tile.x, tile.y, "lightgray");
+        }
+      }
+      await this._sleep(500);
+      let lastTile = oldTile;
+      for (let mv of path) {
+        this._drawPiece(mv, this._model.currentPlayer.suspect);
+        this._removePiece(lastTile);
+        lastTile = mv;
+        this._paintTile(lastTile.x, lastTile.y, "lightgray");
+        await this._sleep(500);
+      }
+
+      if (this._model.currentPlayer.isInPlace)
+         this.showSuggestionButton();
+       this.showAccusationButton();
+       this.showFinishMoveButton();
+    }
+
     bindCast(handler) {
-      d3.select("#cast_die").on("click", handler);
+      d3.select("#" + this._castButtonId).on("click", handler);
     }
 
     bindStay(handler) {
-      d3.select("#stay_in_room").on("click", handler);
+      //d3.select("#stay_in_room").on("click", handler);
     }
 
     bindMove(handler) {

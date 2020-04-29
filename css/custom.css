@@ -76,4 +76,9 @@ p {
 
 li, p {
     font-size: 12px;
+    width: 200px;
+}
+
+input {
+    width: 175px;
 }

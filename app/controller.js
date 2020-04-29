@@ -23,9 +23,10 @@ define(function () {
     castDie = () => {
       this._isMove = true;
       const pips = this._model.castDie();
-      this._view.hasCast(pips);
+      this._view.printCastMessage(pips);
       const tiles = this._model.computeNeighbors(pips);
       this._view.drawTiles(tiles);
+      this._view.hideButtons();
     };
 
     stay = () => {
@@ -42,9 +43,6 @@ define(function () {
       this._view.makeMove(tile, this._model.currentPlayer, oldTile, path);
       this._model.currentPlayer.updatePosition(tile);
       this._isMove = false;
-
-      if (this._model.currentPlayer.isInPlace)
-          this._view.ask();
     };
 
     _ask(){
