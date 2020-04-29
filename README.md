@@ -11,7 +11,7 @@ a true champion of the open society, has been murdered by one of his enemies.
 
 ## Playing
 
-Download a [release](https://github.com/dirmeier/cluedo.js/releases) and open `index.html`. No installation of dependencies required.
+Click [here](https://dirmeier.github.io/cluedo/index.html) or download a [release](https://github.com/dirmeier/cluedo.js/releases) and open `index.html`. No installation of dependencies required.
 
 ## TODO
 
@@ -22,10 +22,11 @@ Download a [release](https://github.com/dirmeier/cluedo.js/releases) and open `i
 - convert to Typescript
 - add codacy
 - implement bots to be able to play alone (i.e., RL/NN)
+- add e2e and integration tests
 
 ## Author
 
-Simon Dirmeier <a href="mailto:simon.dirmeier@web.de">simon.dirmeier@web.de</a>
+Simon Dirmeier <a href="mailto:simon.dirmeier @ web.de">simon.dirmeier @ web.de</a>
 
 ##
 
