@@ -15,6 +15,7 @@ define(function () {
       this._view.bindCast(this.castDie);
       this._view.bindStay(this.stay);
       this._view.bindMove(this.move);
+      this._view.bindShowCards(this.showCards);
 
       this._isMove = false;
       this._run();
@@ -31,6 +32,10 @@ define(function () {
 
     stay = () => {
 
+    };
+
+    showCards = () => {
+      this._view.showCards();
     };
 
     move = (row, col) => {

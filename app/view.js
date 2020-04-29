@@ -13,6 +13,8 @@ define(function (require) {
       this._players = this._model.players;
 
       this._buttonsId = "buttons";
+      this._playerCardsList = "player_card_list";
+      this._showCardsButton = "show_cards_button";
       this._castButtonId = "cast_die_button";
       this._accuseButtonId = "accuse_button";
       this._suggestButtonId = "suggest_button";
@@ -203,8 +205,8 @@ define(function (require) {
 
       const els = [
         "Cast die: throw two dice and move your figure on the board",
-        "Accuse: name a suspect/room/weapon and possibly end the game",
-        "Suggest: ask your co-players for a suspect/room/weapon card",
+        "Accuse: name a suspect/place/weapon and possibly end the game",
+        "Suggest: ask your co-players for a suspect/place/weapon card",
         "Finish move: finish move and start next player's turn"
       ];
 
@@ -221,11 +223,18 @@ define(function (require) {
       help.append("h3").html("Help");
 
       let div = help.append("div");
-      div.attr("id", "player")
+      div
+        .attr("id", "player")
         .append("p")
         .append("u");
-      div.append("ul");
+      div.append("input")
+        .attr("id", this._showCardsButton)
+        .attr("type", "submit")
+        .attr("value", "Show cards");
 
+      div.append("ul")
+        .attr("id", this._playerCardsList)
+        .style("display", "none");
       div = help.append("div").attr("id", "info");
       div.append("p").text("You have the following options:");
 
@@ -261,12 +270,12 @@ define(function (require) {
         .select("p")
         .select("u")
         .text(`\n${this._model.currentPlayer.suspect.name}'s turn`);
-      d3.select("#player")
-        .select("ul")
+
+      d3.select("#" + this._playerCardsList)
         .selectAll("li")
         .remove();
-      const ul = d3.select("#player")
-        .select("ul");
+
+      const ul = d3.select("#" + this._playerCardsList);
       for (let card of this._model.currentPlayer.cards) {
         ul.append("li")
           .append("span")
@@ -317,18 +326,6 @@ define(function (require) {
       d3.select("#" + id).style("display", "inline");
     }
 
-    showSuggestionButton() {
-      this._showButton(this._suggestButtonId);
-    }
-
-    showAccusationButton() {
-      this._showButton(this._accuseButtonId);
-    }
-
-    showFinishMoveButton() {
-      this._showButton(this._finishMoveButtonId);
-    }
-
     async makeMove(tile, player, oldTile, path) {
       for (let tile of this._paintedTiles) {
         const ind = path.filter(
@@ -348,9 +345,22 @@ define(function (require) {
       }
 
       if (this._model.currentPlayer.isInPlace)
-         this.showSuggestionButton();
-       this.showAccusationButton();
-       this.showFinishMoveButton();
+        this._showButton(this._suggestButtonId);
+      this._showButton(this._accuseButtonId);
+      this._showButton(this._finishMoveButtonId);
+    }
+
+    showCards() {
+        const cardsButton = d3.select("#" + this._showCardsButton);
+        const list = d3.select("#" + this._playerCardsList);
+        if (list.style("display") === "none") {
+          list.style("display", "block");
+          cardsButton.attr("value", "Hide cards");
+        }
+        else {
+          list.style("display", "none");
+          cardsButton.attr("value", "Show cards");
+        }
     }
 
     bindCast(handler) {
@@ -365,6 +375,10 @@ define(function (require) {
       d3.selectAll("rect").on("click", function () {
         handler(d3.select(this).attr("row"), d3.select(this).attr("col"));
       });
+    }
+
+    bindShowCards(handler) {
+      d3.select("#" + this._showCardsButton).on("click", handler);
     }
   }
 
