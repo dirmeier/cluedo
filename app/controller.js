@@ -82,8 +82,10 @@ define(function () {
       let isSolved = this._model.solve(
         suspect, place, weapon);
       this._view.makeAccusation(isSolved);
-      if (!isSolved)
+      if (!isSolved) {
         this._model.removeCurrentPlayer();
+        this._view.removePlayerFromLegend();
+      }
       this._checkExit();
     };
 

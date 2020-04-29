@@ -3,11 +3,15 @@
 define(function () {
   class Player {
     constructor(name, suspect) {
-      this.name = name;
+      this._name = name;
       this._next = null;
       this._prev = null;
       this._suspect = suspect;
       this._cards = [];
+    }
+
+    get name() {
+      return this._name;
     }
 
     get isInPlace() {
@@ -46,11 +50,11 @@ define(function () {
       let player = this._next;
       while (player !== this) {
         if (player.holds(murderer))
-          return [player.name, murderer, null, null];
+          return [player.suspect.name, murderer, null, null];
         else if (player.holds(place))
-          return [player.name, null, place, null];
+          return [player.suspect.name, null, place, null];
         else if (player.holds(weapon))
-          return [player.name, null, weapon];
+          return [player.suspect.name, null, weapon];
         else
           player = player.next;
       }
@@ -73,7 +77,7 @@ define(function () {
 
   Player.prototype.toString = function () {
     const crds = this._cards.join("\n\t");
-    return `[Player ${this._suspect.name} \n\t${crds}\n]`;
+    return `[Player ${this.suspect.name} \n\t${crds}\n]`;
   };
 
   return Player;

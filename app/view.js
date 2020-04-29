@@ -195,8 +195,15 @@ define(function (require) {
         .html(piecesHeader);
 
       const ul = d3.select('#legend')
-        .append('ul');
+        .append('ul')
+        .attr("id", "legend_" + piecesHeader);
 
+      this._initLegendPieceList("legend_" + piecesHeader, arr);
+    }
+
+    _initLegendPieceList(id, arr) {
+      const ul = d3.select("#" + id);
+      ul.selectAll("li").remove();
       for (let piece of arr) {
         const tile = piece.tile;
         ul.append("li")
@@ -472,7 +479,7 @@ define(function (require) {
       if (holds[0] !== null) {
         let c = holds.filter(function (i) {return i !== null;});
         this._showInfo(
-          `${this._model.players[c[0]].suspect.name} shows you card:\n'${c[1]}'.
+          `${c[0]} shows you card:\n'${c[1]}'.
           You have the following options:`
         );
       }
@@ -499,6 +506,11 @@ define(function (require) {
         this._showInfo("Boo! You are out!");
         this._showInline(this._finishMoveButtonId);
       }
+    }
+
+    removePlayerFromLegend() {
+      this._initLegendPieceList("legend_Players",
+        this._model.players.map(function (i) {return i.suspect;}));
     }
 
     nextPlayer() {
