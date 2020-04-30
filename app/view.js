@@ -78,8 +78,8 @@ define(function (require) {
 
     _initBoard() {
       this._initTiles();
-      // this._drawPieces("Suspects", this._board.suspects);
-      // this._drawPieces("Weapons", this._board.weapons);
+      this._drawPieces("Suspects", this._board.suspects);
+      this._drawPieces("Weapons", this._board.weapons);
     }
 
     _initTiles() {
@@ -88,7 +88,7 @@ define(function (require) {
         for (let j = 0; j < this._adj[i].length; j++) {
           const tile = this._adj[i][j];
           const g = this._g(svg, i, j);
-          const place = this._initPlace(g , tile, i, j,  tile.place);
+          // const place = this._initPlace(g , tile, i, j,  tile.place);
           const rect = this._rect(g, tile, i, j);
           this._path(g, rect, tile);
         }
@@ -120,7 +120,7 @@ define(function (require) {
         .attr('x', ((this._width) / this._adj[row].length) * col)
         .attr('width',
           place.nrow * ((this._width - 1) / (this._adj[row].length) - 1))
-         //.attr('height', 200)
+         .attr('height', 200)
         .attr("xlink:href", place.path);
     }
 
@@ -130,7 +130,8 @@ define(function (require) {
         .attr("id", "id_r_" + row + "_" + col)
         .attr("width", (this._width - 1) / (this._adj[row].length) - 1)
         .attr("height", (this._height - 1) / (this._adj.length) - 1)
-        .attr("fill", "transparent")
+        .attr("fill", "lightgray")
+        .attr("fill-opacity", 0.5)
         .attr("x", ((this._width) / this._adj[row].length) * col)
         .attr("row", row)
         .attr("col", col);
