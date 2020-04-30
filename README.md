@@ -17,9 +17,8 @@ Click [here](https://dirmeier.github.io/cluedo/index.html) or download a [releas
 
 ## TODO
 
+- generally improve/beautify UI and use my conventional CSS
 - landing page with dynamic setting of `nPlayers`
-- use images for places/room
-- generally improve UI and use my conventional CSS
 - clean up/lint/check JS
 - convert to Typescript
 - add codacy
