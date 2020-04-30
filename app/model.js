@@ -14,10 +14,6 @@ define(function (require) {
       this._dealCards();
     }
 
-    get cards() {
-      return this._game.cards;
-    }
-
     _initPlayers(nPlayers) {
       let players = [];
       const randomSuspects = utl.randomElements(
@@ -48,12 +44,24 @@ define(function (require) {
       }
     }
 
-    castDie() {
-      return this._game.dice.cast();
+    get cards() {
+      return this._game.cards;
     }
 
     get board() {
       return this._game.board;
+    }
+
+    get currentPlayer() {
+      return this._currentPlayer;
+    }
+
+    get players() {
+      return this._players;
+    }
+
+    castDie() {
+      return this._game.dice.cast();
     }
 
     computeNeighbors(distance) {
@@ -69,14 +77,6 @@ define(function (require) {
       if (this._players.length === 0)
         return;
       this._currentPlayer = this._currentPlayer.next;
-    }
-
-    get currentPlayer() {
-      return this._currentPlayer;
-    }
-
-    get players() {
-      return this._players;
     }
 
     murderCase() {

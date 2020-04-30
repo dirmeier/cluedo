@@ -7,7 +7,9 @@
 ## About
 
 `cluedo.js` implements the well known board game in JavaScript. This version plays in ancient Greece where Socrates,
-a true champion of the open society, has been murdered by one of his enemies.
+a true champion of the open society, has been murdered by one of his enemies. Dying, Socrates exclaimed:
+
+*Crito, we owe a rooster to Asclepius. Please, don't forget to pay the debt!*
 
 ## Playing
 

@@ -81,11 +81,13 @@ define(function () {
       return this._isOccupied;
     }
 
+    // Todo: is it a bug not to 'release' old item item?
     occupyWith(item) {
       this._occupant = item;
       this._isOccupied = true;
     }
 
+    // Todo: is it a bug not to 'release' occupant's tile?
     deoccupy() {
       this._occupant = null;
       this._isOccupied = false;

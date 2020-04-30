@@ -31,24 +31,20 @@ define(function (require) {
 
   class Board {
     constructor(nSuspects) {
+      this._weapons = Array.from(weapons);
+      this._suspects = Array.from(suspects);
       this._places = this._initPlaces();
       this._adjacenyMatrix = this._initBoard();
-
-      this._suspects = Array.from(suspects);
-      this._weapons = Array.from(weapons);
 
       this._distributeSuspectsToRooms();
       this._distributeWeaponsToRooms();
     }
 
-    get adjacency() {
-      return this._adjacenyMatrix;
-    }
-
     _initPlaces() {
       let places = {};
       for (let leg of legend) {
-        places[leg.legend] = new Place(leg.place, leg.legend, leg.type);
+        places[leg.legend] = new Place(
+          leg.place, leg.legend, leg.type, leg.path || null);
       }
       return places;
     }
@@ -81,26 +77,8 @@ define(function (require) {
       return adj;
     }
 
-    _distributeSuspectsToRooms() {
-      let places = this._getPlaces();
-      places = utl.randomElements(places, this._suspects.length);
-      for (let i = 0; i < this._suspects.length; i++) {
-        this.putOnRandomTile(this._suspects[i], places[i]);
-      }
-    }
-
-    putOnRandomTile(piece, place) {
-      const tile = this.getFreeTile(place);
-      piece.putOn(tile);
-      return tile;
-    }
-
-    _distributeWeaponsToRooms() {
-      let places = this._getPlaces();
-      places = utl.randomElements(places, this._weapons.length);
-      for (let i = 0; i < this._weapons.length; i++) {
-        this.putOnRandomTile(this._weapons[i], places[i]);
-      }
+    get adjacency() {
+      return this._adjacenyMatrix;
     }
 
     get pieces() {
@@ -113,6 +91,32 @@ define(function (require) {
 
     get weapons() {
       return this._weapons;
+    }
+
+    get places() {
+      return this._places;
+    }
+
+    putOnRandomTile(piece, place) {
+      const tile = this.getFreeTile(place);
+      piece.putOn(tile);
+      return tile;
+    }
+
+    _distributeSuspectsToRooms() {
+      let places = this._getPlaces();
+      places = utl.randomElements(places, this._suspects.length);
+      for (let i = 0; i < this._suspects.length; i++) {
+        this.putOnRandomTile(this._suspects[i], places[i]);
+      }
+    }
+
+    _distributeWeaponsToRooms() {
+      let places = this._getPlaces();
+      places = utl.randomElements(places, this._weapons.length);
+      for (let i = 0; i < this._weapons.length; i++) {
+        this.putOnRandomTile(this._weapons[i], places[i]);
+      }
     }
 
     computeNeighbors(pips, tile) {

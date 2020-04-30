@@ -29,7 +29,7 @@ define(function(require) {
 
   const places = [
     new Place("Agora"),
-    new Place("Altar"),
+    new Place("Bouleuterion"),
     new Place("Diogenes' barrel"),
     new Place("Hill of the Muses"),
     new Place("Library"),
@@ -53,15 +53,6 @@ define(function(require) {
       ];
     }
 
-    murderCase() {
-      return {
-        victim: this._victim,
-        murderer: this._murderer,
-        place: this._place,
-        weapon: this._weapon
-      };
-    }
-
     get suspects() {
       return suspects;
     }
@@ -74,19 +65,28 @@ define(function(require) {
       return places;
     }
 
-    randomAvailableCard() {
-      const card = utl.randomElement(this._availableCards);
-      this._availableCards =
-        this._availableCards.filter((i) => i.name !== card.name);
-      return card;
-    }
-
     get availableCards() {
       return this._availableCards;
     }
 
     set availableCards(cards) {
       this._availableCards = cards;
+    }
+
+    murderCase() {
+      return {
+        victim: this._victim,
+        murderer: this._murderer,
+        place: this._place,
+        weapon: this._weapon
+      };
+    }
+
+    randomAvailableCard() {
+      const card = utl.randomElement(this._availableCards);
+      this._availableCards =
+        this._availableCards.filter((i) => i.name !== card.name);
+      return card;
     }
 
     _availableSuspects() {
