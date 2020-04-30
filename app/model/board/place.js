@@ -25,6 +25,13 @@ define(function () {
       return (new Set(cols)).size;
     }
 
+    get minTileY() {
+      const mi = this._tiles.map(function(i) {
+        return i.y
+      });
+      return Math.min(Math.min(...mi));
+    }
+
     add(tile) {
       this._tiles.push(tile);
     }
@@ -55,6 +62,10 @@ define(function () {
 
     set isDrawn(drawn) {
       this._isDrawn = drawn;
+    }
+
+    get tiles() {
+      return this._tiles;
     }
 
     get isPlace() {

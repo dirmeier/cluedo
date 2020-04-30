@@ -56,7 +56,7 @@ define(function () {
       "type": "place",
       "path": "app/view/temple.jpeg"
     },
-    {"legend": "_", "place": "_", "type": "other"},
-    {"legend": ".", "place": "Path", "type": "path"}
+    {"legend": "_", "place": "_", "type": "other", "path": "app/view/socrates.jpeg"},
+    {"legend": ".", "place": "_", "type": "path"}
   ];
 });

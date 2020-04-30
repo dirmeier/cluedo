@@ -80,26 +80,31 @@ define(function (require) {
       this._initTiles();
       this._drawPieces("Suspects", this._board.suspects);
       this._drawPieces("Weapons", this._board.weapons);
+      this._drawSocrates();
     }
 
     _initTiles() {
+      const main = this._app
+        .append("svg")
+        .attr("width", this._width + 5)
+        .attr("height", this._height + 5);
       for (let i = 0; i < this._adj.length; i++) {
-        const svg = this._svg();
+        const svg = this._row(main, i);
         for (let j = 0; j < this._adj[i].length; j++) {
           const tile = this._adj[i][j];
           const g = this._g(svg, i, j);
-          // const place = this._initPlace(g , tile, i, j,  tile.place);
+          this._initPlace(g, i, j, tile, tile.place);
           const rect = this._rect(g, tile, i, j);
           this._path(g, rect, tile);
         }
       }
     }
 
-    _svg() {
-      return this._app
-        .append("svg")
+    _row(main, i) {
+      return main
+        .append("g")
         .attr("width", this._width + 5)
-        .attr("height", this._height / this._adj.length)
+        .attr("transform", "translate(0," + i * (this._height / this._adj.length) + ")")
         .style("display", "flex");
     }
 
@@ -109,18 +114,13 @@ define(function (require) {
         .attr("id", "id_" + row + "_" + col);
     }
 
-    _initPlace(el, tile, row, col, place) {
+    _initPlace(el, row, col, tile, place) {
       if (place.isDrawn || !place.isPlace)
         return;
       place.isDrawn = true;
-      console.log(place);
-      console.log(place.nrow);
-      console.log(place.ncol);
       el.append("svg:image")
         .attr('x', ((this._width) / this._adj[row].length) * col)
-        .attr('width',
-          place.nrow * ((this._width - 1) / (this._adj[row].length) - 1))
-         .attr('height', 200)
+        .attr("height", ((this._height - 1) / (this._adj.length) - 1) * place.nrow)
         .attr("xlink:href", place.path);
     }
 
@@ -182,6 +182,21 @@ define(function (require) {
         this._drawPiece(piece.tile, piece);
     }
 
+    _drawSocrates() {
+      const row = 7;
+      const col = 9;
+      const place = this._board.places["_"];
+      const g = d3.select("#id_" + row + "_" + col);
+      g.append("svg:image")
+        .attr('x', ((this._width) / this._adj[row].length) * col)
+        .attr("height", ((this._height - 1) / (this._adj.length) - 1) * place.nrow)
+        .attr("xlink:href", place.path);
+      for (let tile of place.tiles) {
+        d3.select("#id_r_" + tile.x + "_" + tile.y)
+          .attr("fill", "transparent");
+      }
+    }
+
     _drawPiece(tile, piece) {
       d3.select("#id_" + tile.x + "_" + tile.y)
         .append("svg:image")
@@ -205,6 +220,8 @@ define(function (require) {
         this._model.players.map(function (i) {return i.suspect;}));
       this._initLegendForPieces("Suspects", this._board.suspects.sort());
       this._initLegendForPieces("Weapons", this._board.weapons.sort());
+      this._initLegendForPieces("Places",
+        Object.values(this._board.places).sort());
       this._initButtonDescription();
     }
 
@@ -224,16 +241,16 @@ define(function (require) {
       const ul = d3.select("#" + id);
       ul.selectAll("li").remove();
       for (let piece of arr) {
-        const tile = piece.tile;
+        if (piece.name === "_") continue;
+        //const tile = piece.tile;
         ul.append("li")
           .append("span")
           .text(piece.name + " ")
           .append("svg")
-          .attr("width", (this._width - 1) / (this._adj[tile.x].length) - 1)
-          .attr("height", (this._height - 1) / (this._adj.length) - 1)
+          .attr("width", 30)
+          .attr("height", 30)
           .append("svg:image")
-          .attr("width", (this._width - 1) / (this._adj[tile.x].length) - 1)
-          .attr("height", (this._height - 1) / (this._adj.length) - 1)
+          .attr("width", 30)
           .attr("xlink:href", piece.path);
       }
     }
