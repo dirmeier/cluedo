@@ -53,7 +53,7 @@ define(function (require) {
       d3.select("#app")
         .append("h1").text("Cluedo - ancient Greece edition");
       d3.select("#app")
-        .append("h2").text("Find Socrates' murderer.");
+        .append("h2").text("Expose Socrates' murderer.");
       d3.select("#app")
         .append("div")
         .attr("id", "legend")
@@ -277,6 +277,15 @@ define(function (require) {
         .text(function (d) {return d;});
     }
 
+    _newButton(el, id, text) {
+      el.append("button")
+        .attr("class", "btn waves-effect waves-light")
+        .attr("type", "submit")
+        .attr("name", "action")
+        .attr("id", id)
+        .text(text);
+    }
+
     _initHelp() {
       const help = d3.select("#help")
         .style("width", this._width + 10);
@@ -286,10 +295,8 @@ define(function (require) {
       div.attr("id", "player")
         .append("p")
         .append("u");
-      div.append("input")
-        .attr("id", this._showCardsButton)
-        .attr("type", "submit")
-        .attr("value", "Show cards");
+
+      this._newButton(div, this._showCardsButton, "Show cards");
 
       div.append("ul")
         .attr("id", this._playerCardsList)
@@ -304,12 +311,9 @@ define(function (require) {
       div = div
         .append("div")
         .attr("id", this._buttonsId);
+      
 
-      div.append("div")
-        .append("input")
-        .attr("id", this._castButtonId)
-        .attr("type", "submit")
-        .attr("value", "Cast die");
+      this._newButton(div, this._castButtonId, "Cast die");
 
       div.append("div")
         .append("input")

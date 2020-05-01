@@ -1,13 +1,28 @@
+@import url('https://fonts.googleapis.com/css?family=Merriweather');
+
 *,
 *::before,
 *::after {
     box-sizing: border-box
 }
 
+
+text, body, button, input, li {
+    font-family: "Merriweather", serif;
+}
+
+
 .row {
     width: 1200px;
     margin: auto auto auto;
     text-align: center;
+}
+
+.introduction {
+    margin: 10% auto auto;
+    width: 600px;
+    padding: 10px;
+    text-align: justify;
 }
 
 .column {
@@ -32,6 +47,23 @@ html {
 h1, h2 {
     text-align: center;
 }
+
+h1 {
+    font-size: 2.5em;
+}
+
+h2 {
+    font-size: 2em;
+}
+
+h3 {
+    font-size: 1.5em;
+}
+
+h5 {
+    font-size: 1em;
+}
+
 
 h4, ul, h5, h6 {
     text-align: left;
@@ -79,8 +111,30 @@ li, p, label {
 
 input {
     width: 175px;
+    font-size: 12px;
 }
+
 
 select {
     width: 150px;
+}
+
+::placeholder {
+    color: darkslategray;
+}
+
+
+.btn, .btn-large, .btn-small {
+    background-color: white;
+    color:black;
+    font-size: 12px;
+    text-transform: none;
+    -webkit-transition-duration: 0.4s;
+    width: 175px;
+    margin: 2px;
+}
+
+.btn:hover, .btn-large:hover, .btn-small:hover {
+    background-color: #1e5262;
+    color: white;
 }
