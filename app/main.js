@@ -21,14 +21,20 @@ define(function (require) {
     .style("margin-top", "10px")
     .attr("align", "center");
   div.append("input")
-    .style("margin-right", "5px")
+    .style("margin-right", "10px")
     .attr("type", "text")
+    .style("width", "350px")
+    .style("height", "40px")
+    .style("display", "inline-block")
     .attr("id", "intro_input")
+    .attr("class", "nes-input")
     .attr("placeholder", "How many players?");
 
   div.append("button")
-    .attr("class", "mdl-button mdl-button--raised mdl-js-ripple-effect")
-    .attr("type", "submit")
+    .attr("class", "nes-btn")
+    .style("height", "40px")
+    .style("display", "inline-block")
+    .attr("type", "button")
     .attr("name", "action")
     .on("click", function () {
       let nmb = d3.select("#intro_input").property("value");

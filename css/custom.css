@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Merriweather');
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 *,
 *::before,
@@ -7,9 +7,9 @@
 }
 
 
-text, body, button, input, li, option, select, div {
-    font-family: "Merriweather", serif !important;
-    font-size: 12px !important;
+html, pre, code, text, body, button, input, li, option, select, div {
+    font-family: 'Press Start 2P', cursive !important;
+    font-size: 12px;
 }
 
 
@@ -21,7 +21,7 @@ text, body, button, input, li, option, select, div {
 
 .introduction {
     margin: 10% auto auto;
-    width: 600px;
+    width: 800px;
     padding: 10px;
     text-align: justify;
 }
@@ -39,6 +39,10 @@ text, body, button, input, li, option, select, div {
     clear: both;
 }
 
+#app {
+    margin-top: 3%;
+}
+
 html {
     background-color: whitesmoke;
     font-family: serif;
@@ -46,7 +50,7 @@ html {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-family: "Merriweather", serif;
+    font-family: 'Press Start 2P', cursive !important;
 }
 
 h1, h2 {
@@ -110,24 +114,6 @@ input {
     font-size: 12px;
 }
 
-input[type=text] {
-    background-color: transparent;
-    border: none;
-    border-bottom: 1px solid #9e9e9e;
-    border-radius: 0;
-    outline: none;
-    height: 3rem;
-    width: 100%;
-    margin: 0 0 8px 0;
-    padding: 0;
-    -webkit-box-shadow: none;
-    box-shadow: none;
-    -webkit-box-sizing: content-box;
-    box-sizing: content-box;
-    -webkit-transition: border .3s, -webkit-box-shadow .3s;
-    transition: box-shadow .3s, border .3s, -webkit-box-shadow .3s
-}
-
 select {
     width: 100px;
 }
@@ -137,22 +123,7 @@ select {
 }
 
 
-.mdl-button {
-    background-color: white;
-    color: black;
-    font-size: 12px;
-    text-transform: none;
-    -webkit-transition-duration: 0.4s;
+.nes-btn {
     width: 175px;
-    margin: 2px;
-    font-family: "Merriweather", serif;
-}
-
-.mdl-button:hover {
-    background-color: #1e5262;
-    color: white;
-}
-
-.mdl-selectfield {
-    width: 250px !important;
+    margin: 5px;
 }

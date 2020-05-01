@@ -255,6 +255,8 @@ define(function (require) {
       }
     }
 
+
+
     _initButtonDescription() {
       d3.select('#legend')
         .append('h5')
@@ -277,11 +279,11 @@ define(function (require) {
         .text(function (d) {return d;});
     }
 
+
     _newButton(el, id, text) {
       return el.append("button")
-        .attr("class",
-          "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect")
-        .attr("type", "submit")
+        .attr("class", "nes-btn")
+        .attr("type", "button")
         .attr("name", "action")
         .attr("id", id)
         .text(text);
@@ -295,7 +297,8 @@ define(function (require) {
       let div = help.append("div");
       div.attr("id", "player").append("p").append("u");
 
-      this._newButton(div, this._showCardsButton, "Show cards");
+      this._newButton(div, this._showCardsButton, "Show cards")
+        .style("margin-bottom", "20px");
 
       div.append("ul")
         .attr("id", this._playerCardsList)
