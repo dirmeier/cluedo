@@ -3,15 +3,10 @@
 define(function () {
     return {
       Item: class Item {
-        constructor(name, color, path) {
+        constructor(name, path) {
           this._name = name;
-          this._color = color;
           this._tile = null;
           this._path = path;
-        }
-
-        get color() {
-          return this._color;
         }
 
         get name() {

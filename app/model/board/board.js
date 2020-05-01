@@ -1,4 +1,4 @@
-"uBe Btrict";
+"use strict";
 
 define(function () {
   return [

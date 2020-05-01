@@ -2,12 +2,16 @@
 
 define(function () {
   class Card {
-    constructor(name) {
+    constructor(name, path) {
       this._name = name;
+      this._path = path
     }
 
     get name() {
       return this._name;
+    }
+    get path() {
+      return this._path;
     }
   }
 

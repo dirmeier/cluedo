@@ -1,7 +1,8 @@
 "use strict";
 
-define(function(require) {
+define(function (require) {
   const utl = require("util");
+  const glb = require("global");
 
   const Suspect = require("model/cards/suspect");
   const Weapon = require("model/cards/weapon");
@@ -10,33 +11,33 @@ define(function(require) {
   const victim = new Suspect("Socrates");
 
   const suspects = [
-    new Suspect("Charmides"),
-    new Suspect("Alcibiades"),
-    new Suspect("Heraclitus"),
-    new Suspect("Critias"),
-    new Suspect("Lysander"),
-    new Suspect("Plato")
+    new Suspect(glb.alcibiades.name, glb.alcibiades.path),
+    new Suspect(glb.charmides.name, glb.charmides.path),
+    new Suspect(glb.critias.name, glb.critias.path),
+    new Suspect(glb.heraclitus.name, glb.heraclitus.path),
+    new Suspect(glb.lysander.name, glb.lysander.path),
+    new Suspect(glb.plato.name, glb.plato.path)
   ];
 
   const weapons = [
-    new Weapon("Bow"),
-    new Weapon("Cup of poison"),
-    new Weapon("Sickle"),
-    new Weapon("Dagger"),
-    new Weapon("Rope"),
-    new Weapon("Treachery")
+    new Weapon(glb.bow.name, glb.bow.path),
+    new Weapon(glb.dagger.name, glb.dagger.path),
+    new Weapon(glb.poison.name, glb.poison.path),
+    new Weapon(glb.rope.name, glb.rope.path),
+    new Weapon(glb.sickle.name, glb.sickle.path),
+    new Weapon(glb.treachery.name, glb.treachery.path)
   ];
 
   const places = [
-    new Place("Agora"),
-    new Place("Bouleuterion"),
-    new Place("Diogenes' barrel"),
-    new Place("Hill of the Muses"),
-    new Place("Library"),
-    new Place("Panthenon"),
-    new Place("Sitting rock under a tree"),
-    new Place("Temple"),
-    new Place("Theater")
+    new Place(glb.agora.name, glb.agora.path),
+    new Place(glb.barrel.name, glb.barrel.path),
+    new Place(glb.bouleuterion.name, glb.bouleuterion.path),
+    new Place(glb.hill.name, glb.hill.path),
+    new Place(glb.library.name, glb.library.path),
+    new Place(glb.parthenon.name, glb.parthenon.path),
+    new Place(glb.temple.name, glb.temple.path),
+    new Place(glb.theater.name, glb.theater.path),
+    new Place(glb.tree.name, glb.tree.path)
   ];
 
   class Cards {

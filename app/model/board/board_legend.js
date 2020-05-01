@@ -1,62 +1,73 @@
 "use strict";
 
-define(function () {
+define(function (require) {
+  const glb = require("global");
+
   return [
     {
       "legend": "A",
-      "place": "Agora",
+      "place": glb.agora.name,
       "type": "place",
       "path": "app/view/agora.jpeg"
     },
     {
       "legend": "B",
-      "place": "Bouleuterion",
+      "place": glb.bouleuterion.name,
       "type": "place",
       "path": "app/view/bouleuterion.jpeg"
     },
     {
       "legend": "D",
-      "place": "Diogenes' barrel",
+      "place": glb.barrel.name,
       "type": "place",
       "path": "app/view/barrel.jpeg"
     },
     {
       "legend": "H",
-      "place": "Hill of the Muses",
+      "place": glb.hill.name,
       "type": "place",
-      "path": "app/view/hill.jpeg"
+      "path": glb.hill.path
     },
     {
       "legend": "L",
-      "place": "Library",
+      "place": glb.library.name,
       "type": "place",
       "path": "app/view/library.jpeg"
     },
     {
       "legend": "P",
-      "place": "Parthenon",
+      "place": glb.parthenon.name,
       "type": "place",
       "path": "app/view/parthenon.jpeg"
     },
     {
       "legend": "S",
-      "place": "Socrates' favourite olive tree",
+      "place": glb.tree.name,
       "type": "place",
       "path": "app/view/tree.jpeg"
     },
     {
       "legend": "T",
-      "place": "Theater",
+      "place": glb.theater.name,
       "type": "place",
       "path": "app/view/theater.jpeg"
     },
     {
       "legend": "U",
-      "place": "Temple",
+      "place": glb.temple.name,
       "type": "place",
       "path": "app/view/temple.jpeg"
     },
-    {"legend": "_", "place": "_", "type": "other", "path": "app/view/socrates.jpeg"},
-    {"legend": ".", "place": "_", "type": "path"}
+    {
+      "legend": "_",
+      "place": "_",
+      "type": "other",
+      "path": "app/view/socrates.jpeg"
+    },
+    {
+      "legend": ".",
+      "place": "_",
+      "type": "path"
+    }
   ];
 });

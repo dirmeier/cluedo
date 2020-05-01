@@ -2,6 +2,7 @@
 
 define(function (require) {
   const utl = require("util");
+  const glb = require("global");
 
   const Tile = require("model/board/tile");
   const Place = require("model/board/place");
@@ -12,25 +13,25 @@ define(function (require) {
   const legend = require("model/board/board_legend");
 
   const suspects = [
-    new Suspect("Plato", "red", "app/view/plato.jpeg"),
-    new Suspect("Critias", "green", "app/view/critias.jpeg"),
-    new Suspect("Alcibiades", "yellow", "app/view/alcibiades.jpeg"),
-    new Suspect("Heraclitus", "purple", "app/view/heraclitus.jpeg"),
-    new Suspect("Charmides", "blue", "app/view/charmides.jpeg"),
-    new Suspect("Lysander", "orange", "app/view/lysander.jpeg")
-  ].sort();
+    new Suspect(glb.alcibiades.name, glb.alcibiades.path),
+    new Suspect(glb.charmides.name, glb.charmides.path),
+    new Suspect(glb.critias.name, glb.critias.path),
+    new Suspect(glb.heraclitus.name, glb.heraclitus.path),
+    new Suspect(glb.lysander.name, glb.lysander.path),
+    new Suspect(glb.plato.name, glb.plato.path)
+  ];
 
   const weapons = [
-    new Weapon("Cup of poison", "green", "app/view/poison.jpeg"),
-    new Weapon("Dagger", "purple", "app/view/dagger.png"),
-    new Weapon("Treachery", "red", "app/view/treachery.png"),
-    new Weapon("Sickle", "black", "app/view/sickle.jpeg"),
-    new Weapon("Rope", "brown", "app/view/rope.jpeg"),
-    new Weapon("Bow", "yellow", "app/view/bow.png")
-  ].sort();
+    new Weapon(glb.bow.name, glb.bow.path),
+    new Weapon(glb.dagger.name, glb.dagger.path),
+    new Weapon(glb.poison.name, glb.poison.path),
+    new Weapon(glb.rope.name, glb.rope.path),
+    new Weapon(glb.sickle.name, glb.sickle.path),
+    new Weapon(glb.treachery.name, glb.treachery.path)
+  ];
 
   class Board {
-    constructor(nSuspects) {
+    constructor() {
       this._weapons = Array.from(weapons);
       this._suspects = Array.from(suspects);
       this._places = this._initPlaces();

@@ -242,7 +242,6 @@ define(function (require) {
       ul.selectAll("li").remove();
       for (let piece of arr) {
         if (piece.name === "_") continue;
-        //const tile = piece.tile;
         ul.append("li")
           .append("span")
           .text(piece.name + " ")
@@ -254,8 +253,6 @@ define(function (require) {
           .attr("xlink:href", piece.path);
       }
     }
-
-
 
     _initButtonDescription() {
       d3.select('#legend')
