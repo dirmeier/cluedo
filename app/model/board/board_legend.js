@@ -14,13 +14,13 @@ define(function (require) {
       "legend": "B",
       "place": glb.bouleuterion.name,
       "type": "place",
-      "path": "app/view/bouleuterion.jpeg"
+      "path": glb.bouleuterion.path
     },
     {
       "legend": "D",
       "place": glb.barrel.name,
       "type": "place",
-      "path": "app/view/barrel.jpeg"
+      "path": glb.barrel.path
     },
     {
       "legend": "H",
@@ -32,37 +32,37 @@ define(function (require) {
       "legend": "L",
       "place": glb.library.name,
       "type": "place",
-      "path": "app/view/library.jpeg"
+      "path": glb.library.path
     },
     {
       "legend": "P",
       "place": glb.parthenon.name,
       "type": "place",
-      "path": "app/view/parthenon.jpeg"
+      "path": glb.parthenon.path
     },
     {
       "legend": "S",
       "place": glb.tree.name,
       "type": "place",
-      "path": "app/view/tree.jpeg"
+      "path": glb.tree.path
     },
     {
       "legend": "T",
       "place": glb.theater.name,
       "type": "place",
-      "path": "app/view/theater.jpeg"
+      "path": glb.theater.path
     },
     {
       "legend": "U",
       "place": glb.temple.name,
       "type": "place",
-      "path": "app/view/temple.jpeg"
+      "path": glb.temple.path
     },
     {
       "legend": "_",
       "place": "_",
       "type": "other",
-      "path": "app/view/socrates.jpeg"
+      "path": glb.socrates.path
     },
     {
       "legend": ".",
