@@ -265,8 +265,8 @@ define(function (require) {
 
       const els = [
         "Cast die: throw two dice and move your figure on the board",
-        "Accuse: name a suspect/place/weapon and possibly end the game",
         "Suggest: ask your co-players for a suspect/place/weapon card",
+        "Accuse: name a suspect/place/weapon and possibly end the game",
         "Next player: finish move and start next player's turn"
       ];
 
@@ -279,7 +279,7 @@ define(function (require) {
 
     _newButton(el, id, text) {
       el.append("button")
-        .attr("class", "btn waves-effect waves-light")
+        .attr("class", "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect")
         .attr("type", "submit")
         .attr("name", "action")
         .attr("id", id)
@@ -311,27 +311,11 @@ define(function (require) {
       div = div
         .append("div")
         .attr("id", this._buttonsId);
-      
 
-      this._newButton(div, this._castButtonId, "Cast die");
-
-      div.append("div")
-        .append("input")
-        .attr("id", this._suggestButtonId)
-        .attr("type", "submit")
-        .attr("value", "Suggest");
-
-      div.append("div")
-        .append("input")
-        .attr("id", this._accuseButtonId)
-        .attr("type", "submit")
-        .attr("value", "Accuse");
-
-      div.append("div")
-        .append("input")
-        .attr("id", this._finishMoveButtonId)
-        .attr("type", "submit")
-        .attr("value", "Next player");
+      this._newButton(div.append("div"), this._castButtonId, "Cast die");
+      this._newButton(div.append("div"), this._suggestButtonId, "Suggest");
+      this._newButton(div.append("div"), this._accuseButtonId, "Accuse");
+      this._newButton(div.append("div"), this._finishMoveButtonId, "Next player");
 
       d3.select("#info")
         .append("div")
@@ -376,18 +360,19 @@ define(function (require) {
         .select("#" + this._selectListsId)
         .append("div")
         .attr("id", divID)
-        .style("display", "none");
+        .attr("class", "input-field")
+        .style("display", "blocked");
 
-      div.append("label").attr("for", listID).text(text);
-      const select = div
-        .append("select").attr("id", listID);
+      const select = div.append("select");
+      select.attr("id", listID);
+      select.selectAll("option")
 
-      select
-        .selectAll("option")
         .data(cards.sort())
         .enter()
         .append("option")
+        .attr("value", function (d) {return d.name; })
         .text(function (d) {return d.name; });
+      div.append("label").text(text);
     }
 
     _printPlayer() {
