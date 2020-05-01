@@ -278,8 +278,9 @@ define(function (require) {
     }
 
     _newButton(el, id, text) {
-      el.append("button")
-        .attr("class", "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect")
+      return el.append("button")
+        .attr("class",
+          "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect")
         .attr("type", "submit")
         .attr("name", "action")
         .attr("id", id)
@@ -292,9 +293,7 @@ define(function (require) {
       help.append("h3").html("Help");
 
       let div = help.append("div");
-      div.attr("id", "player")
-        .append("p")
-        .append("u");
+      div.attr("id", "player").append("p").append("u");
 
       this._newButton(div, this._showCardsButton, "Show cards");
 
@@ -302,16 +301,11 @@ define(function (require) {
         .attr("id", this._playerCardsList)
         .style("display", "none");
 
-      div = help.append("div")
-        .attr("id", "info");
-      div
-        .append("p").attr("id", this._infoText);
+      div = help.append("div").attr("id", "info");
+      div.append("p").attr("id", this._infoText);
       this._showInfo("You have the following options:");
 
-      div = div
-        .append("div")
-        .attr("id", this._buttonsId);
-
+      div = div.append("div").attr("id", this._buttonsId);
       this._newButton(div.append("div"), this._castButtonId, "Cast die");
       this._newButton(div.append("div"), this._suggestButtonId, "Suggest");
       this._newButton(div.append("div"), this._accuseButtonId, "Accuse");
@@ -338,41 +332,40 @@ define(function (require) {
         this._placeSelectList,
         this._model.cards.places);
 
-      d3.select("#info")
-        .append("div")
-        .append("input")
-        .attr("id", this._selectSuggestButtonId)
-        .attr("type", "submit")
-        .attr("value", "Suggest")
-        .style("display", "none");
+      div = d3.select("#info").append("div");
+      let button = this._newButton(div, this._selectSuggestButtonId, "Suggest");
+      button.style("display", "none");
 
-      d3.select("#info")
-        .append("div")
-        .append("input")
-        .attr("id", this._selectAccuseButtonId)
-        .attr("type", "submit")
-        .attr("value", "Accuse")
-        .style("display", "none");
+      div = d3.select("#info").append("div");
+      button = this._newButton(div, this._selectAccuseButtonId, "Accuse");
+      button.style("display", "none");
     }
 
     _initSelectLists(text, divID, listID, cards) {
       const div = d3
         .select("#" + this._selectListsId)
         .append("div")
+        .attr("align" , "center")
+        .attr("class", "mdl-selectfield mdl-selectfield--floating-label")
         .attr("id", divID)
-        .attr("class", "input-field")
-        .style("display", "blocked");
+        .style("display", "none");
 
-      const select = div.append("select");
-      select.attr("id", listID);
+      const select = div
+        .append("select")
+        .attr("align" , "center")
+        .attr("class", "mdl-selectfield__select")
+        .attr("id", listID);
       select.selectAll("option")
-
         .data(cards.sort())
         .enter()
         .append("option")
         .attr("value", function (d) {return d.name; })
         .text(function (d) {return d.name; });
-      div.append("label").text(text);
+      div.append("div")
+        .attr("class", "mdl-selectfield__icon")
+        .append("i")
+        .attr("class", "material-icons").text("arrow_drop_down");
+
     }
 
     _printPlayer() {

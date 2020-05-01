@@ -26,7 +26,6 @@ define(function (require) {
     .attr("id", "intro_input")
     .attr("placeholder", "How many players?");
 
-
   div.append("button")
     .attr("class", "mdl-button mdl-button--raised mdl-js-ripple-effect")
     .attr("type", "submit")
@@ -36,6 +35,8 @@ define(function (require) {
       try {
         if (nmb !== "" && !isNaN(nmb)) {
           nmb = parseInt(nmb);
+          if (nmb > 5 || nmb < 2)
+            throw null;
           _run(nmb);
         } else {
           throw null;

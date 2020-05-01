@@ -7,8 +7,9 @@
 }
 
 
-text, body, button, input, li {
-    font-family: "Merriweather", serif;
+text, body, button, input, li, option, select, div {
+    font-family: "Merriweather", serif !important;
+    font-size: 12px !important;
 }
 
 
@@ -65,7 +66,7 @@ h3 {
 }
 
 h5 {
-    font-size: 1em;
+    font-size: 1.25em;
 }
 
 
@@ -94,15 +95,6 @@ polyline {
     stroke-opacity: 1;
 }
 
-.well {
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 3px;
-    padding: 10px;
-
-    margin: 15px;
-    vertical-align: top;
-    text-align: center;
-}
 
 label, p {
     text-align: left;
@@ -110,7 +102,7 @@ label, p {
 
 li, p, label {
     font-size: 12px;
-    width: 200px;
+    width: 250px;
 }
 
 input {
@@ -118,7 +110,7 @@ input {
     font-size: 12px;
 }
 
-input[type=text]{
+input[type=text] {
     background-color: transparent;
     border: none;
     border-bottom: 1px solid #9e9e9e;
@@ -137,7 +129,7 @@ input[type=text]{
 }
 
 select {
-    width: 150px;
+    width: 100px;
 }
 
 ::placeholder {
@@ -147,7 +139,7 @@ select {
 
 .mdl-button {
     background-color: white;
-    color:black;
+    color: black;
     font-size: 12px;
     text-transform: none;
     -webkit-transition-duration: 0.4s;
@@ -159,4 +151,8 @@ select {
 .mdl-button:hover {
     background-color: #1e5262;
     color: white;
+}
+
+.mdl-selectfield {
+    width: 250px !important;
 }
