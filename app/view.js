@@ -3,17 +3,57 @@
 define(function (require) {
   const d3 = require("libs/d3");
   const utl = require("util");
+  const glb = require("global");
 
   class View {
     constructor(model) {
-      this._width = 600;
-      this._height = 600;
+      this._legendWidth = 250;
+      this._legendHeight = 550;
+      this._helpWidth = 250;
+      this._width = 500;
+      this._height = 500;
+
       this._model = model;
       this._board = this._model.board;
       this._adj = this._board.adjacency;
+      this._suspectPieces = this._board.suspects;
+      this._weaponPieces = this._board.weapons;
+      this._placesPieces = this._board.places;
+      this._playerPiecesNames = this._model.players.map(
+        function (i) { return i.suspect.name; }
+      );
 
-      this._buttonsId = "buttons";
+      this._athenaDiv = "athena_div";
+      this._boardDiv = "board_div";
+      this._infoDiv = "info_div";
+
+      this._legendNextButton = "legend_next_button";
+      this._legendIntroHelp = "legend_intro_help";
+      this._introTextIndex = 0;
+      this._sectionLegend = "section_legend";
+      this._sectionLegendMarginRight = ["-75px", "-75px", "-75px", "-75px"];
+      this._sectionLegendMarginTop = ["-75px", "-75px", "-100px", "-100px"];
+      this._introTexts = [
+        "Welcome. I am the goddess Athena, patron of the city of Athens, and " +
+        "I come with bad news. One of my favorite disciples, Socrates, has been murdered.",
+
+        "To not let this crime go unpunished, I instructed three of his acquaintances," +
+        this._playerPiecesNames.slice(0, -1).join(", ") + " and " + this._playerPiecesNames.pop() +
+        " (one for each player), to expose his murderer.",
+
+        "The crime has been committed by 1 of " + this._suspectPieces.length + " suspects " +
+        "with 1 of " + this._weaponPieces.length + " weapons " +
+        "which are distributed in different places in Athens. I assume the murder has been " +
+        "committed in one of these places.",
+        "Each round a player can 'cast a die' to move between places, make a 'suggestion' to " +
+        "get information about suspects/weapons/places and 'accuse' someone to end the game. " +
+        "Now, please help me and solve the crime.",
+        null
+      ];
+
+      this._infoHeader = "info_header";
       this._infoText = "info_text";
+      this._buttonsId = "buttons";
 
       this._playerCardsList = "player_card_list";
       this._showCardsButton = "show_cards_button";
@@ -35,41 +75,87 @@ define(function (require) {
       this._selectSuggestButtonId = "select_suggest_button";
       this._selectAccuseButtonId = "select_accuse_button";
 
-      this._init();
-      this._initLegend();
-      this._initBoard();
-      this._initHelp();
-      this._printPlayer();
-
       this._paintedTiles = [];
+
+      this._buildElements();
+      this._initAthena();
+      this._init();
     }
 
-    _init() {
-      d3.select("#app")
+    _buildElements() {
+      const app = d3.select("#app")
         .attr("class", "row")
         .attr("align", "center");
-      d3.select("#app")
-        .append("h1")
-        .text("Cluedo - ancient Greece edition");
-      d3.select("#app")
-        .append("h2")
-        .text("Expose Socrates' murderer.");
-      d3.select("#app")
-        .append("div")
-        .attr("id", "legend")
-        .attr("class", "column well")
-        .style("width", 250);
-      d3.select("#app")
-        .append("div")
-        .attr("id", "board")
+
+      app.append("h1").text("Cluedo - ancient Greece edition");
+      app.append("h2").text("Expose Socrates' murderer.");
+
+      app.append("div")
+        .attr("id", this._athenaDiv)
+        .attr("class", "column left")
+        .attr("align", "right");
+
+      app.append("div")
+        .attr("id", this._boardDiv)
         .attr("class", "column")
         .style("width", this._width + 10)
         .style("height", this._height);
-      d3.select("#app")
+
+      app.append("div")
+        .attr("id", this._infoDiv)
+        .attr("class", "column right");
+    }
+
+    _initAthena() {
+      let section = d3.select("#" + this._athenaDiv);
+
+      section = section.append("section")
+        .attr("class", "message-list");
+
+      section.append("section")
+        .attr("id", this._sectionLegend)
+        .attr("class", "message -right column")
+        .style("width", "300px")
         .append("div")
-        .attr("id", "help")
-        .attr("class", "column well")
-        .style("width", 250);
+        .attr("class", "nes-balloon from-right")
+        .append("p")
+        .attr("id", this._legendIntroHelp)
+        .style("font-size", "10px");
+
+      section.append("svg")
+        .attr('height', this._legendHeight)
+        .attr('width', this._legendWidth)
+        .append("svg:image")
+        .attr('height', this._legendHeight)
+        .attr("xlink:href", glb.athena.path);
+
+      const init = this._init;
+      this._newButton(d3.select("#" + this._athenaDiv),
+        this._legendNextButton, "Next")
+        .on("click", function () {
+          init();
+        });
+    }
+
+    _init = () => {
+      const idx = this._introTextIndex;
+      d3.select("#" + this._sectionLegend)
+        .style("margin-right", this._sectionLegendMarginRight[idx])
+        .style("margin-top", this._sectionLegendMarginTop[idx]);
+      if (idx < this._introTexts.length)
+        this._showText(this._legendIntroHelp, this._introTexts[idx]);
+      if (idx === 2) {
+        this._initBoard();
+      } else if (idx === this._introTexts.length - 1) {
+        d3.select("#" + this._legendNextButton).style("display", "none");
+        this._initInfo();
+        this._printPlayer();
+      }
+      this._introTextIndex++;
+    };
+
+    _showText(id, text) {
+      d3.select("#" + id).text(text);
     }
 
     _initBoard() {
@@ -80,7 +166,7 @@ define(function (require) {
     }
 
     _initTiles() {
-      const main = d3.select("#board")
+      const main = d3.select("#" + this._boardDiv)
         .append("svg")
         .attr("width", this._width + 5)
         .attr("height", this._height + 5);
@@ -100,7 +186,8 @@ define(function (require) {
       return main
         .append("g")
         .attr("width", this._width + 5)
-        .attr("transform", "translate(0," + i * (this._height / this._adj.length) + ")")
+        .attr("transform",
+          "translate(0," + i * (this._height / this._adj.length) + ")")
         .style("display", "flex");
     }
 
@@ -210,6 +297,7 @@ define(function (require) {
 
     _initLegend() {
       const legend = d3.select("#legend")
+        .style("width", this._legendWidth)
         .append("h3")
         .html("Legend");
       this._initLegendForPieces("Players",
@@ -272,7 +360,6 @@ define(function (require) {
         .text(function (d) {return d;});
     }
 
-
     _newButton(el, id, text) {
       return el.append("button")
         .attr("class", "nes-btn")
@@ -282,22 +369,24 @@ define(function (require) {
         .text(text);
     }
 
-    _initHelp() {
-      const help = d3.select("#help")
-        .style("width", this._width + 10);
-      help.append("h3").html("Help");
+    _initInfo() {
+      const info = d3.select("#" + this._infoDiv)
+        .style("width", this._helpWidth);
+      info.append("h3").html("Info");
 
-      let div = help.append("div");
-      div.attr("id", "player").append("p").append("u");
-
+      let div = info.append("div");
+      const show = this.showCards;
       this._newButton(div, this._showCardsButton, "Show cards")
-        .style("margin-bottom", "20px");
+        .style("margin-bottom", "20px")
+        .on("click", function () {
+          show();
+        });
 
       div.append("ul")
         .attr("id", this._playerCardsList)
         .style("display", "none");
 
-      div = help.append("div").attr("id", "info");
+      div = info.append("div").attr("id", this._infoHeader);
       div.append("p").attr("id", this._infoText);
       this._showInfo("You have the following options:");
 
@@ -307,7 +396,7 @@ define(function (require) {
       this._newButton(div.append("div"), this._accuseButtonId, "Accuse");
       this._newButton(div.append("div"), this._finishMoveButtonId, "Next player");
 
-      d3.select("#info")
+      d3.select("#"  +  this._infoHeader)
         .append("div")
         .attr("id", this._selectListsId)
         .style("text-align", "left");
@@ -327,48 +416,50 @@ define(function (require) {
         this._placesSelectDiv,
         this._placeSelectList,
         this._model.cards.places);
-
-      div = d3.select("#info").append("div");
-      let button = this._newButton(div, this._selectSuggestButtonId, "Suggest");
-      button.style("display", "none");
-
-      div = d3.select("#info").append("div");
-      button = this._newButton(div, this._selectAccuseButtonId, "Accuse");
-      button.style("display", "none");
+      //
+      // div = d3.select("#info").append("div");
+      // let button = this._newButton(div, this._selectSuggestButtonId, "Suggest");
+      // button.style("display", "none");
+      //
+      // div = d3.select("#info").append("div");
+      // button = this._newButton(div, this._selectAccuseButtonId, "Accuse");
+      // button.style("display", "none");
     }
 
     _initSelectLists(text, divID, listID, cards) {
       const div = d3
         .select("#" + this._selectListsId)
         .append("div")
-        .attr("align" , "center")
-        .attr("class", "mdl-selectfield mdl-selectfield--floating-label")
+        .attr("align", "center")
         .attr("id", divID)
         .style("display", "none");
 
       const select = div
         .append("select")
-        .attr("align" , "center")
-        .attr("class", "mdl-selectfield__select")
+        .attr("align", "center")
         .attr("id", listID);
+
       select.selectAll("option")
         .data(cards.sort())
         .enter()
         .append("option")
         .attr("value", function (d) {return d.name; })
         .text(function (d) {return d.name; });
-      div.append("div")
-        .attr("class", "mdl-selectfield__icon")
-        .append("i")
-        .attr("class", "material-icons").text("arrow_drop_down");
+
+      // div.append("div")
+      //   .attr("class")
+      //   .append("i")
+      //   .attr("class", "material-icons").text("arrow_drop_down");
 
     }
 
     _printPlayer() {
-      d3.select("#player")
-        .select("p")
-        .select("u")
-        .text(`\n${this._model.currentPlayer.suspect.name}'s turn`);
+      d3.select("#" + this._sectionLegend)
+        .style("margin-right", "-200px")
+        .style("margin-top", "30px");
+      d3.select("#" + this._legendIntroHelp)
+        .style("width", "120px")
+        .text(`${this._model.currentPlayer.suspect.name}'s turn`);
 
       d3.select("#" + this._playerCardsList)
         .selectAll("li")
@@ -458,7 +549,7 @@ define(function (require) {
         .text();
     }
 
-    showCards() {
+    showCards = () => {
       const cardsButton = d3.select("#" + this._showCardsButton);
       const list = d3.select("#" + this._playerCardsList);
       if (list.style("display") === "none") {
@@ -468,7 +559,7 @@ define(function (require) {
         list.style("display", "none");
         cardsButton.attr("value", "Show cards");
       }
-    }
+    };
 
     showSuggestions() {
       this._showInfo("Select a suspect and a weapon:");

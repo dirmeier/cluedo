@@ -12,6 +12,10 @@ define(function () {
       name: "Alcibiades",
       path: "assets/alcibiades.jpeg"
     },
+    athena: {
+      name: "Athena",
+      path: "assets/athena.jpeg"
+    },
     barrel: {
       legend: "D",
       name: "Diogenes' barrel",

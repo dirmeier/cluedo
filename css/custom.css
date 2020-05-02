@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
+@media screen and (max-width: 1299px), screen and (max-height: 599px) {
+    .yellowbar { display: block; }
+}
+
 *,
 *::before,
 *::after {
@@ -14,7 +18,7 @@ html, pre, code, text, body, button, input, li, option, select, div {
 
 
 .row {
-    width: 1200px;
+    width: 1400px;
     margin: auto auto auto;
     text-align: center;
 }
@@ -29,9 +33,19 @@ html, pre, code, text, body, button, input, li, option, select, div {
 .column {
     float: left;
     margin: 50px auto auto;
-    min-height: 650px;
+    min-height: 825px;
     min-width: 250px;
 }
+
+.left {
+    max-width: 500px;
+    width: 500px;
+}
+
+.right {
+    width: 300px;
+}
+
 
 .row:after {
     content: "";
@@ -80,12 +94,12 @@ h4, ul, h5, h6 {
 }
 
 ul {
-    padding-left: 10px;
+    padding-left: 20px;
     padding-top: 0;
     padding-bottom: 0;
 }
 
-#board, #help {
+ #info_div {
     margin-left: 15px;
 }
 
@@ -122,8 +136,11 @@ select {
     color: darkslategray;
 }
 
-
 .nes-btn {
     width: 175px;
     margin: 5px;
+}
+
+.message {
+ position: relative;
 }

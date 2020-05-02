@@ -11,7 +11,6 @@ define(function () {
       this._adj = this._board.adjacency;
 
       this._view = view;
-      this._view.bindShowCards(this.showCards);
       this._view.bindCast(this.castDie);
       this._view.bindMove(this.move);
       this._view.bindSuggest(this.suggest);
@@ -23,10 +22,6 @@ define(function () {
       this._isMove = false;
       this._log();
     }
-
-    showCards = () => {
-      this._view.showCards();
-    };
 
     castDie = () => {
       this._isMove = true;
