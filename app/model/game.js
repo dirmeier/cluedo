@@ -40,15 +40,6 @@ define(function (require) {
       return this._cards.randomAvailableCard();
     }
 
-    print() {
-      const murder = this.murderCase();
-      console.log(
-        `${murder.victim.name} was killed by ${murder.murderer.name}` +
-        ` with a ${murder.weapon.name.toLowerCase()}` +
-        ` in the ${murder.room.name.toLowerCase()}.`
-      );
-    }
-
     isSolved(murderer, place, weapon) {
       const cs = this._cards.murderCase();
       return cs.murderer.name === murderer &&

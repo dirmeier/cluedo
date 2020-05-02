@@ -3,7 +3,7 @@
 define(function (require) {
   const utl = require("util");
   const Game = require("model/game");
-  const Player = require("model/player");
+  const Player = require("player");
 
   class Model {
     constructor(nPlayers) {

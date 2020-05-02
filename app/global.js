@@ -2,28 +2,92 @@
 
 define(function () {
   return {
-    agora: {name: "Agora", path: "app/view/agora.jpeg"},
-    alcibiades: {name: "Alcibiades", path: "app/view/alcibiades.jpeg"},
-    barrel: {name: "Diogenes' barrel", path: "app/view/barrel.jpeg"},
-    bouleuterion: {name: "Bouleuterion", path: "app/view/bouleuterion.jpeg"},
-    bow: {name: "Bow", path: "app/view/bow.png"},
-    charmides: {name: "Charmides", path: "app/view/charmides.jpeg"},
-    critias: {name: "Critias", path: "app/view/critias.jpeg"},
-    dagger: {name: "Dagger", path: "app/view/dagger.png"},
-    heraclitus: {name: "Heraclitus", path: "app/view/heraclitus.jpeg"},
-    hill: {name: "Hill of the Muses", path: "app/view/hill.jpeg"},
-    library: {name: "Library", path: "app/view/library.jpeg"},
-    lysander: {name: "Lysander", path: "app/view/lysander.jpeg"},
-    parthenon: {name: "Parthenon", path: "app/view/parthenon.jpeg"},
-    plato: {name: "Plato", path: "app/view/plato.jpeg"},
-    poison: {name: "Cup of poison", path: "app/view/poison.jpeg"},
-    rope: {name: "Rope", path: "app/view/rope.jpeg"},
-    sickle: {name: "Sickle", path: "app/view/sickle.jpeg"},
-    socrates: {name: "Socrates", path: "app/view/socrates.jpeg"},
-    temple: {name: "Temple", path: "app/view/temple.jpeg"},
-    theater: {name: "Theater", path: "app/view/theater.jpeg"},
-    treachery: {name: "Treachery", path: "app/view/treachery.png"},
-    tree: {name: "Socrates' favourite olive tree", path: "app/view/tree.jpeg"}
+    agora: {
+      legend: "A",
+      name: "Agora",
+      path: "assets/agora.jpeg",
+      type: "place"
+    },
+    alcibiades: {
+      name: "Alcibiades",
+      path: "assets/alcibiades.jpeg"
+    },
+    barrel: {
+      legend: "D",
+      name: "Diogenes' barrel",
+      path: "assets/barrel.jpeg",
+      type: "place"
+    },
+    bouleuterion: {
+      legend: "B",
+      name: "Bouleuterion",
+      path: "assets/bouleuterion.jpeg",
+      type: "place"
+    },
+    bow: {
+      name: "Bow", path: "assets/bow.png"
+    },
+    charmides: {name: "Charmides", path: "assets/charmides.jpeg"},
+    critias: {name: "Critias", path: "assets/critias.jpeg"},
+    dagger: {name: "Dagger", path: "assets/dagger.png"},
+    heraclitus: {
+      name: "Heraclitus",
+      path: "assets/heraclitus.jpeg"
+    },
+    hill: {
+      legend: "H",
+      name: "Hill of the Muses",
+      path: "assets/hill.jpeg",
+      type: "place"
+    },
+    library: {
+      legend: "L",
+      name: "Library",
+      path: "assets/library.jpeg",
+      type: "place"
+    },
+    lysander: {name: "Lysander", path: "assets/lysander.jpeg"},
+    parthenon: {
+      legend: "P",
+      name: "Parthenon",
+      path: "assets/parthenon.jpeg",
+      type: "place"
+    },
+    plato: {name: "Plato", path: "assets/plato.jpeg"},
+    poison: {name: "Cup of poison", path: "assets/poison.jpeg"},
+    rope: {name: "Rope", path: "assets/rope.jpeg"},
+    sickle: {name: "Sickle", path: "assets/sickle.jpeg"},
+    socrates: {name: "Socrates", path: "assets/socrates.jpeg"},
+    temple: {
+      legend: "U",
+      name: "Temple of Athena",
+      path: "assets/temple.jpeg",
+      type: "place"
+    },
+    theater: {
+      legend: "T",
+      name: "Theater",
+      path: "assets/theater.jpeg",
+      type: "place"
+    },
+    treachery: {name: "Treachery", path: "assets/treachery.png"},
+    tree: {
+      legend: "S",
+      name: "Socrates' favourite olive tree",
+      path: "assets/tree.jpeg",
+      type: "place"
+    },
+    emtpySpace: {
+      name: "_",
+      legend: "_",
+      path: "assets/socrates.jpeg",
+      type: "other"
+    },
+    path: {
+      name: "_",
+      legend: ".",
+      type: "path"
+    }
   };
 });
 

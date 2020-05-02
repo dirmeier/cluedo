@@ -1,6 +1,6 @@
 "use strict";
 
-define(function (require) {
+define(function () {
   function shuffle(a) {
     for (let i = a.length - 1; i > 0; i--) {
       let j = Math.floor(Math.random() * (i + 1));
@@ -22,9 +22,14 @@ define(function (require) {
     return randomElements(array, 1)[0];
   }
 
+  function sleep(milliseconds) {
+    return new Promise(resolve => setTimeout(resolve, milliseconds));
+  }
+
   return {
     randomElement,
     randomElements,
-    shuffle
+    shuffle,
+    sleep
   };
 });

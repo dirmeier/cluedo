@@ -2,6 +2,7 @@
 
 define(function (require) {
   const d3 = require("libs/d3");
+  const utl = require("util");
 
   class View {
     constructor(model) {
@@ -35,25 +36,24 @@ define(function (require) {
       this._selectAccuseButtonId = "select_accuse_button";
 
       this._init();
-      this._app = this._getApp();
-      this._initBoard();
       this._initLegend();
+      this._initBoard();
       this._initHelp();
       this._printPlayer();
 
       this._paintedTiles = [];
     }
 
-    _sleep(milliseconds) {
-      return new Promise(resolve => setTimeout(resolve, milliseconds));
-    }
-
     _init() {
-      d3.select("#app").attr("class", "row").attr("align", "center");
       d3.select("#app")
-        .append("h1").text("Cluedo - ancient Greece edition");
+        .attr("class", "row")
+        .attr("align", "center");
       d3.select("#app")
-        .append("h2").text("Expose Socrates' murderer.");
+        .append("h1")
+        .text("Cluedo - ancient Greece edition");
+      d3.select("#app")
+        .append("h2")
+        .text("Expose Socrates' murderer.");
       d3.select("#app")
         .append("div")
         .attr("id", "legend")
@@ -72,10 +72,6 @@ define(function (require) {
         .style("width", 250);
     }
 
-    _getApp() {
-      return d3.select("#board");
-    }
-
     _initBoard() {
       this._initTiles();
       this._drawPieces("Suspects", this._board.suspects);
@@ -84,7 +80,7 @@ define(function (require) {
     }
 
     _initTiles() {
-      const main = this._app
+      const main = d3.select("#board")
         .append("svg")
         .attr("width", this._width + 5)
         .attr("height", this._height + 5);
@@ -435,14 +431,14 @@ define(function (require) {
           this._paintTile(tile.x, tile.y, "lightgray");
         }
       }
-      await this._sleep(500);
+      await utl.sleep(500);
       let lastTile = oldTile;
       for (let mv of path) {
         this._drawPiece(mv, this._model.currentPlayer.suspect);
         this._removePiece(lastTile);
         lastTile = mv;
         this._paintTile(lastTile.x, lastTile.y, "lightgray");
-        await this._sleep(500);
+        await utl.sleep(500);
       }
 
       if (this._model.currentPlayer.isInPlace)

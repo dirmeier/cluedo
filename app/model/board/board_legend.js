@@ -5,64 +5,64 @@ define(function (require) {
 
   return [
     {
-      "legend": "A",
+      "legend": glb.agora.legend,
       "place": glb.agora.name,
-      "type": "place",
-      "path": "app/view/agora.jpeg"
+      "type": glb.agora.type,
+      "path": glb.agora.path
     },
     {
-      "legend": "B",
+      "legend": glb.bouleuterion.legend,
       "place": glb.bouleuterion.name,
-      "type": "place",
+      "type": glb.agora.type,
       "path": glb.bouleuterion.path
     },
     {
-      "legend": "D",
+      "legend": glb.barrel.legend,
       "place": glb.barrel.name,
-      "type": "place",
+      "type": glb.barrel.type,
       "path": glb.barrel.path
     },
     {
-      "legend": "H",
+      "legend": glb.hill.legend,
       "place": glb.hill.name,
-      "type": "place",
+      "type": glb.hill.type,
       "path": glb.hill.path
     },
     {
-      "legend": "L",
+      "legend": glb.library.legend,
       "place": glb.library.name,
-      "type": "place",
+      "type": glb.library.type,
       "path": glb.library.path
     },
     {
-      "legend": "P",
+      "legend": glb.parthenon.legend,
       "place": glb.parthenon.name,
-      "type": "place",
+      "type": glb.parthenon.type,
       "path": glb.parthenon.path
     },
     {
-      "legend": "S",
+      "legend": glb.tree.legend,
       "place": glb.tree.name,
-      "type": "place",
+      "type": glb.tree.type,
       "path": glb.tree.path
     },
     {
-      "legend": "T",
+      "legend": glb.theater.legend,
       "place": glb.theater.name,
-      "type": "place",
+      "type": glb.theater.type,
       "path": glb.theater.path
     },
     {
-      "legend": "U",
+      "legend": glb.temple.legend,
       "place": glb.temple.name,
-      "type": "place",
+      "type": glb.temple.type,
       "path": glb.temple.path
     },
     {
-      "legend": "_",
-      "place": "_",
-      "type": "other",
-      "path": glb.socrates.path
+      "legend": glb.emtpySpace.legend,
+      "place": glb.emtpySpace.name,
+      "type": glb.emtpySpace.type,
+      "path": glb.emtpySpace.path
     },
     {
       "legend": ".",
