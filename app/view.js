@@ -146,7 +146,7 @@ define(function (require) {
 
       section.append("svg")
         .attr('height', this._legendHeight)
-        .attr('width', this._legendWidth)
+        .attr('width', this._legendWidth )
         .append("svg:image")
         .attr('height', this._legendHeight)
         .attr("xlink:href", glb.athena.path);
@@ -191,6 +191,8 @@ define(function (require) {
 
     _initTiles() {
       const main = d3.select("#" + this._boardDiv)
+        .append("div")
+        .attr("class", "hide-when-small")
         .append("svg")
         .attr("width", this._width + 5)
         .attr("height", this._height + 5);
@@ -322,7 +324,8 @@ define(function (require) {
     _initLegend() {
       const legend = d3.select("#" + this._legendDiv)
         .append("h3")
-        .html("Legend");
+        .html("Legend")
+        .attr("class", "hide-when-small");
       this._initLegendForPieces("Players",
         this._model.players.map(function (i) {return i.suspect;}));
       this._initLegendForPieces("Suspects", this._board.suspects.sort());
@@ -335,8 +338,7 @@ define(function (require) {
     _initLegendForPieces(piecesHeader, arr) {
       let div = d3.select("#" + this._legendDiv)
         .append("div")
-        .attr("class", "small-column")
-        .style("align", "right");
+        .attr("class", "small-column hide-when-small");
       div.append('h5').html(piecesHeader);
       div.append('ul').attr("id", "legend_" + piecesHeader);
       this._initLegendPieceList("legend_" + piecesHeader, arr);
@@ -360,13 +362,13 @@ define(function (require) {
     }
 
     _initButtonDescription() {
-      d3.select('#legend')
-        .append('h5')
-        .html("Buttons");
+      const div = d3.select("#" + this._legendDiv)
+        .append("div")
+        .attr("class", "small-column hide-when-small");
 
-      const ul = d3.select('#legend')
-        .append('ul');
+        div.append('h5').html("Buttons");
 
+      const ul = div.append('ul');
       const els = [
         "Cast die: throw two dice and move your figure on the board",
         "Suggest: ask your co-players for a suspect/place/weapon card",
@@ -392,7 +394,9 @@ define(function (require) {
 
     _initInfo() {
       const info = d3.select("#" + this._infoDiv)
-        .style("width", this._helpWidth);
+        .style("width", this._helpWidth)
+        .append("div")
+        .attr("class", "hide-when-small");
       info.append("h3").html("Info");
 
       let div = info.append("div");
@@ -438,12 +442,14 @@ define(function (require) {
         this._placeSelectList,
         this._model.cards.places);
 
-      div = d3.select("#" + this._infoDiv).append("div");
+      div = d3.select("#" + this._infoDiv)
+        .select("div")
+        .append("div");
       let button = this._newButton(
         div, this._selectSuggestButtonId, "Suggest");
       button.style("display", "none");
 
-      div = d3.select("#" + this._infoDiv).append("div");
+      div = d3.select("#" + this._infoDiv).select("div").append("div");
       button = this._newButton(
         div, this._selectAccuseButtonId, "Accuse");
       button.style("display", "none");

@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-@media only screen and (max-width: 1600px) {
+@media only screen and (max-width: 1599px) {
     .hide-when-small {
         display: none;
     }
@@ -47,7 +47,7 @@ html, pre, code, text, body, button, input, li, option, select, div {
 }
 
 .small-column {
-    float: right;
+    float: left;
     width: 20%;
 }
 
@@ -72,11 +72,9 @@ html, pre, code, text, body, button, input, li, option, select, div {
 }
 
 html {
-    background-color: whitesmoke;
     font-family: serif;
     font-size: 1rem;
 }
-
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Press Start 2P', cursive !important;
 }
