@@ -1,8 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-@media screen and (max-width: 1299px), screen and (max-height: 599px) {
-    .yellowbar { display: block; }
+@media only screen and (max-width: 1600px) {
+    .hide-when-small {
+        display: none;
+    }
 }
+
+@media only screen and (min-width: 1600px) {
+    .show-when-small {
+        display: none;
+    }
+}
+
 
 *,
 *::before,
@@ -19,6 +28,7 @@ html, pre, code, text, body, button, input, li, option, select, div {
 
 .row {
     width: 1400px;
+    height: 700px;
     margin: auto auto auto;
     text-align: center;
 }
@@ -33,8 +43,12 @@ html, pre, code, text, body, button, input, li, option, select, div {
 .column {
     float: left;
     margin: 50px auto auto;
-    min-height: 825px;
     min-width: 250px;
+}
+
+.small-column {
+    float: right;
+    width: 20%;
 }
 
 .left {
@@ -99,7 +113,7 @@ ul {
     padding-bottom: 0;
 }
 
- #info_div {
+#info_div {
     margin-left: 15px;
 }
 
@@ -129,7 +143,8 @@ input {
 }
 
 select {
-    width: 100px;
+    width: 200px;
+    margin: 5px;
 }
 
 ::placeholder {
@@ -142,5 +157,5 @@ select {
 }
 
 .message {
- position: relative;
+    position: relative;
 }
