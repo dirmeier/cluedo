@@ -44,6 +44,10 @@ define(function (require) {
       }
     }
 
+    get game() {
+      return this._game;
+    }
+
     get cards() {
       return this._game.cards;
     }

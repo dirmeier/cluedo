@@ -103,6 +103,11 @@ define(function (require) {
     }
   }
 
-  return Cards;
+  return {
+    Cards,
+    suspects,
+    weapons,
+    places
+  };
 });
 

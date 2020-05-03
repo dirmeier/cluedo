@@ -26,10 +26,15 @@ define(function () {
     return new Promise(resolve => setTimeout(resolve, milliseconds));
   }
 
+  function distinct(outer, inner) {
+    return outer.filter((i) => !inner.includes(i));
+  }
+
   return {
     randomElement,
     randomElements,
     shuffle,
-    sleep
+    sleep,
+    distinct
   };
 });

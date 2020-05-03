@@ -2,14 +2,14 @@
 
 define(function (require) {
   const Board = require("model/board");
-  const Cards = require("model/cards");
+  const cards = require("model/cards");
   const Dice = require("model/dice");
 
   class Game {
     constructor(nSuspects) {
       this._board = new Board(nSuspects);
       this._dice = new Dice();
-      this._cards = new Cards();
+      this._cards = new cards.Cards();
     }
 
     get dice() {
