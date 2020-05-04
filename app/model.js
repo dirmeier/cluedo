@@ -16,22 +16,15 @@ define(function (require) {
     }
 
     _initPlayers(nPlayers, nAI) {
+      const n = nPlayers  + nAI;
       let players = [];
+      const randomSuspects = utl.randomElements(this._game.board.suspects, n);
+      let constructors = utl.shuffle(
+        [...Array(nPlayers).fill(Player), ...Array(nPlayers).fill(AI)]
+      );
 
-      const randomSuspects = utl.randomElements(
-        this._game.board.suspects, nPlayers + nAI);
-
-      // const constructors = [];
-      // for (let i = 0; i < nPlayers; i++) {
-      //   constructors.push(Player);
-      // }
-      // for (let i = 0; i < nAI; i++) {
-      //   constructors.push(AI);
-      // }
-      //
-
-      for (let i = 0; i < nPlayers; i++) {
-        players.push(new Player(i, randomSuspects[i]));
+      for (let i = 0; i < n; i++) {
+        players.push(new constructors[i](i, randomSuspects[i], this));
         if (i > 0) {
           players[i - 1].next = players[i];
           players[i].prev = players[i - 1];

@@ -5,13 +5,13 @@ define(function (require) {
   const Player = require("player");
 
   class AI extends Player {
-    constructor(name, suspect, model) {
+    constructor(name, suspect, game) {
       super(name, suspect);
-      this._model = model;
-      this._board = this._model.game.board;
-      this._allWeapons = model.game.cards.weapons.map((i) => i.name);
-      this._allSuspects = model.game.cards.suspects.map((i) => i.name);
-      this._allPlaces = model.game.cards.places.map((i) => i.name);
+      this._game = game;
+      this._board = this._game.board;
+      this._allWeapons = this._game.cards.weapons.map((i) => i.name);
+      this._allSuspects = this._game.cards.suspects.map((i) => i.name);
+      this._allPlaces = this._game.cards.places.map((i) => i.name);
 
       this._hasSeenPlaces = [];
       this._hasSeenWeapons = [];
