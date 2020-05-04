@@ -4,20 +4,32 @@ define(function (require) {
   const utl = require("util");
   const Game = require("model/game");
   const Player = require("player");
+  const AI = require("ai");
 
   class Model {
-    constructor(nPlayers) {
-      this._game = new Game(nPlayers);
-      this._players = this._initPlayers(nPlayers);
+    constructor(nPlayers, nAI) {
+      this._game = new Game(nPlayers + nAI);
+      this._players = this._initPlayers(nPlayers, nAI);
       this._currentPlayer = this._players[0];
 
       this._dealCards();
     }
 
-    _initPlayers(nPlayers) {
+    _initPlayers(nPlayers, nAI) {
       let players = [];
+
       const randomSuspects = utl.randomElements(
-        this._game.board.suspects, nPlayers);
+        this._game.board.suspects, nPlayers + nAI);
+
+      // const constructors = [];
+      // for (let i = 0; i < nPlayers; i++) {
+      //   constructors.push(Player);
+      // }
+      // for (let i = 0; i < nAI; i++) {
+      //   constructors.push(AI);
+      // }
+      //
+
       for (let i = 0; i < nPlayers; i++) {
         players.push(new Player(i, randomSuspects[i]));
         if (i > 0) {

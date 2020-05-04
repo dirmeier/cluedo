@@ -88,9 +88,7 @@ define(function (require) {
         suspect: suspect,
         place: place
       };
-
     }
-
   }
 
   AI.prototype.toString = function () {
