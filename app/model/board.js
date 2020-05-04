@@ -205,10 +205,6 @@ define(function (require) {
       }
     }
 
-    movePiece(piece, place) {
-      return this.putOnRandomTile(piece, place);
-    }
-
     getPiece(name) {
       for (let piece of this.pieces) {
         if (piece.name === name)

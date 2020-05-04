@@ -16,20 +16,20 @@ define(function (require) {
     }
 
     _initPlayers(nPlayers, nAI) {
-      const n = nPlayers  + nAI;
+      const n = nPlayers + nAI;
       let players = [];
       const randomSuspects = utl.randomElements(this._game.board.suspects, n);
       let constructors = utl.shuffle(
-        [...Array(nPlayers).fill(Player), ...Array(nPlayers).fill(AI)]
+        [...Array(nPlayers).fill(Player), ...Array(nAI).fill(AI)]
       );
 
       for (let i = 0; i < n; i++) {
-        players.push(new constructors[i](i, randomSuspects[i], this));
+        players.push(new constructors[i](i, randomSuspects[i], this._game));
         if (i > 0) {
           players[i - 1].next = players[i];
           players[i].prev = players[i - 1];
         }
-        if (i === nPlayers - 1) {
+        if (i === n - 1) {
           players[i].next = players[0];
           players[0].prev = players[i];
         }
@@ -53,24 +53,12 @@ define(function (require) {
       return this._game;
     }
 
-    get cards() {
-      return this._game.cards;
-    }
-
-    get board() {
-      return this._game.board;
-    }
-
     get currentPlayer() {
       return this._currentPlayer;
     }
 
     get players() {
       return this._players;
-    }
-
-    castDie() {
-      return this._game.dice.cast();
     }
 
     computeNeighbors(distance) {

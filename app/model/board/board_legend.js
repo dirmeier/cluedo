@@ -66,7 +66,7 @@ define(function (require) {
     },
     {
       "legend": ".",
-      "place": "_",
+      "place": "Path",
       "type": "path"
     }
   ];

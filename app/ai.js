@@ -20,8 +20,24 @@ define(function (require) {
       this._target = null;
     }
 
+    get target() {
+      return this._target;
+    }
+
+    get isAI() {
+      return true;
+    }
+
+    get name() {
+      return super.name + " (AI)";
+    }
+
     addCard(card) {
-      super.addCard();
+      super.addCard(card);
+      this.addSeenCard(card);
+    }
+
+    addSeenCard(card) {
       const cons = card.constructor.name;
       if (cons === "Suspect")
         this._hasSeenSuspects.push(card.name);
@@ -33,19 +49,22 @@ define(function (require) {
     wantToCast() {
       const hasSeenRoom = this._hasSeenPlaces.includes(
         this.suspect.tile.place.name);
-      if (!hasSeenRoom)
-        return false;
-      return Math.random() < .5;
+
+      /// TODO debug:
+      return true;
+      // if (!hasSeenRoom)
+      //   return false;
+      // return Math.random() < .5;
     }
 
-    move(pips) {
+    getPath(pips) {
       if (this._target === null) {
-        const randomPlaceString = utl.randomElement(
-          utl.distinct(this._allPlaces, this._hasSeenPlaces));
-        const randomPlace = this._board.places.filter(
-          (i) => i.name === randomPlaceString
-        );
-        this._target = randomPlace;
+        const hasNotSeenPlaces = utl.distinct(
+          this._allPlaces, this._hasSeenPlaces);
+        const randomPlaceString = utl.randomElement(hasNotSeenPlaces);
+        const randomPlace = Object.values(this._board.places)
+          .filter((i) => i.name === randomPlaceString);
+        this._target = randomPlace[0];
       }
 
       // here we should implement the closest free tile not just any tile
@@ -54,7 +73,8 @@ define(function (require) {
         this._targetTile
       );
 
-      return entirePath.slice(0, pips + 1);
+      const moveablePath = entirePath.slice(0, pips);
+      return moveablePath;
     }
 
     suggest() {
@@ -69,24 +89,22 @@ define(function (require) {
       };
     }
 
-    wantToAccuse() {
-      return this._hasSeenPlaces.length + 1 === this._allPlaces.length &&
+    canAccuse() {
+      const can = this._hasSeenPlaces.length + 1 === this._allPlaces.length &&
         this._hasSeenWeapons.length + 1 === this._allWeapons.length &&
         this._hasSeenSuspects.length + 1 === this._allSuspects.length;
+      return can;
     }
 
     accuse() {
-      const weapon = weapons.filter(
-        (i) => !this._hasSeenWeapons.includes(i));
-      const suspect = suspects.filter(
-        (i) => !this._hasSeenSuspects.includes(i));
-      const place = places.filter(
-        (i) => !this._hasSeenPlaces.includes(i));
+      const weapon = utl.distinct(this._allWeapons, this._hasSeenWeapons);
+      const suspect = utl.distinct(this._allSuspects, this._hasSeenSuspects);
+      const place = utl.distinct(this._allPlaces, this._hasSeenPlaces);
 
       return {
-        weapon: weapon,
-        suspect: suspect,
-        place: place
+        weapon: weapon[0],
+        suspect: suspect[0],
+        place: place[0]
       };
     }
   }

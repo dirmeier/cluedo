@@ -90,10 +90,11 @@ define(function (require) {
   //   .append("span")
   //   .attr("id", "intro_span");
   //
-  // const _run = (nPlayers, nAI) => {
+  const _run = (nPlayers, nAI) => {
     d3.select("#landing_page").style("display", "none");
-    const model = new Model(3, 3);
+    const model = new Model(nPlayers, nAI);
     const view = new View(model);
-    new Controller(nPlayers, model, view);
-  // };
+    new Controller(nPlayers + nAI, model, view);
+  };
+  _run(2, 0);
 });

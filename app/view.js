@@ -14,7 +14,7 @@ define(function (require) {
       this._height = 500;
 
       this._model = model;
-      this._board = this._model.board;
+      this._board = this._model.game.board;
       this._adj = this._board.adjacency;
       this._suspectPieces = this._board.suspects;
       this._weaponPieces = this._board.weapons;
@@ -28,6 +28,13 @@ define(function (require) {
       this._infoDiv = "info_div";
       this._legendDiv = "legend_div";
 
+      this._infoHeader = "info_header";
+      this._infoText = "info_text";
+      this._revealCardButton = "show_revealed_card_button";
+      this._revealCardParagraph = "show_revealed_card_paragraph";
+
+      this._buttonsId = "buttons";
+
       this._legendNextButton = "legend_next_button";
       this._legendIntroHelp = "legend_intro_help";
       this._introTextIndex = 0;
@@ -38,7 +45,7 @@ define(function (require) {
         "Welcome. I am the goddess Athena, patron of the city of Athens, and " +
         "I come with bad news. One of my favorite disciples, Socrates, has been murdered.",
 
-        "To not let this crime go unpunished, I instructed three of his acquaintances," +
+        "To not let this crime go unpunished, I instructed some of his acquaintances," +
         this._playerPiecesNames.slice(0, -1).join(", ") + " and " + this._playerPiecesNames.pop() +
         " (one for each player), to expose his murderer.",
 
@@ -46,15 +53,13 @@ define(function (require) {
         "with 1 of " + this._weaponPieces.length + " weapons " +
         "which are distributed in different places in Athens. I assume the murder has been " +
         "committed in one of these places.",
+
         "Each round a player can 'cast a die' to move between places, make a 'suggestion' to " +
         "get information about suspects/weapons/places and 'accuse' someone to end the game. " +
         "Now, please help me and expose the murder and save the open society.",
+
         null
       ];
-
-      this._infoHeader = "info_header";
-      this._infoText = "info_text";
-      this._buttonsId = "buttons";
 
       this._playerCardsList = "player_card_list";
       this._showCardsButton = "show_cards_button";
@@ -83,7 +88,7 @@ define(function (require) {
       this._initBoard();
       this._initInfo();
       this._initLegend();
-      this._init();
+      this._intro();
     }
 
     _buildElements() {
@@ -146,20 +151,17 @@ define(function (require) {
 
       section.append("svg")
         .attr('height', this._legendHeight)
-        .attr('width', this._legendWidth )
+        .attr('width', this._legendWidth)
         .append("svg:image")
         .attr('height', this._legendHeight)
         .attr("xlink:href", glb.athena.path);
 
-      const init = this._init;
-      this._newButton(d3.select("#" + this._athenaDiv), this._legendNextButton, "Next")
-        .attr("class", "nes-btn hide-when-small")
-        .on("click", function () {
-          init();
-        });
+      this._newButton(
+        d3.select("#" + this._athenaDiv), this._legendNextButton, "Next")
+        .attr("class", "nes-btn hide-when-small");
     }
 
-    _init = () => {
+    _intro = () => {
       const idx = this._introTextIndex;
       d3.select("#" + this._sectionLegend)
         .style("margin-right", this._sectionLegendMarginRight[idx])
@@ -172,10 +174,10 @@ define(function (require) {
         d3.select("#" + this._legendNextButton).style("display", "none");
         d3.select("#" + this._infoDiv).style("display", "block");
         d3.select("#" + this._legendDiv).style("display", "block");
-        this._legendDiv
         this._printPlayer();
       }
       this._introTextIndex++;
+      return this._introTextIndex;
     };
 
     _showText(id, text) {
@@ -366,7 +368,7 @@ define(function (require) {
         .append("div")
         .attr("class", "small-column hide-when-small");
 
-        div.append('h5').html("Buttons");
+      div.append('h5').html("Buttons");
 
       const ul = div.append('ul');
       const els = [
@@ -400,22 +402,31 @@ define(function (require) {
       info.append("h3").html("Info");
 
       let div = info.append("div");
-      const show = this.showCards;
+      let show = this.showCards;
       this._newButton(div, this._showCardsButton, "Show cards")
         .style("margin-bottom", "20px")
         .on("click", function () {
           show();
         });
 
-      div.append("ul")
-        .attr("id", this._playerCardsList)
-        .style("display", "none");
-
+      div.append("ul").attr("id", this._playerCardsList).style("display", "none");
       div = info.append("div").attr("id", this._infoHeader);
-      div.append("p").attr("id", this._infoText);
-      this._showInfo("You have the following options:");
+      div.append("div")
+        .style("overflow", "hidden")
+        .append("p")
+        .attr("id", this._infoText);
+      this.showInfo("You have the following options:");
 
-      div = div.append("div").attr("id", this._buttonsId);
+      div = d3.select("#" + this._infoHeader).append("div");
+      show = this.showRevealCard;
+      let button = this._newButton(div, this._revealCardButton, "Reveal card");
+      button.style("display", "none")
+        .on("click", function () {
+            show();
+        });
+      div.append("p").attr("id", this._revealCardParagraph).style("display", "none");
+
+      div = d3.select("#" + this._infoHeader).append("div").attr("id", this._buttonsId);
       this._newButton(div.append("div"), this._castButtonId, "Cast die");
       this._newButton(div.append("div"), this._suggestButtonId, "Suggest");
       this._newButton(div.append("div"), this._accuseButtonId, "Accuse");
@@ -430,26 +441,24 @@ define(function (require) {
         "Suspects: ",
         this._suspectsSelectDiv,
         this._suspectsSelectList,
-        this._model.cards.suspects);
+        this._model.game.cards.suspects);
       this._initSelectLists(
         "Weapons: ",
         this._weaponsSelectDiv,
         this._weaponsSelectList,
-        this._model.cards.weapons);
+        this._model.game.cards.weapons);
       this._initSelectLists(
         "Places:",
         this._placesSelectDiv,
         this._placeSelectList,
-        this._model.cards.places);
+        this._model.game.cards.places);
 
-      div = d3.select("#" + this._infoDiv)
-        .select("div")
-        .append("div");
-      let button = this._newButton(
+      div = d3.select("#" + this._infoHeader).append("div");
+      button = this._newButton(
         div, this._selectSuggestButtonId, "Suggest");
       button.style("display", "none");
 
-      div = d3.select("#" + this._infoDiv).select("div").append("div");
+      div = d3.select("#" + this._infoHeader).append("div");
       button = this._newButton(
         div, this._selectAccuseButtonId, "Accuse");
       button.style("display", "none");
@@ -482,7 +491,7 @@ define(function (require) {
         .style("margin-top", "30px");
       d3.select("#" + this._legendIntroHelp)
         .style("width", "120px")
-        .text(`${this._model.currentPlayer.suspect.name}'s turn`);
+        .text(`${this._model.currentPlayer.name}'s turn`);
 
       d3.select("#" + this._playerCardsList)
         .selectAll("li")
@@ -502,11 +511,11 @@ define(function (require) {
         .remove();
       d3.select("#" + this._infoDiv)
         .append("div")
-        .text("You all lost. Good job. Reload the page if you want to give it another try.");
+        .text("You all lost. Good job. Reload the page if you want to give it another try.\n");
     }
 
     drawTiles(tiles, pips) {
-      this._showInfo(`You cast: ${pips}. Make a move by clicking a field.`);
+      this.appendInfo(`${this._model.currentPlayer.name} cast: ${pips}.\n`);
       for (let tile of this._paintedTiles)
         this._paintTile(tile.x, tile.y, "lightgray");
       for (let tile of tiles)
@@ -537,6 +546,10 @@ define(function (require) {
       d3.select("#" + id).style("display", "none");
     }
 
+    async wait(ms) {
+      await utl.sleep(ms);
+    }
+
     async makeMove(tile, player, oldTile, path) {
       for (let tile of this._paintedTiles) {
         const ind = path.filter(
@@ -545,14 +558,14 @@ define(function (require) {
           this._paintTile(tile.x, tile.y, "lightgray");
         }
       }
-      await utl.sleep(500);
+      await this.wait(500);
       let lastTile = oldTile;
       for (let mv of path) {
         this._drawPiece(mv, this._model.currentPlayer.suspect);
         this._removePiece(lastTile);
         lastTile = mv;
         this._paintTile(lastTile.x, lastTile.y, "lightgray");
-        await utl.sleep(500);
+        await this.wait(500);
       }
 
       if (this._model.currentPlayer.isInPlace)
@@ -561,8 +574,13 @@ define(function (require) {
       this._showInline(this._finishMoveButtonId);
     }
 
-    _showInfo(text) {
+    showInfo(text) {
       d3.select("#" + this._infoText).text(text);
+    }
+
+    appendInfo(text) {
+      const app = d3.select("#" + this._infoText).text() + " " + text;
+      this.showInfo(app);
     }
 
     _getCheckedOption(id) {
@@ -577,39 +595,53 @@ define(function (require) {
       const list = d3.select("#" + this._playerCardsList);
       if (list.style("display") === "none") {
         list.style("display", "block");
-        cardsButton.attr("value", "Hide cards");
+        cardsButton.text("Hide cards");
       } else {
         list.style("display", "none");
-        cardsButton.attr("value", "Show cards");
+        cardsButton.text("Show cards");
+      }
+    };
+
+    showRevealCard = () => {
+      const revealButton = d3.select("#" + this._revealCardButton);
+      const par = d3.select("#" + this._revealCardParagraph);
+      if (par.style("display") === "none") {
+        par.style("display", "block") ;
+        revealButton.text("Hide card");
+      } else {
+        par.style("display", "none");
+        revealButton.text("Reveal card");
       }
     };
 
     showSuggestions() {
-      this._showInfo("Select a suspect and a weapon:");
+      this.appendInfo("Select a suspect and a weapon:");
       d3.select("#" + this._suspectsSelectDiv).style("display", "block");
       d3.select("#" + this._weaponsSelectDiv).style("display", "block");
       d3.select("#" + this._selectSuggestButtonId).style("display", "inline");
     }
 
     showAccusations() {
-      this._showInfo("Select a suspect, weapon and place:");
+      this.appendInfo("Select a suspect, weapon and place:");
       d3.select("#" + this._suspectsSelectDiv).style("display", "block");
       d3.select("#" + this._weaponsSelectDiv).style("display", "block");
       d3.select("#" + this._placesSelectDiv).style("display", "block");
       d3.select("#" + this._selectAccuseButtonId).style("display", "inline");
     }
 
-    showHolds(holds) {
+    showHolds(holds, isAI) {
       this._hide(this._suspectsSelectDiv);
       this._hide(this._weaponsSelectDiv);
       this._hide(this._selectSuggestButtonId);
-
-      if (holds[0] !== null) {
-        let c = holds.filter(function (i) {return i !== null;});
-        this._showInfo(
-          `${c[0]} shows you card:\n'${c[1]}'.
-          You have the following options:`
-        );
+      const pl = this._model.currentPlayer.name;
+      if (holds !== null) {
+        this.appendInfo(`${holds.player} showed ${pl} a card.`);
+        if (!isAI) {
+          d3.select("#" + this._revealCardButton).style("display", "inline");
+          d3.select("#" + this._revealCardParagraph).text(holds.card.name);
+        }
+      } else {
+        this.appendInfo(`${pl} didn't receive any card.`);
       }
       this._showInline(this._accuseButtonId);
       this._showInline(this._finishMoveButtonId);
@@ -627,11 +659,11 @@ define(function (require) {
       this._hide(this._selectAccuseButtonId);
 
       if (isSolved)
-        this._showInfo("Congrats! You won!" +
+        this.showInfo("Congrats! You won!" +
           " You saved the open society against its opponents." +
           " Restart the game by reloading the page.");
       else {
-        this._showInfo("Boo! You are out!");
+        this.showInfo("Boo! You are out!");
         this._showInline(this._finishMoveButtonId);
       }
     }
@@ -643,7 +675,7 @@ define(function (require) {
 
     nextPlayer() {
       this._printPlayer();
-      this._showInfo("You have the following options:");
+      this.showInfo("You have the following options:");
       this._showInline(this._castButtonId);
       this._showInline(this._suggestButtonId);
       this._showInline(this._accuseButtonId);
@@ -697,6 +729,16 @@ define(function (require) {
       d3.select("#" + this._finishMoveButtonId).on("click", handler);
     }
 
+    bindStartGame(handler) {
+      const init = this._intro;
+      const text = this._introTexts;
+      d3.select("#" + this._legendNextButton).on("click",
+        function () {
+          const idx = init();
+          if (idx === text.length) handler();
+        }
+      );
+    }
   }
 
   return View;

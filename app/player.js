@@ -10,12 +10,16 @@ define(function () {
       this._cards = [];
     }
 
+    get isAI() {
+      return false;
+    }
+
     get name() {
-      return this._name;
+      return this._suspect.name;
     }
 
     get isInPlace() {
-        return this._suspect.tile.place.type === "place";
+      return this._suspect.tile.place.type === "place";
     }
 
     get suspect() {
@@ -49,30 +53,27 @@ define(function () {
     ask(murderer, place, weapon) {
       let player = this._next;
       while (player !== this) {
-        if (player.holds(murderer))
-          return [player.suspect.name, murderer, null, null];
-        else if (player.holds(place))
-          return [player.suspect.name, null, place, null];
-        else if (player.holds(weapon))
-          return [player.suspect.name, null, weapon];
-        else
-          player = player.next;
+        for (let el of [murderer, place, weapon]) {
+          let hold = player.holds(el);
+          if (hold.length > 0) {
+            return {
+              player: player.suspect.name,
+              card: hold[0]
+            };
+          }
+        }
+        player = player.next;
       }
-      return [null, false, false, false];
+      return null;
     }
 
     holds(item) {
-      return this._cards.filter((i) => i.name === item).length > 0;
+      return this._cards.filter((i) => i.name === item);
     }
 
     get tile() {
       return this._suspect.tile;
     }
-
-    updatePosition(tile) {
-      this._suspect.putOn(tile);
-    }
-
   }
 
   Player.prototype.toString = function () {

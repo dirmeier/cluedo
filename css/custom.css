@@ -74,6 +74,7 @@ html {
     font-family: serif;
     font-size: 1rem;
 }
+
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Press Start 2P', cursive !important;
 }
@@ -155,4 +156,10 @@ select {
 
 .message {
     position: relative;
+}
+
+#info_text {
+    overflow-y: scroll;
+    max-height: 250px;
+    font-size: 10px;
 }
