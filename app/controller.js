@@ -113,7 +113,7 @@ define(function () {
       const pips = this._dice.cast();
       const tiles = this._model.computeNeighbors(pips);
 
-      this._view.drawTiles(tiles, pips);
+      this._view.drawTiles(tiles, pips, this._model.currentPlayer.isAI);
       this._view.hideButtons();
 
       this._pips = pips;
@@ -150,7 +150,7 @@ define(function () {
 
     suggest = () => {
       this._view.hideButtons();
-      this._view.showSuggestions();
+      this._view.showSuggestions(this._model.currentPlayer.isAI);
     };
 
     makeSuggestion = (suspect, weapon) => {
@@ -182,7 +182,7 @@ define(function () {
 
     accuse = () => {
       this._view.hideButtons();
-      this._view.showAccusations();
+      this._view.showAccusations(this._model.currentPlayer.isAI);
     };
 
     makeAccusation = (suspect, weapon, place) => {

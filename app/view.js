@@ -418,11 +418,11 @@ define(function (require) {
       this.showInfo("You have the following options:");
 
       div = d3.select("#" + this._infoHeader).append("div");
-      show = this.showRevealCard;
+      let showw = this.showRevealCard;
       let button = this._newButton(div, this._revealCardButton, "Reveal card");
       button.style("display", "none")
         .on("click", function () {
-          show();
+          showw();
         });
       div.append("p").attr("id", this._revealCardParagraph).style("display", "none");
 
@@ -514,8 +514,11 @@ define(function (require) {
         .text("You all lost. Good job. Reload the page if you want to give it another try.\n");
     }
 
-    drawTiles(tiles, pips) {
-      this.appendInfo(`${this._model.currentPlayer.name} cast: ${pips}.\n`);
+    drawTiles(tiles, pips, isAI) {
+      if (isAI)
+        this.appendInfo(`${this._model.currentPlayer.name} cast: ${pips}.\n`);
+      else
+        this.showInfo(`${this._model.currentPlayer.name} cast: ${pips}.\n`);
       for (let tile of this._paintedTiles)
         this._paintTile(tile.x, tile.y, "lightgray");
       for (let tile of tiles)
@@ -532,7 +535,8 @@ define(function (require) {
         this._castButtonId,
         this._accuseButtonId,
         this._suggestButtonId,
-        this._finishMoveButtonId
+        this._finishMoveButtonId,
+        this._revealCardButton
       ]) {
         d3.select("#" + el).style("display", "none");
       }
@@ -609,15 +613,17 @@ define(function (require) {
       }
     };
 
-    showSuggestions() {
-      this.appendInfo("Select a suspect and a weapon:");
+    showSuggestions(isAI) {
+      if (!isAI)
+        this.showInfo("Select a suspect and a weapon:");
       d3.select("#" + this._suspectsSelectDiv).style("display", "block");
       d3.select("#" + this._weaponsSelectDiv).style("display", "block");
       d3.select("#" + this._selectSuggestButtonId).style("display", "inline");
     }
 
-    showAccusations() {
-      this.appendInfo("Select a suspect, weapon and place:");
+    showAccusations(isAI) {
+      if (!isAI)
+        this.showInfo("Select a suspect, weapon and place:");
       d3.select("#" + this._suspectsSelectDiv).style("display", "block");
       d3.select("#" + this._weaponsSelectDiv).style("display", "block");
       d3.select("#" + this._placesSelectDiv).style("display", "block");
@@ -630,10 +636,12 @@ define(function (require) {
       this._hide(this._selectSuggestButtonId);
       const pl = this._model.currentPlayer.name;
       if (holds !== null) {
-        this.appendInfo(`${holds.player} showed ${pl} a card.`);
         if (!isAI) {
+          this.showInfo(`${holds.player} showed ${pl} a card.`);
           d3.select("#" + this._revealCardButton).style("display", "inline");
           d3.select("#" + this._revealCardParagraph).text(holds.card.name);
+        } else {
+          this.appendInfo(`${holds.player} showed ${pl} a card.`);
         }
       } else {
         this.appendInfo(`${pl} didn't receive any card.`);
