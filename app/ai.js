@@ -49,12 +49,9 @@ define(function (require) {
     wantToCast() {
       const hasSeenRoom = this._hasSeenPlaces.includes(
         this.suspect.tile.place.name);
-
-      /// TODO debug:
-      return true;
-      // if (!hasSeenRoom)
-      //   return false;
-      // return Math.random() < .5;
+      if (!hasSeenRoom)
+        return Math.random() < .25;
+      return Math.random() < .5;
     }
 
     getPath(pips) {
@@ -111,7 +108,12 @@ define(function (require) {
 
   AI.prototype.toString = function () {
     const crds = this._cards.join("\n\t");
-    return `[AI ${this.suspect.name} \n\t${crds}\n]`;
+    const seenCrds = [
+      ...this._hasSeenWeapons,
+      ...this._hasSeenSuspects,
+      ...this._hasSeenPlaces
+    ].sort().join(", ");
+    return `[AI ${this.suspect.name} \n\t${crds}\n\t[Seen ${seenCrds}]\n]`;
   };
 
   return AI;

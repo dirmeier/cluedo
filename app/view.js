@@ -422,7 +422,7 @@ define(function (require) {
       let button = this._newButton(div, this._revealCardButton, "Reveal card");
       button.style("display", "none")
         .on("click", function () {
-            show();
+          show();
         });
       div.append("p").attr("id", this._revealCardParagraph).style("display", "none");
 
@@ -538,7 +538,7 @@ define(function (require) {
       }
     }
 
-    _showInline(id) {
+    showInline(id) {
       d3.select("#" + id).style("display", "inline");
     }
 
@@ -561,17 +561,12 @@ define(function (require) {
       await this.wait(500);
       let lastTile = oldTile;
       for (let mv of path) {
-        this._drawPiece(mv, this._model.currentPlayer.suspect);
-        this._removePiece(lastTile);
+        await this._drawPiece(mv, this._model.currentPlayer.suspect);
+        await this._removePiece(lastTile);
         lastTile = mv;
-        this._paintTile(lastTile.x, lastTile.y, "lightgray");
+        await this._paintTile(lastTile.x, lastTile.y, "lightgray");
         await this.wait(500);
       }
-
-      if (this._model.currentPlayer.isInPlace)
-        this._showInline(this._suggestButtonId);
-      this._showInline(this._accuseButtonId);
-      this._showInline(this._finishMoveButtonId);
     }
 
     showInfo(text) {
@@ -606,7 +601,7 @@ define(function (require) {
       const revealButton = d3.select("#" + this._revealCardButton);
       const par = d3.select("#" + this._revealCardParagraph);
       if (par.style("display") === "none") {
-        par.style("display", "block") ;
+        par.style("display", "block");
         revealButton.text("Hide card");
       } else {
         par.style("display", "none");
@@ -643,8 +638,6 @@ define(function (require) {
       } else {
         this.appendInfo(`${pl} didn't receive any card.`);
       }
-      this._showInline(this._accuseButtonId);
-      this._showInline(this._finishMoveButtonId);
     }
 
     updatePiece(oldTile, newTile) {
@@ -664,7 +657,6 @@ define(function (require) {
           " Restart the game by reloading the page.");
       else {
         this.showInfo("Boo! You are out!");
-        this._showInline(this._finishMoveButtonId);
       }
     }
 
@@ -676,10 +668,23 @@ define(function (require) {
     nextPlayer() {
       this._printPlayer();
       this.showInfo("You have the following options:");
-      this._showInline(this._castButtonId);
-      this._showInline(this._suggestButtonId);
-      this._showInline(this._accuseButtonId);
-      this._showInline(this._finishMoveButtonId);
+      this.showInline(this._castButtonId);
+      this.showInline(this._suggestButtonId);
+      this.showInline(this._accuseButtonId);
+      this.showInline(this._finishMoveButtonId);
+    }
+
+    showSuggestButton() {
+      if (this._model.currentPlayer.isInPlace)
+        this.showInline(this._suggestButtonId);
+    }
+
+    showAccuseButton() {
+      this.showInline(this._accuseButtonId);
+    }
+
+    showFinishButton() {
+      this.showInline(this._finishMoveButtonId);
     }
 
     bindCast(handler) {

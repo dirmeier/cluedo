@@ -96,5 +96,5 @@ define(function (require) {
     const view = new View(model);
     new Controller(nPlayers + nAI, model, view);
   };
-  _run(2, 0);
+  _run(0, 2);
 });

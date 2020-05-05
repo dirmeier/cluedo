@@ -160,6 +160,6 @@ select {
 
 #info_text {
     overflow-y: scroll;
-    max-height: 250px;
+    max-height: 300px;
     font-size: 10px;
 }
