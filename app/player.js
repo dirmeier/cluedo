@@ -10,44 +10,48 @@ define(function () {
       this._cards = [];
     }
 
-    get isAI() {
-      return false;
+    get cards() {
+      return this._cards;
     }
 
-    get name() {
-      return this._suspect.name;
+    get isAI() {
+      return false;
     }
 
     get isInPlace() {
       return this._suspect.tile.place.type === "place";
     }
 
-    get suspect() {
-      return this._suspect;
-    }
-
-    addCard(card) {
-      this._cards.push(card);
-    }
-
-    get cards() {
-      return this._cards;
+    get name() {
+      return this._suspect.name;
     }
 
     get next() {
       return this._next;
     }
 
-    set next(next) {
-      this._next = next;
-    }
-
     get prev() {
       return this._prev;
     }
 
+    get suspect() {
+      return this._suspect;
+    }
+
+    get tile() {
+      return this._suspect.tile;
+    }
+
     set prev(prev) {
       this._prev = prev;
+    }
+
+    set next(next) {
+      this._next = next;
+    }
+
+    addCard(card) {
+      this._cards.push(card);
     }
 
     ask(murderer, place, weapon) {
@@ -69,10 +73,6 @@ define(function () {
 
     holds(item) {
       return this._cards.filter((i) => i.name === item);
-    }
-
-    get tile() {
-      return this._suspect.tile;
     }
   }
 

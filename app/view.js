@@ -14,13 +14,15 @@ define(function (require) {
       this._height = 500;
 
       this._model = model;
-      this._board = this._model.game.board;
+      this._board = this._model.board;
       this._adj = this._board.adjacency;
       this._suspectPieces = this._board.suspects;
       this._weaponPieces = this._board.weapons;
       this._placesPieces = this._board.places;
       this._playerPiecesNames = this._model.players.map(
-        function (i) { return i.suspect.name; }
+        function (i) {
+          return i.suspect.name;
+        }
       );
 
       this._athenaDiv = "athena_div";
@@ -329,7 +331,9 @@ define(function (require) {
         .html("Legend")
         .attr("class", "hide-when-small");
       this._initLegendForPieces("Players",
-        this._model.players.map(function (i) {return i.suspect;}));
+        this._model.players.map(function (i) {
+          return i.suspect;
+        }));
       this._initLegendForPieces("Suspects", this._board.suspects.sort());
       this._initLegendForPieces("Weapons", this._board.weapons.sort());
       this._initLegendForPieces("Places",
@@ -382,7 +386,9 @@ define(function (require) {
         .data(els)
         .enter()
         .append("li")
-        .text(function (d) {return d;});
+        .text(function (d) {
+          return d;
+        });
     }
 
     _newButton(el, id, text) {
@@ -441,17 +447,17 @@ define(function (require) {
         "Suspects: ",
         this._suspectsSelectDiv,
         this._suspectsSelectList,
-        this._model.game.cards.suspects);
+        this._model.cards.suspects);
       this._initSelectLists(
         "Weapons: ",
         this._weaponsSelectDiv,
         this._weaponsSelectList,
-        this._model.game.cards.weapons);
+        this._model.cards.weapons);
       this._initSelectLists(
         "Places:",
         this._placesSelectDiv,
         this._placeSelectList,
-        this._model.game.cards.places);
+        this._model.cards.places);
 
       div = d3.select("#" + this._infoHeader).append("div");
       button = this._newButton(
@@ -481,8 +487,12 @@ define(function (require) {
         .data(cards.sort())
         .enter()
         .append("option")
-        .attr("value", function (d) {return d.name; })
-        .text(function (d) {return d.name; });
+        .attr("value", function (d) {
+          return d.name;
+        })
+        .text(function (d) {
+          return d.name;
+        });
     }
 
     _printPlayer() {
@@ -531,14 +541,14 @@ define(function (require) {
     }
 
     hideButtons() {
-      for (let el of [
+      for (let id of [
         this._castButtonId,
         this._accuseButtonId,
         this._suggestButtonId,
         this._finishMoveButtonId,
         this._revealCardButton
       ]) {
-        d3.select("#" + el).style("display", "none");
+        this._hide(id);
       }
     }
 
@@ -554,10 +564,12 @@ define(function (require) {
       await utl.sleep(ms);
     }
 
-    async makeMove(tile, player, oldTile, path) {
+    async makeMove(oldTile, tile, path) {
       for (let tile of this._paintedTiles) {
         const ind = path.filter(
-          function (i) {return i.x === tile.x & i.y === tile.y;});
+          function (i) {
+            return i.x === tile.x & i.y === tile.y;
+          });
         if (!ind.length) {
           this._paintTile(tile.x, tile.y, "lightgray");
         }
@@ -573,8 +585,11 @@ define(function (require) {
       }
     }
 
-    showInfo(text) {
-      d3.select("#" + this._infoText).text(text);
+    _getCheckedOption(id) {
+      return d3
+        .select("#" + id)
+        .select("option:checked")
+        .text();
     }
 
     appendInfo(text) {
@@ -582,11 +597,8 @@ define(function (require) {
       this.showInfo(app);
     }
 
-    _getCheckedOption(id) {
-      return d3
-        .select("#" + id)
-        .select("option:checked")
-        .text();
+    showInfo(text) {
+      d3.select("#" + this._infoText).text(text);
     }
 
     showCards = () => {
@@ -630,7 +642,7 @@ define(function (require) {
       d3.select("#" + this._selectAccuseButtonId).style("display", "inline");
     }
 
-    showHolds(holds, isAI) {
+    async showHolds(holds, isAI) {
       this._hide(this._suspectsSelectDiv);
       this._hide(this._weaponsSelectDiv);
       this._hide(this._selectSuggestButtonId);
@@ -646,6 +658,8 @@ define(function (require) {
       } else {
         this.appendInfo(`${pl} didn't receive any card.`);
       }
+      if (isAI)
+        await this.wait(2000);
     }
 
     updatePiece(oldTile, newTile) {
@@ -670,16 +684,64 @@ define(function (require) {
 
     removePlayerFromLegend() {
       this._initLegendPieceList("legend_Players",
-        this._model.players.map(function (i) {return i.suspect;}));
+        this._model.players.map(function (i) {
+          return i.suspect;
+        }));
     }
 
     nextPlayer() {
       this._printPlayer();
       this.showInfo("You have the following options:");
-      this.showInline(this._castButtonId);
-      this.showInline(this._suggestButtonId);
+      let func = this._hide;
+
+      if (this._model.nPlayers > 1)
+        func = this.showInline;
+
+      func(this._castButtonId);
+      func(this._suggestButtonId);
+      func(this._finishMoveButtonId);
       this.showInline(this._accuseButtonId);
-      this.showInline(this._finishMoveButtonId);
+    }
+
+    finishAIMove() {
+      this.appendInfo(`${this._model.currentPlayer.name} finishes his turn'.`);
+      this.showFinishButton();
+    }
+
+    async aiMove(player) {
+      this.hideButtons();
+      this.showInfo(player.name + " is firing some neurons.");
+      await this.wait(2000);
+    }
+
+    async aiCast(player) {
+      await this.appendInfo(player.name + " wants to cast a die.");
+      await this.wait(2000);
+      this.appendInfo(
+        `${player.name} decides to move ` +
+        `to place '${player.target.name}'.`);
+      await this.wait(2000);
+    }
+
+    async aiAccuse(player, acc) {
+      this.appendInfo(`${player.name.name} wants to make am accusation.`);
+      await this.wait(2000);
+      this.appendInfo(
+        `${player.name} accuses '${acc.suspect}' who he thinks committed 
+          the murder in '${acc.place}' with '${acc.weapon}'.`
+      );
+      await this.wait(2000);
+    }
+
+    async aiSuggest(player, sugg) {
+      this.appendInfo(`${player.name} wants to make a suggestion.`);
+      await this.wait(2000);
+      this.appendInfo(
+        `${player.name} believes '${sugg.suspect}' 
+           committed the murder in '${player.tile.place.name}' 
+           with '${sugg.weapon}'.`
+      );
+      await this.wait(2000);
     }
 
     showSuggestButton() {

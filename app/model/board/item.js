@@ -13,27 +13,23 @@ define(function () {
           return this._name;
         }
 
-        putOn(tile) {
-          if (this._tile !== null)
-            this._tile.deoccupy();
-          this._tile = tile;
-          this._tile.occupyWith(this);
-        }
-
-        set tile(tile) {
-          this._tile = tile;
+        get path() {
+          return this._path;
         }
 
         get tile() {
           return this._tile;
         }
 
-        get clazz() {
-          return this.constructor.name;
+        set tile(tile) {
+          this._tile = tile;
         }
 
-        get path() {
-          return this._path;
+        putOn(tile) {
+          if (this._tile !== null)
+            this._tile.deoccupy();
+          this._tile = tile;
+          this._tile.occupyWith(this);
         }
       }
     };

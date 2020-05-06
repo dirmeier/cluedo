@@ -8,11 +8,6 @@ define(function () {
         throw "Please provide nPlayers";
 
       this._model = model;
-      this._game = this._model.game;
-      this._dice = this._game.dice;
-      this._board = this._game.board;
-      this._adj = this._board.adjacency;
-
       this._view = view;
       this._view.bindCast(this.castDie);
       this._view.bindMove(this.move);
@@ -30,152 +25,115 @@ define(function () {
 
     ai_turn = async () => {
       if (this._model.currentPlayer.isAI)
-          await this._ai();
+        await this._ai();
     };
 
-    async _ai_think() {
+    _ai_think = async () => {
       const player = this._model.currentPlayer;
-      this._view.hideButtons();
-      this._view.showInfo(player.name + " is firing some neurons.");
-      const wantToCastDie = player.wantToCast();
-      await this._view.wait(2000);
-      return wantToCastDie;
-    }
+      await this._view.aiMove(player);
+      const cast = player.wantToCast();
+      return cast;
+    };
 
-    async _ai_cast() {
+    _ai_cast = async () => {
       const player = this._model.currentPlayer;
-      await this._view.appendInfo(player.name + " wants to cast a die.");
-      await this._view.wait(2000);
-      const pips = this.castDie();
-      const path = player.getPath(pips);
-      await this._view.wait(2000);
-      this._view.appendInfo(
-        `${player.name} decides to move ` +
-        `to place '${player.target.name}'.`);
-      await this._view.wait(2000);
+      const pips = await this.castDie();
+      const path = await player.getPath(pips);
+      await this._view.aiCast(player);
       await this._makeMove(
         this._model.currentPlayer.tile, path[path.length - 1], path);
-    }
+    };
 
-    async _ai_suggest() {
+    _ai_suggest = async () => {
       const player = this._model.currentPlayer;
-      this._view.appendInfo(`${player.name} wants to make a suggestion.`);
-      await this._view.wait(2000);
       const sugg = player.suggest();
-      this._view.appendInfo(
-        `${player.name} believes '${sugg.suspect}' 
-           committed the murder in '${player.tile.place.name}' 
-           with '${sugg.weapon}'.`
-      );
-      await this._view.wait(2000);
-      const holds = this.makeSuggestion(sugg.suspect, sugg.weapon);
+      await this._view.aiSuggest(player, sugg);
+      const holds = await this.makeSuggestion(sugg.suspect, sugg.weapon);
+
       if (holds !== null)
         player.addSeenCard(holds.card);
-      await this._view.wait(2000);
-    }
+    };
 
-    async _ai_accuse() {
+    _ai_accuse = async () => {
       const player = this._model.currentPlayer;
       const acc = await player.accuse();
-      this._view.appendInfo(`${player.name} wants to make am accusation.`);
-      await this._view.wait(2000);
-      this._view.appendInfo(
-        `${player.name} accuses '${acc.suspect}' who he thinks committed 
-          the murder in '${acc.place}' with '${acc.weapon}'.`
-      );
+      await this._view.aiAccuse(player, acc);
       await this.makeAccusation(acc.suspect, acc.weapon, acc.place);
-      await this._view.wait(2000);
-    }
+    };
 
-    async _ai() {
-      const player = this._model.currentPlayer;
-      const wantToCastDie = await this._ai_think();
-
-      if (wantToCastDie) {
+    _ai = async () => {
+      if (await this._ai_think()) {
         await this._ai_cast();
       }
 
-      if (player.isInPlace) {
+      if (this._model.currentPlayer.isInPlace) {
         await this._ai_suggest();
       }
 
-      if (player.canAccuse()) {
+      if (this._model.currentPlayer.wantsToAccuse()) {
         await this._ai_accuse();
       }
 
-      await this._view.appendInfo(`${player.name} finishes his turn'.`);
-      this._view.showFinishButton();
-      await this._view.wait(2000);
-    }
+      await this._view.finishAIMove();
+    };
 
     castDie = () => {
       this._isMove = true;
-      const pips = this._dice.cast();
-      const tiles = this._model.computeNeighbors(pips);
+      this._pips = this._model.cast();
+      const tiles = this._model.tilesInRangeOfCurrPlayer(this._pips);
 
-      this._view.drawTiles(tiles, pips, this._model.currentPlayer.isAI);
+      this._view.drawTiles(tiles, this._pips, this._model.currentPlayer.isAI);
       this._view.hideButtons();
 
-      this._pips = pips;
-      return pips;
+      return this._pips;
     };
 
-    move = (row, col) => {
+    move = async (row, col) => {
       if (!this._isMove)
         return;
 
-      const oldTile = this._model.currentPlayer.tile;
-      const tile = this._adj[row][col];
+      const oldTile = this._model.getPlayerTile();
+      const tile = this._model.getTile(row, col);
       const path = this._model.computePath(oldTile, tile);
 
       if (path.length > this._pips) {
         this._view.appendInfo("You cannot walk that far.");
       } else {
-        this._makeMove(oldTile, tile, path);
+        await this._makeMove(oldTile, tile, path);
       }
     };
 
-    _makeMove(oldTile, tile, path) {
-      this._view.makeMove(tile, this._model.currentPlayer, oldTile, path);
+    _makeMove = async (oldTile, tile, path) => {
+      await this._view.makeMove(oldTile, tile, path);
+
+      this._model.putCurrPlayerSuspectPieceOn(tile);
+      this._isMove = false;
 
       if (!this._model.currentPlayer.isAI) {
         this._view.showSuggestButton();
         this._view.showAccuseButton();
         this._view.showFinishButton();
       }
-
-      this._model.currentPlayer.suspect.putOn(tile);
-      this._isMove = false;
-    }
+    };
 
     suggest = () => {
       this._view.hideButtons();
       this._view.showSuggestions(this._model.currentPlayer.isAI);
     };
 
-    makeSuggestion = (suspect, weapon) => {
-      let holds = this._model.ask(
-        suspect, this._model.currentPlayer.tile.place.name, weapon);
+    makeSuggestion = async (suspect, weapon) => {
+      let holds = await this._model.ask(suspect, weapon);
 
-      const suspectPiece = this._board.getPiece(suspect);
-      const weaponPiece = this._board.getPiece(weapon);
-      const oldSuspectTile = suspectPiece.tile;
-      const oldWeaponTile = weaponPiece.tile;
+      for (let itemName of [suspect, weapon]) {
+        const tiles = this._model.moveToPlayerPlace(itemName);
+        this._view.updatePiece(tiles.oldTile, tiles.newTile);
+      }
 
-      const newSuspectTile = this._board.putOnRandomTile(
-        suspectPiece, this._model.currentPlayer.tile.place);
-      const newWeaponTile = this._board.putOnRandomTile(
-        weaponPiece, this._model.currentPlayer.tile.place);
-
-      this._view.showHolds(holds, this._model.currentPlayer.isAI);
-
+      await this._view.showHolds(holds, this._model.currentPlayer.isAI);
       if (!this._model.currentPlayer.isAI) {
         this._view.showAccuseButton();
         this._view.showFinishButton();
       }
-
-      this._view.updatePiece(oldWeaponTile, newWeaponTile);
-      this._view.updatePiece(oldSuspectTile, newSuspectTile);
 
       return holds;
     };
@@ -185,10 +143,9 @@ define(function () {
       this._view.showAccusations(this._model.currentPlayer.isAI);
     };
 
-    makeAccusation = (suspect, weapon, place) => {
-      let isSolved = this._model.solve(
-        suspect, place, weapon);
-      this._view.makeAccusation(isSolved);
+    makeAccusation = async (suspect, weapon, place) => {
+      let isSolved = this._model.isSolved(suspect, place, weapon);
+      await this._view.makeAccusation(isSolved);
 
       if (!isSolved) {
         this._model.removeCurrentPlayer();
@@ -198,7 +155,6 @@ define(function () {
       if (!this._model.currentPlayer.isAI) {
         this._view.showFinishButton();
       }
-
       this._checkExit();
     };
 
@@ -216,7 +172,6 @@ define(function () {
     };
 
     _log = () => {
-      console.log("------- new turn -------");
       for (let i = 0; i < this._model.players.length; i++)
         console.log(this._model.players[i].toString());
       console.log(this._model.murderCase());

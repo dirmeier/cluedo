@@ -3,6 +3,7 @@
 define(function (require) {
   const utl = require("util");
   const glb = require("global");
+  const alg = require("algorithm");
 
   const Tile = require("model/board/tile");
   const Place = require("model/board/place");
@@ -39,6 +40,26 @@ define(function (require) {
 
       this._distributeSuspectsToRooms();
       this._distributeWeaponsToRooms();
+    }
+
+    get adjacency() {
+      return this._adjacenyMatrix;
+    }
+
+    get pieces() {
+      return this._suspects.concat(this._weapons);
+    }
+
+    get suspects() {
+      return this._suspects;
+    }
+
+    get weapons() {
+      return this._weapons;
+    }
+
+    get places() {
+      return this._places;
     }
 
     _initPlaces() {
@@ -78,32 +99,6 @@ define(function (require) {
       return adj;
     }
 
-    get adjacency() {
-      return this._adjacenyMatrix;
-    }
-
-    get pieces() {
-      return this._suspects.concat(this._weapons);
-    }
-
-    get suspects() {
-      return this._suspects;
-    }
-
-    get weapons() {
-      return this._weapons;
-    }
-
-    get places() {
-      return this._places;
-    }
-
-    putOnRandomTile(piece, place) {
-      const tile = this.getFreeTile(place);
-      piece.putOn(tile);
-      return tile;
-    }
-
     _distributeSuspectsToRooms() {
       let places = this._getPlaces();
       places = utl.randomElements(places, this._suspects.length);
@@ -120,82 +115,16 @@ define(function (require) {
       }
     }
 
-    computeNeighbors(pips, tile) {
-      let stack = [tile];
-      let neis = [];
-      tile.distance = 0;
-
-      for (let i = 0; i < board.length; i++) {
-        for (let j = 0; j < board[i].length; j++) {
-          this._adjacenyMatrix[i][j].visited = false;
-        }
-      }
-
-      while (stack.length) {
-        let node = stack.shift();
-        neis.push(node);
-        for (let nei of Object.values(node.neighbors)) {
-          if (nei !== null &&
-            !nei.occupied &&
-            !nei.visited &&
-            node.canReach(nei)) {
-            nei.distance = node.distance + 1;
-            nei.visited = true;
-            if (nei.distance <= pips)
-              stack.push(nei);
-          }
-        }
-      }
-      return neis;
-    }
-
-    computePath(oldTile, tile) {
-      this._dijkstra(oldTile, tile);
-      let path = [];
-      let u = tile;
-      while (u !== oldTile) {
-        path.push(u);
-        u = u.previous;
-      }
-      return path.reverse();
-    }
-
-    _dijkstra(oldTile, tile) {
-      let Q = [];
-      for (let i = 0; i < this._adjacenyMatrix.length; i++) {
-        for (let j = 0; j < this._adjacenyMatrix[i].length; j++) {
-          this._adjacenyMatrix[i][j].distance = 10000;
-          this._adjacenyMatrix[i][j].previous = null;
-          Q.push(this._adjacenyMatrix[i][j]);
-        }
-      }
-      oldTile.distance = 0;
-
-      while (Q.length) {
-        const u = Q.reduce(function (i, j) {
-          return i.distance < j.distance ? i : j;
-        });
-        Q = Q.filter(function (i) {return u.x !== i.x || i.y !== u.y;});
-
-        if (u === tile) {
-          return;
-        }
-
-        for (let v of Object.values(u.neighbors)) {
-          if (v !== null && !v.occupied && u.canReach(v)) {
-            const alt = u.distance + 1;
-            if (alt < v.distance) {
-              v.distance = alt;
-              v.previous = u;
-            }
-          }
-        }
-      }
-    }
-
     _getPlaces() {
-      return Object.values(this._places)
+      return Object
+        .values(this._places)
         .filter((v) => v.type === "place");
+    }
+
+    putOnRandomTile(piece, place) {
+      const tile = this.getFreeTile(place);
+      piece.putOn(tile);
+      return tile;
     }
 
     getFreeTile(place) {
@@ -212,6 +141,22 @@ define(function (require) {
       }
       return null;
     }
+
+    computePath(src, target) {
+      const ret = alg.dijkstra(src, target, this._adjacenyMatrix);
+      let path = [];
+      let u = target;
+      while (u !== src) {
+        path.push(u);
+        u = ret.previous[u.hashCode()];
+      }
+      return path.reverse();
+    }
+
+    computeNeighbors(distance, tile) {
+      return alg.computeNeighbors(distance, tile, this._adjacenyMatrix);
+    }
+
   }
 
   return Board;

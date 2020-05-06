@@ -11,11 +11,20 @@ define(function () {
       this._isDrawn = false;
     }
 
-    get nrow() {
-      const rows = this._tiles.map(function(i) {
-        return i.x
-      });
-      return (new Set(rows)).size;
+    get isDrawn() {
+      return this._isDrawn;
+    }
+
+    get isPlace() {
+      return  this._type === "place";
+    }
+
+    get type() {
+      return this._type;
+    }
+
+    get name() {
+      return this._name;
     }
 
     get ncol() {
@@ -25,53 +34,28 @@ define(function () {
       return (new Set(cols)).size;
     }
 
-    get minTileY() {
-      const mi = this._tiles.map(function(i) {
-        return i.y
+    get nrow() {
+      const rows = this._tiles.map(function(i) {
+        return i.x
       });
-      return Math.min(Math.min(...mi));
-    }
-
-    add(tile) {
-      this._tiles.push(tile);
-    }
-
-    get type() {
-      return this._type;
-    }
-
-    get tiles() {
-      return this._tiles;
-    }
-
-    get name() {
-      return this._name;
-    }
-
-    get abbreviation( ) {
-      return this._abbreviation;
+      return (new Set(rows)).size;
     }
 
     get path() {
       return this._path;
     }
 
-    get isDrawn() {
-      return this._isDrawn;
+    get tiles() {
+      return this._tiles;
     }
 
     set isDrawn(drawn) {
       this._isDrawn = drawn;
     }
 
-    get tiles() {
-      return this._tiles;
+    add(tile) {
+      this._tiles.push(tile);
     }
-
-    get isPlace() {
-      return  this._type === "place";
-    }
-
   }
 
   return Place;

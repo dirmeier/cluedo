@@ -2,29 +2,58 @@
 
 define(function (require) {
   const utl = require("util");
-  const Game = require("model/game");
+  const alg = require("algorithm");
+
+  const Board = require("model/board");
+  const cards = require("model/cards");
+  const Dice = require("model/dice");
+
   const Player = require("player");
   const AI = require("ai");
 
   class Model {
     constructor(nPlayers, nAI) {
-      this._game = new Game(nPlayers + nAI);
+
+      this._board = new Board(nPlayers + nAI);
+      this._dice = new Dice();
+      this._cards = new cards.Cards();
+
       this._players = this._initPlayers(nPlayers, nAI);
       this._currentPlayer = this._players[0];
 
       this._dealCards();
     }
 
+    get dice() {
+      return this._dice;
+    }
+
+    get cards() {
+      return this._cards;
+    }
+
+    get board() {
+      return this._board;
+    }
+
+    get currentPlayer() {
+      return this._currentPlayer;
+    }
+
+    get players() {
+      return this._players;
+    }
+
     _initPlayers(nPlayers, nAI) {
       const n = nPlayers + nAI;
       let players = [];
-      const randomSuspects = utl.randomElements(this._game.board.suspects, n);
+      const randomSuspects = utl.randomElements(this._board.suspects, n);
       let constructors = utl.shuffle(
         [...Array(nPlayers).fill(Player), ...Array(nAI).fill(AI)]
       );
 
       for (let i = 0; i < n; i++) {
-        players.push(new constructors[i](i, randomSuspects[i], this._game));
+        players.push(new constructors[i](i, randomSuspects[i], this._board, this._cards));
         if (i > 0) {
           players[i - 1].next = players[i];
           players[i].prev = players[i - 1];
@@ -40,8 +69,8 @@ define(function (require) {
     _dealCards() {
       while (this._players.length) {
         for (let i = 0; i < this._players.length; i++) {
-          if (this._game.availableCards.length) {
-            this._players[i].addCard(this._game.randomAvailableCard());
+          if (this._cards.availableCards.length) {
+            this._players[i].addCard(this._cards.randomAvailableCard());
           } else {
             return;
           }
@@ -49,43 +78,70 @@ define(function (require) {
       }
     }
 
-    get game() {
-      return this._game;
+    ask(murderer, weapon) {
+      return this._currentPlayer.ask(murderer,
+        this._currentPlayer.tile.place.name, weapon
+      );
     }
 
-    get currentPlayer() {
-      return this._currentPlayer;
+    cast() {
+      return this._dice.cast();
     }
 
-    get players() {
-      return this._players;
-    }
-
-    computeNeighbors(distance) {
-      return this._game.computeNeighbors(distance,
-        this.currentPlayer.suspect.tile);
+    tilesInRangeOfCurrPlayer(distance) {
+      const tile = this.currentPlayer.suspect.tile;
+      return this._board.computeNeighbors(distance, tile);
     }
 
     computePath(oldTile, tile) {
-      return this._game.computePath(oldTile, tile);
+      return this._board.computePath(oldTile, tile);
+    }
+
+    getTile(row, col) {
+      const tile = this._board.adjacency[row][col];
+      return tile;
+    }
+
+    getPlayerTile() {
+      return this._currentPlayer.tile;
+    }
+
+    isSolved(murderer, place, weapon) {
+      const cs = this._cards.murderCase();
+      return cs.murderer.name === murderer &&
+        cs.place.name === place &&
+        cs.weapon.name === weapon;
+    }
+
+    get nPlayers() {
+      return this._players.length;
     }
 
     nextPlayer() {
-      if (this._players.length === 0)
+      if (this.nPlayers === 0)
         return;
       this._currentPlayer = this._currentPlayer.next;
     }
 
     murderCase() {
-      return this._game.murderCase();
+      return this._cards.murderCase();
     }
 
-    solve(murderer, place, weapon) {
-      return this._game.isSolved(murderer, place, weapon);
+    moveToPlayerPlace(pieceName) {
+      const piece = this._board.getPiece(pieceName);
+      const oldTile = piece.tile;
+
+      const newTile = this._board.putOnRandomTile(
+        piece, this._currentPlayer.tile.place);
+
+      return {
+        oldTile: oldTile,
+        newTile: newTile
+      }
     }
 
-    ask(murderer, place, weapon) {
-      return this._currentPlayer.ask(murderer, place, weapon);
+    putCurrPlayerSuspectPieceOn(tile) {
+      this._currentPlayer.suspect.putOn(tile);
     }
 
     removeCurrentPlayer() {
@@ -94,7 +150,7 @@ define(function (require) {
       }
 
       const cards = this._currentPlayer.cards;
-      this._game.availableCards = cards;
+      this._cards.availableCards = cards;
 
       const ne = this._currentPlayer.next;
       const pre = this._currentPlayer.prev;

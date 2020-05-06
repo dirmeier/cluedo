@@ -5,13 +5,12 @@ define(function (require) {
   const Player = require("player");
 
   class AI extends Player {
-    constructor(name, suspect, game) {
+    constructor(name, suspect, board, cards) {
       super(name, suspect);
-      this._game = game;
-      this._board = this._game.board;
-      this._allWeapons = this._game.cards.weapons.map((i) => i.name);
-      this._allSuspects = this._game.cards.suspects.map((i) => i.name);
-      this._allPlaces = this._game.cards.places.map((i) => i.name);
+      this._board = board;
+      this._allWeapons = cards.weapons.map((i) => i.name);
+      this._allSuspects = cards.suspects.map((i) => i.name);
+      this._allPlaces = cards.places.map((i) => i.name);
 
       this._hasSeenPlaces = [];
       this._hasSeenWeapons = [];
@@ -20,16 +19,16 @@ define(function (require) {
       this._target = null;
     }
 
-    get target() {
-      return this._target;
-    }
-
     get isAI() {
       return true;
     }
 
     get name() {
       return super.name + " (AI)";
+    }
+
+    get target() {
+      return this._target;
     }
 
     addCard(card) {
@@ -86,7 +85,7 @@ define(function (require) {
       };
     }
 
-    canAccuse() {
+    wantsToAccuse() {
       const can = this._hasSeenPlaces.length + 1 === this._allPlaces.length &&
         this._hasSeenWeapons.length + 1 === this._allWeapons.length &&
         this._hasSeenSuspects.length + 1 === this._allSuspects.length;

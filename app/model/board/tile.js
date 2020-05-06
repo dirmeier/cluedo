@@ -20,37 +20,30 @@ define(function () {
       this._isOccupied = false;
       this._occupant = null;
       this._neighbors = {up: null, down: null, left: null, right: null};
-      this._distance = 0;
-      this._visited = false;
-      this._previous = null
+    }
+
+    get gate() {
+      return this._gate;
+    }
+
+    get name() {
+      return this._name;
+    }
+
+    get neighbors() {
+      return this._neighbors;
+    }
+
+    get occupant() {
+      return this._occupant;
+    }
+
+    get occupied() {
+      return this._isOccupied;
     }
 
     get place() {
       return this._place;
-    }
-
-    get previous() {
-      return this._previous;
-    }
-
-    set previous(p) {
-      this._previous = p;
-    }
-
-    get visited() {
-      return this._visited;
-    }
-
-    set visited(v) {
-      this._visited = v;
-    }
-
-    get distance() {
-      return this._distance;
-    }
-
-    set distance(d) {
-      this._distance = d;
     }
 
     get x() {
@@ -61,24 +54,8 @@ define(function () {
       return this._y;
     }
 
-    get name() {
-      return this._name;
-    }
-
-    get gate() {
-      return this._gate;
-    }
-
-    get neighbors() {
-      return this._neighbors;
-    }
-
     set occupied(occupied) {
       this._isOccupied = occupied;
-    }
-
-    get occupied() {
-      return this._isOccupied;
     }
 
     // Todo: is it a bug not to 'release' old item item?
@@ -93,21 +70,12 @@ define(function () {
       this._isOccupied = false;
     }
 
-    get occupant() {
-      return this._occupant;
-    }
-
     isOtherRoomAndNoGate(neighbor) {
       return this.isOtherRoom(neighbor) && this.isNoGate(neighbor);
     }
 
-    isOtherRoomAndGate(neighbor) {
-      return this.isOtherRoom(neighbor) && this.isGate();
-    }
-
     isOtherRoomAndNoNeighborVerticalGate(neighbor) {
-      return this.isOtherRoom(neighbor)
-        && neighbor.isVerticalGate();
+      return this.isOtherRoom(neighbor) && neighbor.isVerticalGate();
     }
 
     isOtherRoom(neighbor) {
@@ -140,6 +108,17 @@ define(function () {
     }
 
   }
+
+  Tile.prototype.hashCode = function () {
+    const k = String(this.x) + "/" + String(this.y);
+    let hash = 0;
+    for (let i = 0; i < k.length; i++) {
+      let chr = k.charCodeAt(i);
+      hash = ((hash << 5) - hash) + chr;
+      hash |= 0;
+    }
+    return hash;
+  };
 
   return Tile;
 });
