@@ -1,24 +1,23 @@
 module.exports = {
+  parser: 'babel-eslint',
   env: {
     browser: true,
     es6: true,
     node: true
   },
-  extends: [
-    'standard'
-  ],
-  globals: {
-    Atomics: 'readonly',
-    SharedArrayBuffer: 'readonly'
-  },
   parserOptions: {
-    ecmaVersion: 2018,
-    sourceType: 'module',
-    parser: "babel-eslint"
+    'sourceType': 'module',
+    'ecmaFeatures': {
+      'jsx': true,
+      'modules': true
+    }
   },
+  plugins: ['standard'],
   rules: {
-    "semi": ["error", "always"],
-    "quotes": ["error", "double"],
-    "array-element-newline": ["error", "consistent"]
+    'semi': ['error', 'always'],
+    'quotes': ['error', 'double'],
+    'array-element-newline': ['error', 'consistent']
   }
-};
+}
+
+

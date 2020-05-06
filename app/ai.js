@@ -46,6 +46,8 @@ define(function (require) {
     }
 
     wantToCast() {
+      if (!this.isInPlace)
+        return true;
       const hasSeenRoom = this._hasSeenPlaces.includes(
         this.suspect.tile.place.name);
       if (!hasSeenRoom)
@@ -53,7 +55,7 @@ define(function (require) {
       return Math.random() < .5;
     }
 
-    getPath(pips) {
+    computeDestination(pips) {
       if (this._target === null) {
         const hasNotSeenPlaces = utl.distinct(
           this._allPlaces, this._hasSeenPlaces);
@@ -65,9 +67,7 @@ define(function (require) {
 
       // here we should implement the closest free tile not just any tile
       this._targetTile = this._board.getFreeTile(this._target);
-      const entirePath = this._board.computePath(this.tile,
-        this._targetTile
-      );
+      const entirePath = this._board.computePath(this.tile, this._targetTile);
 
       const moveablePath = entirePath.slice(0, pips);
       return moveablePath;
@@ -86,7 +86,8 @@ define(function (require) {
     }
 
     wantsToAccuse() {
-      const can = this._hasSeenPlaces.length + 1 === this._allPlaces.length &&
+      const can =
+        this._hasSeenPlaces.length + 1 === this._allPlaces.length &&
         this._hasSeenWeapons.length + 1 === this._allWeapons.length &&
         this._hasSeenSuspects.length + 1 === this._allSuspects.length;
       return can;

@@ -24,38 +24,38 @@ define(function () {
     }
 
     ai_turn = async () => {
-      if (this._model.currentPlayer.isAI)
+      if (this._model.currentPlayerIsAI)
         await this._ai();
     };
 
     _ai_think = async () => {
-      const player = this._model.currentPlayer;
+      const player = await this._model.currentPlayer;
       await this._view.aiMove(player);
-      const cast = player.wantToCast();
+      const cast = await player.wantToCast();
       return cast;
     };
 
     _ai_cast = async () => {
-      const player = this._model.currentPlayer;
+      const player = await this._model.currentPlayer;
       const pips = await this.castDie();
-      const path = await player.getPath(pips);
+      const path = await player.computeDestination(pips);
       await this._view.aiCast(player);
       await this._makeMove(
         this._model.currentPlayer.tile, path[path.length - 1], path);
     };
 
     _ai_suggest = async () => {
-      const player = this._model.currentPlayer;
-      const sugg = player.suggest();
+      const player = await this._model.currentPlayer;
+      const sugg = await player.suggest();
       await this._view.aiSuggest(player, sugg);
       const holds = await this.makeSuggestion(sugg.suspect, sugg.weapon);
 
       if (holds !== null)
-        player.addSeenCard(holds.card);
+        await player.addSeenCard(holds.card);
     };
 
     _ai_accuse = async () => {
-      const player = this._model.currentPlayer;
+      const player = await this._model.currentPlayer;
       const acc = await player.accuse();
       await this._view.aiAccuse(player, acc);
       await this.makeAccusation(acc.suspect, acc.weapon, acc.place);
@@ -74,7 +74,7 @@ define(function () {
         await this._ai_accuse();
       }
 
-      await this._view.finishAIMove();
+      await this._view.aiFinishMove();
     };
 
     castDie = () => {
@@ -92,9 +92,9 @@ define(function () {
       if (!this._isMove)
         return;
 
-      const oldTile = this._model.getPlayerTile();
-      const tile = this._model.getTile(row, col);
-      const path = this._model.computePath(oldTile, tile);
+      const oldTile = await this._model.getPlayerTile();
+      const tile = await this._model.getTile(row, col);
+      const path = await this._model.computePath(oldTile, tile);
 
       if (path.length > this._pips) {
         this._view.appendInfo("You cannot walk that far.");
@@ -106,7 +106,7 @@ define(function () {
     _makeMove = async (oldTile, tile, path) => {
       await this._view.makeMove(oldTile, tile, path);
 
-      this._model.putCurrPlayerSuspectPieceOn(tile);
+      await this._model.putCurrPlayerSuspectPieceOn(tile);
       this._isMove = false;
 
       if (!this._model.currentPlayer.isAI) {
@@ -118,19 +118,19 @@ define(function () {
 
     suggest = () => {
       this._view.hideButtons();
-      this._view.showSuggestions(this._model.currentPlayer.isAI);
+      this._view.showSuggestions(this._model.currentPlayerIsAI);
     };
 
     makeSuggestion = async (suspect, weapon) => {
       let holds = await this._model.ask(suspect, weapon);
 
       for (let itemName of [suspect, weapon]) {
-        const tiles = this._model.moveToPlayerPlace(itemName);
-        this._view.updatePiece(tiles.oldTile, tiles.newTile);
+        const tiles = await this._model.moveToPlayerPlace(itemName);
+        await this._view.updatePiece(tiles.oldTile, tiles.newTile);
       }
 
-      await this._view.showHolds(holds, this._model.currentPlayer.isAI);
-      if (!this._model.currentPlayer.isAI) {
+      await this._view.showHolds(holds, this._model.currentPlayerIsAI);
+      if (!this._model.currentPlayerIsAI) {
         this._view.showAccuseButton();
         this._view.showFinishButton();
       }
@@ -140,19 +140,19 @@ define(function () {
 
     accuse = () => {
       this._view.hideButtons();
-      this._view.showAccusations(this._model.currentPlayer.isAI);
+      this._view.showAccusations(this._model.currentPlayerIsAI);
     };
 
     makeAccusation = async (suspect, weapon, place) => {
-      let isSolved = this._model.isSolved(suspect, place, weapon);
+      let isSolved = await this._model.isSolved(suspect, place, weapon);
       await this._view.makeAccusation(isSolved);
 
       if (!isSolved) {
-        this._model.removeCurrentPlayer();
-        this._view.removePlayerFromLegend();
+        await this._model.removeCurrentPlayer();
+        await this._view.removePlayerFromLegend();
       }
 
-      if (!this._model.currentPlayer.isAI) {
+      if (!this._model.currentPlayerIsAI) {
         this._view.showFinishButton();
       }
       this._checkExit();

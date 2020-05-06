@@ -1,12 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-@media only screen and (max-width: 1599px) {
+@media only screen and (max-width: 1500px) {
     .hide-when-small {
         display: none;
     }
 }
 
-@media only screen and (min-width: 1600px) {
+@media only screen and (min-width: 1500px) {
     .show-when-small {
         display: none;
     }
@@ -26,8 +26,8 @@ html, pre, code, text, body, button, input, li, option, select, div {
 
 
 .row {
-    width: 1400px;
-    height: 700px;
+    width: 1500px;
+    height: 800px;
     margin: auto auto auto;
     text-align: center;
 }
@@ -52,11 +52,11 @@ html, pre, code, text, body, button, input, li, option, select, div {
 
 .left {
     max-width: 500px;
-    width: 500px;
+    width: 450px;
 }
 
 .right {
-    width: 300px;
+    width: 350px;
 }
 
 

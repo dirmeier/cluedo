@@ -7,42 +7,56 @@ define(function (require) {
 
   class View {
     constructor(model) {
+      this._athenaHeight = 400;
+      this._athenaWidth = 200;
       this._legendWidth = 250;
       this._legendHeight = 550;
       this._helpWidth = 250;
-      this._width = 500;
-      this._height = 500;
+      this._width = 600;
+      this._height = 600;
 
       this._model = model;
       this._board = this._model.board;
       this._adj = this._board.adjacency;
       this._suspectPieces = this._board.suspects;
       this._weaponPieces = this._board.weapons;
-      this._placesPieces = this._board.places;
       this._playerPiecesNames = this._model.players.map(
         function (i) {
           return i.suspect.name;
         }
       );
 
+      this._accuseButtonId = "accuse_button";
       this._athenaDiv = "athena_div";
       this._boardDiv = "board_div";
+      this._buttonsId = "buttons";
+      this._castButtonId = "cast_die_button";
+      this._finishMoveButtonId = "finish_move_button";
       this._infoDiv = "info_div";
-      this._legendDiv = "legend_div";
-
       this._infoHeader = "info_header";
       this._infoText = "info_text";
-      this._revealCardButton = "show_revealed_card_button";
-      this._revealCardParagraph = "show_revealed_card_paragraph";
-
-      this._buttonsId = "buttons";
-
+      this._introTextIndex = 0;
+      this._legendDiv = "legend_div";
       this._legendNextButton = "legend_next_button";
       this._legendIntroHelp = "legend_intro_help";
-      this._introTextIndex = 0;
+      this._placesSelectDiv = "places_select_div";
+      this._placeSelectList = "places_select_list";
+      this._playerCardsList = "player_card_list";
+      this._revealCardButton = "show_revealed_card_button";
+      this._revealCardParagraph = "show_revealed_card_paragraph";
       this._sectionLegend = "section_legend";
+      this._showCardsButton = "show_cards_button";
+      this._suggestButtonId = "suggest_button";
+      this._selectListsId = "card_list";
+      this._selectSuggestButtonId = "select_suggest_button";
+      this._selectAccuseButtonId = "select_accuse_button";
+      this._suspectsSelectDiv = "suspects_select_div";
+      this._suspectsSelectList = "suspects_select_list";
+      this._weaponsSelectDiv = "weapons_select_div";
+      this._weaponsSelectList = "weapons_select_list";
+
       this._sectionLegendMarginRight = ["-75px", "-75px", "-75px", "-75px"];
-      this._sectionLegendMarginTop = ["-75px", "-75px", "-100px", "-100px"];
+      this._sectionLegendMarginTop = ["0px", "0px", "-25px", "-25px"];
       this._introTexts = [
         "Welcome. I am the goddess Athena, patron of the city of Athens, and " +
         "I come with bad news. One of my favorite disciples, Socrates, has been murdered.",
@@ -62,27 +76,6 @@ define(function (require) {
 
         null
       ];
-
-      this._playerCardsList = "player_card_list";
-      this._showCardsButton = "show_cards_button";
-
-      this._castButtonId = "cast_die_button";
-      this._accuseButtonId = "accuse_button";
-      this._suggestButtonId = "suggest_button";
-      this._finishMoveButtonId = "finish_move_button";
-
-      this._selectListsId = "card_list";
-
-      this._suspectsSelectDiv = "suspects_select_div";
-      this._suspectsSelectList = "suspects_select_list";
-      this._weaponsSelectDiv = "weapons_select_div";
-      this._weaponsSelectList = "weapons_select_list";
-      this._placesSelectDiv = "places_select_div";
-      this._placeSelectList = "places_select_list";
-
-      this._selectSuggestButtonId = "select_suggest_button";
-      this._selectAccuseButtonId = "select_accuse_button";
-
       this._paintedTiles = [];
 
       this._buildElements();
@@ -152,10 +145,12 @@ define(function (require) {
         .style("font-size", "10px");
 
       section.append("svg")
-        .attr('height', this._legendHeight)
-        .attr('width', this._legendWidth)
+        .attr("height", 500)
+        .attr("width", this._athenaWidth)
         .append("svg:image")
-        .attr('height', this._legendHeight)
+        .attr("height", this._athenaHeight)
+        .attr("width", this._athenaWidth)
+        .attr("y",100)
         .attr("xlink:href", glb.athena.path);
 
       this._newButton(
@@ -216,8 +211,7 @@ define(function (require) {
       return main
         .append("g")
         .attr("width", this._width + 5)
-        .attr("transform",
-          "translate(0," + i * (this._height / this._adj.length) + ")")
+        .attr("transform", "translate(0," + i * (this._height / this._adj.length) + ")")
         .style("display", "flex");
     }
 
@@ -232,7 +226,7 @@ define(function (require) {
         return;
       place.isDrawn = true;
       el.append("svg:image")
-        .attr('x', ((this._width) / this._adj[row].length) * col)
+        .attr("x", ((this._width) / this._adj[row].length) * col)
         .attr("height", ((this._height - 1) / (this._adj.length) - 1) * place.nrow)
         .attr("xlink:href", place.path);
     }
@@ -251,9 +245,9 @@ define(function (require) {
     }
 
     _path(el, rect, tile) {
-      const x = parseFloat(rect.attr('x'));
-      const w = parseFloat(rect.attr('width'));
-      const h = parseFloat(rect.attr('height'));
+      const x = parseFloat(rect.attr("x"));
+      const w = parseFloat(rect.attr("width"));
+      const h = parseFloat(rect.attr("height"));
 
       if (tile.neighbors.left === null)
         el.append("polyline").attr(
@@ -301,7 +295,7 @@ define(function (require) {
       const place = this._board.places["_"];
       const g = d3.select("#id_" + row + "_" + col);
       g.append("svg:image")
-        .attr('x', ((this._width) / this._adj[row].length) * col)
+        .attr("x", ((this._width) / this._adj[row].length) * col)
         .attr("height", ((this._height - 1) / (this._adj.length) - 1) * place.nrow)
         .attr("xlink:href", place.path);
       for (let tile of place.tiles) {
@@ -313,7 +307,7 @@ define(function (require) {
     _drawPiece(tile, piece) {
       d3.select("#id_" + tile.x + "_" + tile.y)
         .append("svg:image")
-        .attr('x', ((this._width) / this._adj[tile.x].length) * tile.y)
+        .attr("x", ((this._width) / this._adj[tile.x].length) * tile.y)
         .attr("width", (this._width - 1) / (this._adj[tile.x].length) - 1)
         .attr("height", (this._height - 1) / (this._adj.length) - 1)
         .attr("xlink:href", piece.path);
@@ -326,10 +320,7 @@ define(function (require) {
     }
 
     _initLegend() {
-      const legend = d3.select("#" + this._legendDiv)
-        .append("h3")
-        .html("Legend")
-        .attr("class", "hide-when-small");
+      
       this._initLegendForPieces("Players",
         this._model.players.map(function (i) {
           return i.suspect;
@@ -345,8 +336,8 @@ define(function (require) {
       let div = d3.select("#" + this._legendDiv)
         .append("div")
         .attr("class", "small-column hide-when-small");
-      div.append('h5').html(piecesHeader);
-      div.append('ul').attr("id", "legend_" + piecesHeader);
+      div.append("h5").html(piecesHeader);
+      div.append("ul").attr("id", "legend_" + piecesHeader);
       this._initLegendPieceList("legend_" + piecesHeader, arr);
     }
 
@@ -372,9 +363,9 @@ define(function (require) {
         .append("div")
         .attr("class", "small-column hide-when-small");
 
-      div.append('h5').html("Buttons");
+      div.append("h5").html("Buttons");
 
-      const ul = div.append('ul');
+      const ul = div.append("ul");
       const els = [
         "Cast die: throw two dice and move your figure on the board",
         "Suggest: ask your co-players for a suspect/place/weapon card",
@@ -497,8 +488,8 @@ define(function (require) {
 
     _printPlayer() {
       d3.select("#" + this._sectionLegend)
-        .style("margin-right", "-200px")
-        .style("margin-top", "30px");
+        .style("margin-right", "-20px")
+        .style("margin-top", "50px");
       d3.select("#" + this._legendIntroHelp)
         .style("width", "120px")
         .text(`${this._model.currentPlayer.name}'s turn`);
@@ -564,6 +555,13 @@ define(function (require) {
       await utl.sleep(ms);
     }
 
+    _getCheckedOption(id) {
+      return d3
+      .select("#" + id)
+      .select("option:checked")
+      .text();
+    }
+
     async makeMove(oldTile, tile, path) {
       for (let tile of this._paintedTiles) {
         const ind = path.filter(
@@ -583,13 +581,6 @@ define(function (require) {
         await this._paintTile(lastTile.x, lastTile.y, "lightgray");
         await this.wait(500);
       }
-    }
-
-    _getCheckedOption(id) {
-      return d3
-        .select("#" + id)
-        .select("option:checked")
-        .text();
     }
 
     appendInfo(text) {
@@ -703,7 +694,7 @@ define(function (require) {
       this.showInline(this._accuseButtonId);
     }
 
-    finishAIMove() {
+    aiFinishMove() {
       this.appendInfo(`${this._model.currentPlayer.name} finishes his turn'.`);
       this.showFinishButton();
     }

@@ -24,6 +24,10 @@ define(function (require) {
       this._dealCards();
     }
 
+    get currentPlayerIsAI() {
+      return this._currentPlayer.isAI;
+    }
+
     get dice() {
       return this._dice;
     }
@@ -44,6 +48,10 @@ define(function (require) {
       return this._players;
     }
 
+    get nPlayers() {
+      return this._players.length;
+    }
+
     _initPlayers(nPlayers, nAI) {
       const n = nPlayers + nAI;
       let players = [];
@@ -53,7 +61,8 @@ define(function (require) {
       );
 
       for (let i = 0; i < n; i++) {
-        players.push(new constructors[i](i, randomSuspects[i], this._board, this._cards));
+        players.push(
+          new constructors[i](i, randomSuspects[i], this._board, this._cards));
         if (i > 0) {
           players[i - 1].next = players[i];
           players[i].prev = players[i - 1];
@@ -88,11 +97,6 @@ define(function (require) {
       return this._dice.cast();
     }
 
-    tilesInRangeOfCurrPlayer(distance) {
-      const tile = this.currentPlayer.suspect.tile;
-      return this._board.computeNeighbors(distance, tile);
-    }
-
     computePath(oldTile, tile) {
       return this._board.computePath(oldTile, tile);
     }
@@ -113,20 +117,6 @@ define(function (require) {
         cs.weapon.name === weapon;
     }
 
-    get nPlayers() {
-      return this._players.length;
-    }
-
-    nextPlayer() {
-      if (this.nPlayers === 0)
-        return;
-      this._currentPlayer = this._currentPlayer.next;
-    }
-
-    murderCase() {
-      return this._cards.murderCase();
-    }
-
     moveToPlayerPlace(pieceName) {
       const piece = this._board.getPiece(pieceName);
       const oldTile = piece.tile;
@@ -138,6 +128,16 @@ define(function (require) {
         oldTile: oldTile,
         newTile: newTile
       }
+    }
+
+    murderCase() {
+      return this._cards.murderCase();
+    }
+
+    nextPlayer() {
+      if (this.nPlayers === 0)
+        return;
+      this._currentPlayer = this._currentPlayer.next;
     }
 
     putCurrPlayerSuspectPieceOn(tile) {
@@ -161,6 +161,11 @@ define(function (require) {
         (i) => i.name !== this._currentPlayer.name);
 
       this._dealCards();
+    }
+
+    tilesInRangeOfCurrPlayer(distance) {
+      const tile = this.currentPlayer.suspect.tile;
+      return this._board.computeNeighbors(distance, tile);
     }
 
   }
