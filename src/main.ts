@@ -1,28 +1,38 @@
-define(function (require) {
-  const Model = require("model");
-  const View = require("view");
-  const Controller = require("controller");
-  const d3 = require("libs/d3");
+"use strict";
 
-  const intro_players_input_button = "intro_players_input";
-  const intro_ai_input_button = "intro_ai_input";
+import * as d3 from "d3";
+import Model from "./model";
+import View from "./view";
+import Controller from "./controller";
 
-  function _parse(id) {
-    const nmb = d3.select("#" + id).property("value");
-    try {
-      if (nmb !== "" && !isNaN(nmb)) {
-        if (nmb > 5 || nmb < 0) throw null;
-        else return parseInt(nmb);
-      } else {
-        throw null;
-      }
-    } catch (err) {
-      d3.select("#intro_span")
-        .text("Enter integers only!")
-        .style("color", "darkred");
+const intro_players_input_button = "intro_players_input";
+const intro_ai_input_button = "intro_ai_input";
+
+const _parse = (id: string) => {
+  const nmb = d3.select("#" + id).property("value");
+  try {
+    if (nmb !== "" && !isNaN(nmb)) {
+      if (nmb > 5 || nmb < 0) throw null;
+      else return parseInt(nmb);
+    } else {
+      throw null;
     }
-    return null;
+  } catch (err) {
+    d3.select("#intro_span")
+      .text("Enter integers only!")
+      .style("color", "darkred");
   }
+  return null;
+}
+
+const _run = (nPlayers: number, nAI: number) => {
+  d3.select("#landing_page").style("display", "none");
+  const model = new Model(nPlayers, nAI);
+  const view = new View(model);
+  new Controller(nPlayers + nAI, model, view);
+};
+
+(function () {
 
   let div = d3
     .select("#app")
@@ -37,10 +47,10 @@ define(function (require) {
     .append("div")
     .text(
       "This version of Cluedo plays in ancient Greece, where" +
-        " Socrates, a true champion of the open society," +
-        " has been murdered by one of his enemies." +
-        " Players need to identify the murderer," +
-        " the weapon the crime was committed with, and its place."
+      " Socrates, a true champion of the open society," +
+      " has been murdered by one of his enemies." +
+      " Players need to identify the murderer," +
+      " the weapon the crime was committed with, and its place."
     );
   div = div.append("div").style("margin-top", "10px").attr("align", "center");
 
@@ -94,10 +104,4 @@ define(function (require) {
     .append("span")
     .attr("id", "intro_span");
 
-  const _run = (nPlayers, nAI) => {
-    d3.select("#landing_page").style("display", "none");
-    const model = new Model(nPlayers, nAI);
-    const view = new View(model);
-    new Controller(nPlayers + nAI, model, view);
-  };
-});
+})();

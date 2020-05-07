@@ -1,6 +1,6 @@
 ## TODO
 
-- use gulp for typescript -> uglify 
+- use weboack for typescript -> uglify -> concat
 - have a look into clean MVC design with bots. the current solution seems sub-optimal
 - generally improve/beautify UI and use my conventional CSS
 - landing page with dynamic setting of `nPlayers`
