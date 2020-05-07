@@ -1,6 +1,6 @@
 "use strict";
 
-define(function(require) {
+define(function (require) {
   const Card = require("model/cards/card");
 
   class Suspect extends Card {}

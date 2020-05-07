@@ -38,30 +38,30 @@ define(function (require) {
 
     addSeenCard(card) {
       const cons = card.constructor.name;
-      if (cons === "Suspect")
-        this._hasSeenSuspects.push(card.name);
-      else if (cons === "Weapon")
-        this._hasSeenWeapons.push(card.name);
+      if (cons === "Suspect") this._hasSeenSuspects.push(card.name);
+      else if (cons === "Weapon") this._hasSeenWeapons.push(card.name);
       else this._hasSeenPlaces.push(card.name);
     }
 
     wantToCast() {
-      if (!this.isInPlace)
-        return true;
+      if (!this.isInPlace) return true;
       const hasSeenRoom = this._hasSeenPlaces.includes(
-        this.suspect.tile.place.name);
-      if (!hasSeenRoom)
-        return Math.random() < .25;
-      return Math.random() < .5;
+        this.suspect.tile.place.name
+      );
+      if (!hasSeenRoom) return Math.random() < 0.25;
+      return Math.random() < 0.5;
     }
 
     computeDestination(pips) {
       if (this._target === null) {
         const hasNotSeenPlaces = utl.distinct(
-          this._allPlaces, this._hasSeenPlaces);
+          this._allPlaces,
+          this._hasSeenPlaces
+        );
         const randomPlaceString = utl.randomElement(hasNotSeenPlaces);
-        const randomPlace = Object.values(this._board.places)
-          .filter((i) => i.name === randomPlaceString);
+        const randomPlace = Object.values(this._board.places).filter(
+          (i) => i.name === randomPlaceString
+        );
         this._target = randomPlace[0];
       }
 
@@ -75,13 +75,15 @@ define(function (require) {
 
     suggest() {
       const weaps = utl.randomElement(
-        utl.distinct(this._allWeapons, this._hasSeenWeapons));
+        utl.distinct(this._allWeapons, this._hasSeenWeapons)
+      );
       const susps = utl.randomElement(
-        utl.distinct(this._allSuspects, this._hasSeenSuspects));
+        utl.distinct(this._allSuspects, this._hasSeenSuspects)
+      );
 
       return {
         weapon: weaps,
-        suspect: susps
+        suspect: susps,
       };
     }
 
@@ -101,7 +103,7 @@ define(function (require) {
       return {
         weapon: weapon[0],
         suspect: suspect[0],
-        place: place[0]
+        place: place[0],
       };
     }
   }
@@ -111,13 +113,12 @@ define(function (require) {
     const seenCrds = [
       ...this._hasSeenWeapons,
       ...this._hasSeenSuspects,
-      ...this._hasSeenPlaces
-    ].sort().join(", ");
+      ...this._hasSeenPlaces,
+    ]
+      .sort()
+      .join(", ");
     return `[AI ${this.suspect.name} \n\t${crds}\n\t[Seen ${seenCrds}]\n]`;
   };
 
   return AI;
 });
-
-
-

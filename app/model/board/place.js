@@ -16,7 +16,7 @@ define(function () {
     }
 
     get isPlace() {
-      return  this._type === "place";
+      return this._type === "place";
     }
 
     get type() {
@@ -28,17 +28,17 @@ define(function () {
     }
 
     get ncol() {
-      const cols = this._tiles.map(function(i) {
-        return i.y
+      const cols = this._tiles.map(function (i) {
+        return i.y;
       });
-      return (new Set(cols)).size;
+      return new Set(cols).size;
     }
 
     get nrow() {
-      const rows = this._tiles.map(function(i) {
-        return i.x
+      const rows = this._tiles.map(function (i) {
+        return i.x;
       });
-      return (new Set(rows)).size;
+      return new Set(rows).size;
     }
 
     get path() {

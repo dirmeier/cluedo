@@ -62,7 +62,7 @@ define(function () {
           if (hold.length > 0) {
             return {
               player: player.suspect.name,
-              card: hold[0]
+              card: hold[0],
             };
           }
         }
@@ -83,4 +83,3 @@ define(function () {
 
   return Player;
 });
-

@@ -1,7 +1,6 @@
 "use strict";
 
 define(function () {
-
   class Controller {
     constructor(nPlayers, model, view) {
       if (typeof nPlayers === "undefined" || nPlayers < 1)
@@ -24,8 +23,7 @@ define(function () {
     }
 
     ai_turn = async () => {
-      if (this._model.currentPlayerIsAI)
-        await this._ai();
+      if (this._model.currentPlayerIsAI) await this._ai();
     };
 
     _ai_think = async () => {
@@ -41,7 +39,10 @@ define(function () {
       const path = await player.computeDestination(pips);
       await this._view.aiCast(player);
       await this._makeMove(
-        this._model.currentPlayer.tile, path[path.length - 1], path);
+        this._model.currentPlayer.tile,
+        path[path.length - 1],
+        path
+      );
     };
 
     _ai_suggest = async () => {
@@ -50,8 +51,7 @@ define(function () {
       await this._view.aiSuggest(player, sugg);
       const holds = await this.makeSuggestion(sugg.suspect, sugg.weapon);
 
-      if (holds !== null)
-        await player.addSeenCard(holds.card);
+      if (holds !== null) await player.addSeenCard(holds.card);
     };
 
     _ai_accuse = async () => {
@@ -89,8 +89,7 @@ define(function () {
     };
 
     move = async (row, col) => {
-      if (!this._isMove)
-        return;
+      if (!this._isMove) return;
 
       const oldTile = await this._model.getPlayerTile();
       const tile = await this._model.getTile(row, col);
@@ -180,4 +179,3 @@ define(function () {
 
   return Controller;
 });
-

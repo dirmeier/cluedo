@@ -4,7 +4,7 @@ define(function (require) {
   const Item = require("model/board/item");
 
   class Weapon extends Item.Item {
-    constructor(name,  path) {
+    constructor(name, path) {
       super(name, path);
     }
   }

@@ -19,7 +19,7 @@ define(function (require) {
     new Suspect(glb.critias.name, glb.critias.path),
     new Suspect(glb.heraclitus.name, glb.heraclitus.path),
     new Suspect(glb.lysander.name, glb.lysander.path),
-    new Suspect(glb.plato.name, glb.plato.path)
+    new Suspect(glb.plato.name, glb.plato.path),
   ];
 
   const weapons = [
@@ -28,7 +28,7 @@ define(function (require) {
     new Weapon(glb.poison.name, glb.poison.path),
     new Weapon(glb.rope.name, glb.rope.path),
     new Weapon(glb.sickle.name, glb.sickle.path),
-    new Weapon(glb.treachery.name, glb.treachery.path)
+    new Weapon(glb.treachery.name, glb.treachery.path),
   ];
 
   class Board {
@@ -66,7 +66,11 @@ define(function (require) {
       let places = {};
       for (let leg of legend) {
         places[leg.legend] = new Place(
-          leg.place, leg.legend, leg.type, leg.path || null);
+          leg.place,
+          leg.legend,
+          leg.type,
+          leg.path || null
+        );
       }
       return places;
     }
@@ -85,12 +89,10 @@ define(function (require) {
 
       for (let i = 0; i < board.length; i++) {
         for (let j = 0; j < board[i].length; j++) {
-          if (i > 0)
-            adj[i][j].neighbors.up = adj[i - 1][j] || null;
+          if (i > 0) adj[i][j].neighbors.up = adj[i - 1][j] || null;
           if (i < board.length - 1)
             adj[i][j].neighbors.down = adj[i + 1][j] || null;
-          if (j > 0)
-            adj[i][j].neighbors.left = adj[i][j - 1] || null;
+          if (j > 0) adj[i][j].neighbors.left = adj[i][j - 1] || null;
           if (j < board[i].length - 1)
             adj[i][j].neighbors.right = adj[i][j + 1] || null;
         }
@@ -116,9 +118,7 @@ define(function (require) {
     }
 
     _getPlaces() {
-      return Object
-        .values(this._places)
-        .filter((v) => v.type === "place");
+      return Object.values(this._places).filter((v) => v.type === "place");
     }
 
     putOnRandomTile(piece, place) {
@@ -136,8 +136,7 @@ define(function (require) {
 
     getPiece(name) {
       for (let piece of this.pieces) {
-        if (piece.name === name)
-          return piece;
+        if (piece.name === name) return piece;
       }
       return null;
     }
@@ -156,11 +155,7 @@ define(function (require) {
     computeNeighbors(distance, tile) {
       return alg.computeNeighbors(distance, tile, this._adjacenyMatrix);
     }
-
   }
 
   return Board;
 });
-
-
-

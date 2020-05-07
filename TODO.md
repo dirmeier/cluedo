@@ -1,14 +1,6 @@
 ## TODO
 
-- remove some code form classes to dedicated classes (such as dijkstra)
-- remove getters that are difficult to understand like below and replace with more verbose calls 
-
-```
-get cards() {
-    return this.model.game.cards
-}
-```
-
+- use gulp for typescript -> uglify 
 - have a look into clean MVC design with bots. the current solution seems sub-optimal
 - generally improve/beautify UI and use my conventional CSS
 - landing page with dynamic setting of `nPlayers`

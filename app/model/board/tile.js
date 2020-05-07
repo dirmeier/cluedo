@@ -1,7 +1,6 @@
 "use strict";
 
 define(function () {
-
   class Tile {
     constructor(name, place, x, y, gate) {
       this._name = name;
@@ -9,17 +8,16 @@ define(function () {
       this._x = x;
       this._y = y;
       this._direction = {
-        '>': false,
-        '<': false,
-        '^': false,
-        'v': false
+        ">": false,
+        "<": false,
+        "^": false,
+        v: false,
       };
       this._gate = gate;
-      if (this._gate !== null)
-        this._direction[this._gate] = true;
+      if (this._gate !== null) this._direction[this._gate] = true;
       this._isOccupied = false;
       this._occupant = null;
-      this._neighbors = {up: null, down: null, left: null, right: null};
+      this._neighbors = { up: null, down: null, left: null, right: null };
     }
 
     get gate() {
@@ -103,10 +101,11 @@ define(function () {
     }
 
     canReach(neighbor) {
-      return neighbor !== null && (this._name === neighbor._name ||
-        this.isGate() || neighbor.isGate());
+      return (
+        neighbor !== null &&
+        (this._name === neighbor._name || this.isGate() || neighbor.isGate())
+      );
     }
-
   }
 
   Tile.prototype.hashCode = function () {
@@ -114,7 +113,7 @@ define(function () {
     let hash = 0;
     for (let i = 0; i < k.length; i++) {
       let chr = k.charCodeAt(i);
-      hash = ((hash << 5) - hash) + chr;
+      hash = (hash << 5) - hash + chr;
       hash |= 0;
     }
     return hash;
@@ -122,4 +121,3 @@ define(function () {
 
   return Tile;
 });
-

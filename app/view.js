@@ -9,8 +9,6 @@ define(function (require) {
     constructor(model) {
       this._athenaHeight = 400;
       this._athenaWidth = 200;
-      this._legendWidth = 250;
-      this._legendHeight = 550;
       this._helpWidth = 250;
       this._width = 600;
       this._height = 600;
@@ -20,11 +18,9 @@ define(function (require) {
       this._adj = this._board.adjacency;
       this._suspectPieces = this._board.suspects;
       this._weaponPieces = this._board.weapons;
-      this._playerPiecesNames = this._model.players.map(
-        function (i) {
-          return i.suspect.name;
-        }
-      );
+      this._playerPiecesNames = this._model.players.map(function (i) {
+        return i.suspect.name;
+      });
 
       this._accuseButtonId = "accuse_button";
       this._athenaDiv = "athena_div";
@@ -58,23 +54,29 @@ define(function (require) {
       this._sectionLegendMarginRight = ["-75px", "-75px", "-75px", "-75px"];
       this._sectionLegendMarginTop = ["0px", "0px", "-25px", "-25px"];
       this._introTexts = [
-        "Welcome. I am the goddess Athena, patron of the city of Athens, and " +
-        "I come with bad news. One of my favorite disciples, Socrates, has been murdered.",
+        "Welcome. I am the goddess Athena, patron of the city of Athens, " +
+          "and I come with bad news. One of my favorite disciples, Socrates, " +
+          "has been murdered.",
 
         "To not let this crime go unpunished, I instructed some of his acquaintances," +
-        this._playerPiecesNames.slice(0, -1).join(", ") + " and " + this._playerPiecesNames.pop() +
-        " (one for each player), to expose his murderer.",
+          this._playerPiecesNames.slice(0, -1).join(", ") +
+          " and " +
+          this._playerPiecesNames.pop() +
+          " (one for each player), to expose his murderer.",
 
-        "The crime has been committed by 1 of " + this._suspectPieces.length + " suspects " +
-        "with 1 of " + this._weaponPieces.length + " weapons " +
-        "which are distributed in different places in Athens. I assume the murder has been " +
-        "committed in one of these places.",
+        "The crime has been committed by 1 of " +
+          this._suspectPieces.length +
+          " suspects with 1 of " +
+          this._weaponPieces.length +
+          " weapons which are distributed in different places in Athens. " +
+          "I assume the murder has been committed in one of these places.",
 
-        "Each round a player can 'cast a die' to move between places, make a 'suggestion' to " +
-        "get information about suspects/weapons/places and 'accuse' someone to end the game. " +
-        "Now, please help me and expose the murder and save the open society.",
+        "Each round a player can 'cast a die' to move between places, make a " +
+          "'suggestion' to get information about suspects/weapons/places and " +
+          "'accuse' someone to end the game. Now, please help me and expose the " +
+          "murder and save the open society.",
 
-        null
+        null,
       ];
       this._paintedTiles = [];
 
@@ -87,7 +89,8 @@ define(function (require) {
     }
 
     _buildElements() {
-      const app = d3.select("#app")
+      const app = d3
+        .select("#app")
         .append("div")
         .attr("class", "row")
         .attr("align", "center");
@@ -95,19 +98,22 @@ define(function (require) {
       app.append("h1").text("Cluedo - ancient Greece edition");
       app.append("h2").text("Expose Socrates' murderer.");
 
-      app.append("div")
+      app
+        .append("div")
         .attr("id", this._athenaDiv)
         .attr("class", "column left")
         .attr("align", "right");
 
-      app.append("div")
+      app
+        .append("div")
         .attr("id", this._boardDiv)
         .attr("class", "column")
         .style("display", "none")
         .style("width", this._width + 10)
         .style("height", this._height);
 
-      app.append("div")
+      app
+        .append("div")
         .attr("id", this._infoDiv)
         .attr("class", "column right")
         .style("display", "none");
@@ -123,10 +129,10 @@ define(function (require) {
     _initAthena() {
       let section = d3.select("#" + this._athenaDiv);
 
-      section = section.append("section")
-        .attr("class", "message-list");
+      section = section.append("section").attr("class", "message-list");
 
-      const bl = section.append("section")
+      const bl = section
+        .append("section")
         .attr("id", this._sectionLegend)
         .attr("class", "message -right column")
         .style("width", "300px");
@@ -140,22 +146,27 @@ define(function (require) {
       bl.append("div")
         .attr("class", "nes-balloon from-right show-when-small")
         .append("p")
-        .text("Unfortunately your display is too small to play." +
-          " Save the open society another time.")
+        .text(
+          "Unfortunately your display is too small to play." +
+            " Save the open society another time."
+        )
         .style("font-size", "10px");
 
-      section.append("svg")
+      section
+        .append("svg")
         .attr("height", 500)
         .attr("width", this._athenaWidth)
         .append("svg:image")
         .attr("height", this._athenaHeight)
         .attr("width", this._athenaWidth)
-        .attr("y",100)
+        .attr("y", 100)
         .attr("xlink:href", glb.athena.path);
 
       this._newButton(
-        d3.select("#" + this._athenaDiv), this._legendNextButton, "Next")
-        .attr("class", "nes-btn hide-when-small");
+        d3.select("#" + this._athenaDiv),
+        this._legendNextButton,
+        "Next"
+      ).attr("class", "nes-btn hide-when-small");
     }
 
     _intro = () => {
@@ -181,6 +192,16 @@ define(function (require) {
       d3.select("#" + id).text(text);
     }
 
+    _newButton(el, id, text) {
+      return el
+        .append("button")
+        .attr("class", "nes-btn")
+        .attr("type", "button")
+        .attr("name", "action")
+        .attr("id", id)
+        .text(text);
+    }
+
     _initBoard() {
       this._initTiles();
       this._drawPieces("Suspects", this._board.suspects);
@@ -189,7 +210,8 @@ define(function (require) {
     }
 
     _initTiles() {
-      const main = d3.select("#" + this._boardDiv)
+      const main = d3
+        .select("#" + this._boardDiv)
         .append("div")
         .attr("class", "hide-when-small")
         .append("svg")
@@ -211,35 +233,50 @@ define(function (require) {
       return main
         .append("g")
         .attr("width", this._width + 5)
-        .attr("transform", "translate(0," + i * (this._height / this._adj.length) + ")")
+        .attr(
+          "transform",
+          "translate(0," + i * (this._height / this._adj.length) + ")"
+        )
         .style("display", "flex");
     }
 
     _g(svg, row, col) {
-      return svg
-        .append("g")
-        .attr("id", "id_" + row + "_" + col);
+      return svg.append("g").attr("id", "id_" + row + "_" + col);
     }
 
     _initPlace(el, row, col, tile, place) {
-      if (place.isDrawn || !place.isPlace)
-        return;
+      if (place.isDrawn || !place.isPlace) return;
       place.isDrawn = true;
       el.append("svg:image")
-        .attr("x", ((this._width) / this._adj[row].length) * col)
-        .attr("height", ((this._height - 1) / (this._adj.length) - 1) * place.nrow)
+        .attr("x", (this._width / this._adj[row].length) * col)
+        .attr(
+          "height",
+          ((this._height - 1) / this._adj.length - 1) * place.nrow
+        )
         .attr("xlink:href", place.path);
+    }
+
+    hideButtons() {
+      for (let id of [
+        this._castButtonId,
+        this._accuseButtonId,
+        this._suggestButtonId,
+        this._finishMoveButtonId,
+        this._revealCardButton,
+      ]) {
+        this._hide(id);
+      }
     }
 
     _rect(el, tile, row, col) {
       return el
         .append("rect")
         .attr("id", "id_r_" + row + "_" + col)
-        .attr("width", (this._width - 1) / (this._adj[row].length) - 1)
-        .attr("height", (this._height - 1) / (this._adj.length) - 1)
+        .attr("width", (this._width - 1) / this._adj[row].length - 1)
+        .attr("height", (this._height - 1) / this._adj.length - 1)
         .attr("fill", "lightgray")
         .attr("fill-opacity", 0.5)
-        .attr("x", ((this._width) / this._adj[row].length) * col)
+        .attr("x", (this._width / this._adj[row].length) * col)
         .attr("row", row)
         .attr("col", col);
     }
@@ -250,43 +287,46 @@ define(function (require) {
       const h = parseFloat(rect.attr("height"));
 
       if (tile.neighbors.left === null)
-        el.append("polyline").attr(
-          "points", "0.5,0 0.5," + h);
+        el.append("polyline").attr("points", "0.5,0 0.5," + h);
       else if (tile.neighbors.right === null)
-        el.append("polyline").attr(
-          "points", (x + w) + ",0 " + (x + w) + "," + h);
+        el.append("polyline").attr("points", x + w + ",0 " + (x + w) + "," + h);
 
       if (tile.isOtherRoomAndNoGate(tile.neighbors.right)) {
-        el.append("polyline").attr(
-          "points", (x + w) + ",0 " + (x + w) + "," + h);
+        el.append("polyline").attr("points", x + w + ",0 " + (x + w) + "," + h);
       }
 
       if (tile.isOtherRoomAndNoGate(tile.neighbors.down)) {
         el.append("polyline").attr(
-          "points", (x) + ",  " + (h - 2) + " " + (x + w) + "," + (h - 2));
+          "points",
+          x + ",  " + (h - 2) + " " + (x + w) + "," + (h - 2)
+        );
       }
 
       if (tile.isOtherRoomAndNoNeighborVerticalGate(tile.neighbors.down)) {
         el.append("polyline").attr(
-          "points", (x) + ",  " + (h - 2) + " " + (x + w) + "," + (h - 2));
+          "points",
+          x + ",  " + (h - 2) + " " + (x + w) + "," + (h - 2)
+        );
       }
 
       if (tile.isGateRight() && tile.isOtherRoom(tile.neighbors.down)) {
         el.append("polyline").attr(
-          "points", (x) + ",  " + (h - 2) + " " + (x + w) + "," + (h - 2));
+          "points",
+          x + ",  " + (h - 2) + " " + (x + w) + "," + (h - 2)
+        );
       }
 
       if (tile.neighbors.up === null)
-        el.append("polyline").attr(
-          "points", x + ",0.5 " + (x + w) + ",0.5");
+        el.append("polyline").attr("points", x + ",0.5 " + (x + w) + ",0.5");
       else if (tile.neighbors.down === null)
         el.append("polyline").attr(
-          "points", x + ",  " + (h - 2) + " " + (x + w) + "," + (h - 2));
+          "points",
+          x + ",  " + (h - 2) + " " + (x + w) + "," + (h - 2)
+        );
     }
 
     _drawPieces(piecesHeader, arr) {
-      for (let piece of arr)
-        this._drawPiece(piece.tile, piece);
+      for (let piece of arr) this._drawPiece(piece.tile, piece);
     }
 
     _drawSocrates() {
@@ -295,21 +335,23 @@ define(function (require) {
       const place = this._board.places["_"];
       const g = d3.select("#id_" + row + "_" + col);
       g.append("svg:image")
-        .attr("x", ((this._width) / this._adj[row].length) * col)
-        .attr("height", ((this._height - 1) / (this._adj.length) - 1) * place.nrow)
+        .attr("x", (this._width / this._adj[row].length) * col)
+        .attr(
+          "height",
+          ((this._height - 1) / this._adj.length - 1) * place.nrow
+        )
         .attr("xlink:href", place.path);
       for (let tile of place.tiles) {
-        d3.select("#id_r_" + tile.x + "_" + tile.y)
-          .attr("fill", "transparent");
+        d3.select("#id_r_" + tile.x + "_" + tile.y).attr("fill", "transparent");
       }
     }
 
     _drawPiece(tile, piece) {
       d3.select("#id_" + tile.x + "_" + tile.y)
         .append("svg:image")
-        .attr("x", ((this._width) / this._adj[tile.x].length) * tile.y)
-        .attr("width", (this._width - 1) / (this._adj[tile.x].length) - 1)
-        .attr("height", (this._height - 1) / (this._adj.length) - 1)
+        .attr("x", (this._width / this._adj[tile.x].length) * tile.y)
+        .attr("width", (this._width - 1) / this._adj[tile.x].length - 1)
+        .attr("height", (this._height - 1) / this._adj.length - 1)
         .attr("xlink:href", piece.path);
     }
 
@@ -320,20 +362,24 @@ define(function (require) {
     }
 
     _initLegend() {
-      
-      this._initLegendForPieces("Players",
+      this._initLegendForPieces(
+        "Players",
         this._model.players.map(function (i) {
           return i.suspect;
-        }));
+        })
+      );
       this._initLegendForPieces("Suspects", this._board.suspects.sort());
       this._initLegendForPieces("Weapons", this._board.weapons.sort());
-      this._initLegendForPieces("Places",
-        Object.values(this._board.places).sort());
+      this._initLegendForPieces(
+        "Places",
+        Object.values(this._board.places).sort()
+      );
       this._initButtonDescription();
     }
 
     _initLegendForPieces(piecesHeader, arr) {
-      let div = d3.select("#" + this._legendDiv)
+      let div = d3
+        .select("#" + this._legendDiv)
         .append("div")
         .attr("class", "small-column hide-when-small");
       div.append("h5").html(piecesHeader);
@@ -359,7 +405,8 @@ define(function (require) {
     }
 
     _initButtonDescription() {
-      const div = d3.select("#" + this._legendDiv)
+      const div = d3
+        .select("#" + this._legendDiv)
         .append("div")
         .attr("class", "small-column hide-when-small");
 
@@ -370,7 +417,7 @@ define(function (require) {
         "Cast die: throw two dice and move your figure on the board",
         "Suggest: ask your co-players for a suspect/place/weapon card",
         "Accuse: name a suspect/place/weapon and possibly end the game",
-        "Next player: finish move and start next player's turn"
+        "Next player: finish move and start next player's turn",
       ];
 
       ul.selectAll("li")
@@ -382,17 +429,9 @@ define(function (require) {
         });
     }
 
-    _newButton(el, id, text) {
-      return el.append("button")
-        .attr("class", "nes-btn")
-        .attr("type", "button")
-        .attr("name", "action")
-        .attr("id", id)
-        .text(text);
-    }
-
     _initInfo() {
-      const info = d3.select("#" + this._infoDiv)
+      const info = d3
+        .select("#" + this._infoDiv)
         .style("width", this._helpWidth)
         .append("div")
         .attr("class", "hide-when-small");
@@ -406,9 +445,13 @@ define(function (require) {
           show();
         });
 
-      div.append("ul").attr("id", this._playerCardsList).style("display", "none");
+      div
+        .append("ul")
+        .attr("id", this._playerCardsList)
+        .style("display", "none");
       div = info.append("div").attr("id", this._infoHeader);
-      div.append("div")
+      div
+        .append("div")
         .style("overflow", "hidden")
         .append("p")
         .attr("id", this._infoText);
@@ -417,17 +460,26 @@ define(function (require) {
       div = d3.select("#" + this._infoHeader).append("div");
       let showw = this.showRevealCard;
       let button = this._newButton(div, this._revealCardButton, "Reveal card");
-      button.style("display", "none")
-        .on("click", function () {
-          showw();
-        });
-      div.append("p").attr("id", this._revealCardParagraph).style("display", "none");
+      button.style("display", "none").on("click", function () {
+        showw();
+      });
+      div
+        .append("p")
+        .attr("id", this._revealCardParagraph)
+        .style("display", "none");
 
-      div = d3.select("#" + this._infoHeader).append("div").attr("id", this._buttonsId);
+      div = d3
+        .select("#" + this._infoHeader)
+        .append("div")
+        .attr("id", this._buttonsId);
       this._newButton(div.append("div"), this._castButtonId, "Cast die");
       this._newButton(div.append("div"), this._suggestButtonId, "Suggest");
       this._newButton(div.append("div"), this._accuseButtonId, "Accuse");
-      this._newButton(div.append("div"), this._finishMoveButtonId, "Next player");
+      this._newButton(
+        div.append("div"),
+        this._finishMoveButtonId,
+        "Next player"
+      );
 
       d3.select("#" + this._infoHeader)
         .append("div")
@@ -438,26 +490,27 @@ define(function (require) {
         "Suspects: ",
         this._suspectsSelectDiv,
         this._suspectsSelectList,
-        this._model.cards.suspects);
+        this._model.cards.suspects
+      );
       this._initSelectLists(
         "Weapons: ",
         this._weaponsSelectDiv,
         this._weaponsSelectList,
-        this._model.cards.weapons);
+        this._model.cards.weapons
+      );
       this._initSelectLists(
         "Places:",
         this._placesSelectDiv,
         this._placeSelectList,
-        this._model.cards.places);
+        this._model.cards.places
+      );
 
       div = d3.select("#" + this._infoHeader).append("div");
-      button = this._newButton(
-        div, this._selectSuggestButtonId, "Suggest");
+      button = this._newButton(div, this._selectSuggestButtonId, "Suggest");
       button.style("display", "none");
 
       div = d3.select("#" + this._infoHeader).append("div");
-      button = this._newButton(
-        div, this._selectAccuseButtonId, "Accuse");
+      button = this._newButton(div, this._selectAccuseButtonId, "Accuse");
       button.style("display", "none");
     }
 
@@ -474,7 +527,8 @@ define(function (require) {
         .attr("align", "center")
         .attr("id", listID);
 
-      select.selectAll("option")
+      select
+        .selectAll("option")
         .data(cards.sort())
         .enter()
         .append("option")
@@ -488,7 +542,7 @@ define(function (require) {
 
     _printPlayer() {
       d3.select("#" + this._sectionLegend)
-        .style("margin-right", "-20px")
+        .style("margin-right", "-75px")
         .style("margin-top", "50px");
       d3.select("#" + this._legendIntroHelp)
         .style("width", "120px")
@@ -500,9 +554,7 @@ define(function (require) {
 
       const ul = d3.select("#" + this._playerCardsList);
       for (let card of this._model.currentPlayer.cards.sort()) {
-        ul.append("li")
-          .append("span")
-          .text(card.name);
+        ul.append("li").append("span").text(card.name);
       }
     }
 
@@ -512,35 +564,24 @@ define(function (require) {
         .remove();
       d3.select("#" + this._infoDiv)
         .append("div")
-        .text("You all lost. Good job. Reload the page if you want to give it another try.\n");
+        .text(
+          "You all lost. Good job. " +
+            "Reload the page if you want to give it another try.\n"
+        );
     }
 
     drawTiles(tiles, pips, isAI) {
       if (isAI)
         this.appendInfo(`${this._model.currentPlayer.name} cast: ${pips}.\n`);
-      else
-        this.showInfo(`${this._model.currentPlayer.name} cast: ${pips}.\n`);
+      else this.showInfo(`${this._model.currentPlayer.name} cast: ${pips}.\n`);
       for (let tile of this._paintedTiles)
         this._paintTile(tile.x, tile.y, "lightgray");
-      for (let tile of tiles)
-        this._paintTile(tile.x, tile.y, "#C79999");
+      for (let tile of tiles) this._paintTile(tile.x, tile.y, "#C79999");
       this._paintedTiles = tiles;
     }
 
     _paintTile(row, col, color) {
       return d3.select("#id_r_" + row + "_" + col).style("fill", color);
-    }
-
-    hideButtons() {
-      for (let id of [
-        this._castButtonId,
-        this._accuseButtonId,
-        this._suggestButtonId,
-        this._finishMoveButtonId,
-        this._revealCardButton
-      ]) {
-        this._hide(id);
-      }
     }
 
     showInline(id) {
@@ -557,17 +598,16 @@ define(function (require) {
 
     _getCheckedOption(id) {
       return d3
-      .select("#" + id)
-      .select("option:checked")
-      .text();
+        .select("#" + id)
+        .select("option:checked")
+        .text();
     }
 
     async makeMove(oldTile, tile, path) {
       for (let tile of this._paintedTiles) {
-        const ind = path.filter(
-          function (i) {
-            return i.x === tile.x & i.y === tile.y;
-          });
+        const ind = path.filter(function (i) {
+          return (i.x === tile.x) & (i.y === tile.y);
+        });
         if (!ind.length) {
           this._paintTile(tile.x, tile.y, "lightgray");
         }
@@ -617,16 +657,14 @@ define(function (require) {
     };
 
     showSuggestions(isAI) {
-      if (!isAI)
-        this.showInfo("Select a suspect and a weapon:");
+      if (!isAI) this.showInfo("Select a suspect and a weapon:");
       d3.select("#" + this._suspectsSelectDiv).style("display", "block");
       d3.select("#" + this._weaponsSelectDiv).style("display", "block");
       d3.select("#" + this._selectSuggestButtonId).style("display", "inline");
     }
 
     showAccusations(isAI) {
-      if (!isAI)
-        this.showInfo("Select a suspect, weapon and place:");
+      if (!isAI) this.showInfo("Select a suspect, weapon and place:");
       d3.select("#" + this._suspectsSelectDiv).style("display", "block");
       d3.select("#" + this._weaponsSelectDiv).style("display", "block");
       d3.select("#" + this._placesSelectDiv).style("display", "block");
@@ -649,8 +687,7 @@ define(function (require) {
       } else {
         this.appendInfo(`${pl} didn't receive any card.`);
       }
-      if (isAI)
-        await this.wait(2000);
+      if (isAI) await this.wait(2000);
     }
 
     updatePiece(oldTile, newTile) {
@@ -665,19 +702,23 @@ define(function (require) {
       this._hide(this._selectAccuseButtonId);
 
       if (isSolved)
-        this.showInfo("Congrats! You won!" +
-          " You saved the open society against its opponents." +
-          " Restart the game by reloading the page.");
+        this.showInfo(
+          "Congrats! You won!" +
+            " You saved the open society against its opponents." +
+            " Restart the game by reloading the page."
+        );
       else {
         this.showInfo("Boo! You are out!");
       }
     }
 
     removePlayerFromLegend() {
-      this._initLegendPieceList("legend_Players",
+      this._initLegendPieceList(
+        "legend_Players",
         this._model.players.map(function (i) {
           return i.suspect;
-        }));
+        })
+      );
     }
 
     nextPlayer() {
@@ -685,54 +726,12 @@ define(function (require) {
       this.showInfo("You have the following options:");
       let func = this._hide;
 
-      if (this._model.nPlayers > 1)
-        func = this.showInline;
+      if (this._model.nPlayers > 1) func = this.showInline;
 
       func(this._castButtonId);
       func(this._suggestButtonId);
       func(this._finishMoveButtonId);
       this.showInline(this._accuseButtonId);
-    }
-
-    aiFinishMove() {
-      this.appendInfo(`${this._model.currentPlayer.name} finishes his turn'.`);
-      this.showFinishButton();
-    }
-
-    async aiMove(player) {
-      this.hideButtons();
-      this.showInfo(player.name + " is firing some neurons.");
-      await this.wait(2000);
-    }
-
-    async aiCast(player) {
-      await this.appendInfo(player.name + " wants to cast a die.");
-      await this.wait(2000);
-      this.appendInfo(
-        `${player.name} decides to move ` +
-        `to place '${player.target.name}'.`);
-      await this.wait(2000);
-    }
-
-    async aiAccuse(player, acc) {
-      this.appendInfo(`${player.name.name} wants to make am accusation.`);
-      await this.wait(2000);
-      this.appendInfo(
-        `${player.name} accuses '${acc.suspect}' who he thinks committed 
-          the murder in '${acc.place}' with '${acc.weapon}'.`
-      );
-      await this.wait(2000);
-    }
-
-    async aiSuggest(player, sugg) {
-      this.appendInfo(`${player.name} wants to make a suggestion.`);
-      await this.wait(2000);
-      this.appendInfo(
-        `${player.name} believes '${sugg.suspect}' 
-           committed the murder in '${player.tile.place.name}' 
-           with '${sugg.weapon}'.`
-      );
-      await this.wait(2000);
     }
 
     showSuggestButton() {
@@ -746,6 +745,49 @@ define(function (require) {
 
     showFinishButton() {
       this.showInline(this._finishMoveButtonId);
+    }
+
+    async aiFinishMove() {
+      await this.appendInfo(
+        `${this._model.currentPlayer.name} finishes his turn'.`
+      );
+      await this.showFinishButton();
+    }
+
+    async aiMove(player) {
+      this.hideButtons();
+      this.showInfo(player.name + " is firing some neurons.");
+      await this.wait(2000);
+    }
+
+    async aiCast(player) {
+      await this.appendInfo(player.name + " wants to cast a die.");
+      await this.wait(2000);
+      this.appendInfo(
+        `${player.name} decides to move ` + `to place '${player.target.name}'.`
+      );
+      await this.wait(2000);
+    }
+
+    async aiAccuse(player, acc) {
+      this.appendInfo(`${player.name.name} wants to make am accusation.`);
+      await this.wait(2000);
+      this.appendInfo(
+        `${player.name} accuses '${acc.suspect}' who he thinks committed
+          the murder in '${acc.place}' with '${acc.weapon}'.`
+      );
+      await this.wait(2000);
+    }
+
+    async aiSuggest(player, sugg) {
+      this.appendInfo(`${player.name} wants to make a suggestion.`);
+      await this.wait(2000);
+      this.appendInfo(
+        `${player.name} believes '${sugg.suspect}'
+           committed the murder in '${player.tile.place.name}'
+           with '${sugg.weapon}'.`
+      );
+      await this.wait(2000);
     }
 
     bindCast(handler) {
@@ -771,9 +813,8 @@ define(function (require) {
       const wl = this._weaponsSelectList;
       const get = this._getCheckedOption;
       d3.select("#" + this._selectSuggestButtonId).on("click", function () {
-          handler(get(sl), get(wl));
-        }
-      );
+        handler(get(sl), get(wl));
+      });
     }
 
     bindAccuse(handler) {
@@ -786,9 +827,8 @@ define(function (require) {
       const pl = this._placeSelectList;
       const get = this._getCheckedOption;
       d3.select("#" + this._selectAccuseButtonId).on("click", function () {
-          handler(get(sl), get(wl), get(pl));
-        }
-      );
+        handler(get(sl), get(wl), get(pl));
+      });
     }
 
     bindNextPlayer(handler) {
@@ -798,12 +838,10 @@ define(function (require) {
     bindStartGame(handler) {
       const init = this._intro;
       const text = this._introTexts;
-      d3.select("#" + this._legendNextButton).on("click",
-        function () {
-          const idx = init();
-          if (idx === text.length) handler();
-        }
-      );
+      d3.select("#" + this._legendNextButton).on("click", function () {
+        const idx = init();
+        if (idx === text.length) handler();
+      });
     }
   }
 

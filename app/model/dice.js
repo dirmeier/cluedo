@@ -9,8 +9,7 @@ define(function (require) {
     }
 
     cast() {
-      return utl.randomElement(this._die) +
-        utl.randomElement(this._die);
+      return utl.randomElement(this._die) + utl.randomElement(this._die);
     }
   }
 

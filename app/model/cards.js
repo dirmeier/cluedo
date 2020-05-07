@@ -16,7 +16,7 @@ define(function (require) {
     new Suspect(glb.critias.name, glb.critias.path),
     new Suspect(glb.heraclitus.name, glb.heraclitus.path),
     new Suspect(glb.lysander.name, glb.lysander.path),
-    new Suspect(glb.plato.name, glb.plato.path)
+    new Suspect(glb.plato.name, glb.plato.path),
   ];
 
   const weapons = [
@@ -25,7 +25,7 @@ define(function (require) {
     new Weapon(glb.poison.name, glb.poison.path),
     new Weapon(glb.rope.name, glb.rope.path),
     new Weapon(glb.sickle.name, glb.sickle.path),
-    new Weapon(glb.treachery.name, glb.treachery.path)
+    new Weapon(glb.treachery.name, glb.treachery.path),
   ];
 
   const places = [
@@ -37,7 +37,7 @@ define(function (require) {
     new Place(glb.parthenon.name, glb.parthenon.path),
     new Place(glb.temple.name, glb.temple.path),
     new Place(glb.theater.name, glb.theater.path),
-    new Place(glb.tree.name, glb.tree.path)
+    new Place(glb.tree.name, glb.tree.path),
   ];
 
   class Cards {
@@ -50,7 +50,7 @@ define(function (require) {
       this._availableCards = [
         ...this._availableWeapons(),
         ...this._availableSuspects(),
-        ...this._availablePlaces()
+        ...this._availablePlaces(),
       ];
     }
 
@@ -79,14 +79,15 @@ define(function (require) {
         victim: this._victim,
         murderer: this._murderer,
         place: this._place,
-        weapon: this._weapon
+        weapon: this._weapon,
       };
     }
 
     randomAvailableCard() {
       const card = utl.randomElement(this._availableCards);
-      this._availableCards =
-        this._availableCards.filter((i) => i.name !== card.name);
+      this._availableCards = this._availableCards.filter(
+        (i) => i.name !== card.name
+      );
       return card;
     }
 
@@ -107,7 +108,6 @@ define(function (require) {
     Cards,
     suspects,
     weapons,
-    places
+    places,
   };
 });
-

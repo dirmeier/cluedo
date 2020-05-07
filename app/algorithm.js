@@ -1,7 +1,6 @@
 "use strict";
 
 define(function () {
-
   function dijkstra(src, target, matrix) {
     let Q = [];
     const distances = {};
@@ -20,12 +19,14 @@ define(function () {
       const u = Q.reduce(function (i, j) {
         return distances[i.hashCode()] < distances[j.hashCode()] ? i : j;
       });
-      Q = Q.filter(function (i) {return u.x !== i.x || i.y !== u.y;});
+      Q = Q.filter(function (i) {
+        return u.x !== i.x || i.y !== u.y;
+      });
 
       if (u === target) {
         return {
           previous: previous,
-          distance: distances
+          distance: distances,
         };
       }
 
@@ -42,7 +43,7 @@ define(function () {
 
     return {
       previous: previous,
-      distance: distances
+      distance: distances,
     };
   }
 
@@ -63,14 +64,15 @@ define(function () {
       let node = stack.shift();
       neis.push(node);
       for (let nei of Object.values(node.neighbors)) {
-        if (nei !== null &&
-            !nei.occupied &&
-            !visited[nei.hashCode()] &&
-            node.canReach(nei)) {
+        if (
+          nei !== null &&
+          !nei.occupied &&
+          !visited[nei.hashCode()] &&
+          node.canReach(nei)
+        ) {
           distances[nei.hashCode()] = distances[node.hashCode()] + 1;
           visited[nei.hashCode()] = true;
-          if (distances[nei.hashCode()] <= pips)
-            stack.push(nei);
+          if (distances[nei.hashCode()] <= pips) stack.push(nei);
         }
       }
     }
@@ -80,9 +82,6 @@ define(function () {
 
   return {
     computeNeighbors,
-    dijkstra
+    dijkstra,
   };
 });
-
-
-

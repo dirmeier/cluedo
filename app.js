@@ -1,7 +1,7 @@
 "use strict";
 
 requirejs.config({
-  baseUrl: 'app'
+  baseUrl: "app",
 });
 
-requirejs(['main']);
+requirejs(["main"]);

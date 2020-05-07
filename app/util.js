@@ -12,8 +12,7 @@ define(function () {
   }
 
   function randomElements(array, cnt) {
-    if (cnt > array.length)
-      throw "array length < sample count";
+    if (cnt > array.length) throw "array length < sample count";
     const shuffled = shuffle(array);
     return shuffled.slice(0, cnt);
   }
@@ -23,7 +22,7 @@ define(function () {
   }
 
   function sleep(milliseconds) {
-    return new Promise(resolve => setTimeout(resolve, milliseconds));
+    return new Promise((resolve) => setTimeout(resolve, milliseconds));
   }
 
   function distinct(outer, inner) {
@@ -35,6 +34,6 @@ define(function () {
     randomElements,
     shuffle,
     sleep,
-    distinct
+    distinct,
   };
 });

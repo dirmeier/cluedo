@@ -2,7 +2,6 @@
 
 define(function (require) {
   const utl = require("util");
-  const alg = require("algorithm");
 
   const Board = require("model/board");
   const cards = require("model/cards");
@@ -13,7 +12,6 @@ define(function (require) {
 
   class Model {
     constructor(nPlayers, nAI) {
-
       this._board = new Board(nPlayers + nAI);
       this._dice = new Dice();
       this._cards = new cards.Cards();
@@ -56,13 +54,15 @@ define(function (require) {
       const n = nPlayers + nAI;
       let players = [];
       const randomSuspects = utl.randomElements(this._board.suspects, n);
-      let constructors = utl.shuffle(
-        [...Array(nPlayers).fill(Player), ...Array(nAI).fill(AI)]
-      );
+      let constructors = utl.shuffle([
+        ...Array(nPlayers).fill(Player),
+        ...Array(nAI).fill(AI),
+      ]);
 
       for (let i = 0; i < n; i++) {
         players.push(
-          new constructors[i](i, randomSuspects[i], this._board, this._cards));
+          new constructors[i](i, randomSuspects[i], this._board, this._cards)
+        );
         if (i > 0) {
           players[i - 1].next = players[i];
           players[i].prev = players[i - 1];
@@ -88,8 +88,10 @@ define(function (require) {
     }
 
     ask(murderer, weapon) {
-      return this._currentPlayer.ask(murderer,
-        this._currentPlayer.tile.place.name, weapon
+      return this._currentPlayer.ask(
+        murderer,
+        this._currentPlayer.tile.place.name,
+        weapon
       );
     }
 
@@ -112,9 +114,11 @@ define(function (require) {
 
     isSolved(murderer, place, weapon) {
       const cs = this._cards.murderCase();
-      return cs.murderer.name === murderer &&
+      return (
+        cs.murderer.name === murderer &&
         cs.place.name === place &&
-        cs.weapon.name === weapon;
+        cs.weapon.name === weapon
+      );
     }
 
     moveToPlayerPlace(pieceName) {
@@ -122,12 +126,14 @@ define(function (require) {
       const oldTile = piece.tile;
 
       const newTile = this._board.putOnRandomTile(
-        piece, this._currentPlayer.tile.place);
+        piece,
+        this._currentPlayer.tile.place
+      );
 
       return {
         oldTile: oldTile,
-        newTile: newTile
-      }
+        newTile: newTile,
+      };
     }
 
     murderCase() {
@@ -135,8 +141,7 @@ define(function (require) {
     }
 
     nextPlayer() {
-      if (this.nPlayers === 0)
-        return;
+      if (this.nPlayers === 0) return;
       this._currentPlayer = this._currentPlayer.next;
     }
 
@@ -158,7 +163,8 @@ define(function (require) {
       ne.prev = pre;
 
       this._players = this._players.filter(
-        (i) => i.name !== this._currentPlayer.name);
+        (i) => i.name !== this._currentPlayer.name
+      );
 
       this._dealCards();
     }
@@ -167,9 +173,7 @@ define(function (require) {
       const tile = this.currentPlayer.suspect.tile;
       return this._board.computeNeighbors(distance, tile);
     }
-
   }
 
   return Model;
 });
-
