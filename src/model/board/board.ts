@@ -24,7 +24,7 @@ const board: Array<Array<string>> = [
     ".",
     "B",
     "B",
-    "B",
+    "B"
   ],
   [
     "D",
@@ -49,7 +49,7 @@ const board: Array<Array<string>> = [
     ".",
     "B",
     "B",
-    "B",
+    "B"
   ],
   [
     "D",
@@ -74,7 +74,7 @@ const board: Array<Array<string>> = [
     ".",
     "B",
     "B",
-    "B",
+    "B"
   ],
   [
     "D",
@@ -99,7 +99,7 @@ const board: Array<Array<string>> = [
     ".",
     "B",
     "B",
-    "B",
+    "B"
   ],
   [
     "D",
@@ -124,7 +124,7 @@ const board: Array<Array<string>> = [
     ".",
     "B<",
     "B",
-    "B",
+    "B"
   ],
   [
     ".",
@@ -149,7 +149,7 @@ const board: Array<Array<string>> = [
     ".",
     "B",
     "B",
-    "B",
+    "B"
   ],
   [
     ".",
@@ -174,7 +174,7 @@ const board: Array<Array<string>> = [
     ".",
     ".",
     ".",
-    ".",
+    "."
   ],
   [
     "A",
@@ -199,7 +199,7 @@ const board: Array<Array<string>> = [
     "T",
     "T^",
     "T",
-    "T",
+    "T"
   ],
   [
     "A",
@@ -224,32 +224,7 @@ const board: Array<Array<string>> = [
     "T",
     "T",
     "T",
-    "T",
-  ],
-  [
-    "A",
-    "A",
-    "A",
-    "A",
-    "A",
-    "A",
-    "A>",
-    ".",
-    ".",
-    "_",
-    "_",
-    "_",
-    "_",
-    "_",
-    "_",
-    "_",
-    ".",
-    "T<",
-    "T",
-    "T",
-    "T",
-    "T",
-    "T",
+    "T"
   ],
   [
     "A",
@@ -274,7 +249,32 @@ const board: Array<Array<string>> = [
     "T",
     "T",
     "T",
+    "T"
+  ],
+  [
+    "A",
+    "A",
+    "A",
+    "A",
+    "A",
+    "A",
+    "A>",
+    ".",
+    ".",
+    "_",
+    "_",
+    "_",
+    "_",
+    "_",
+    "_",
+    "_",
+    ".",
+    "T<",
     "T",
+    "T",
+    "T",
+    "T",
+    "T"
   ],
   [
     "A",
@@ -299,7 +299,7 @@ const board: Array<Array<string>> = [
     "T",
     "T",
     "T",
-    "T",
+    "T"
   ],
   [
     "A",
@@ -324,7 +324,7 @@ const board: Array<Array<string>> = [
     "T",
     "T",
     "T",
-    "T",
+    "T"
   ],
   [
     "A",
@@ -349,7 +349,7 @@ const board: Array<Array<string>> = [
     ".",
     ".",
     ".",
-    ".",
+    "."
   ],
   [
     ".",
@@ -374,7 +374,7 @@ const board: Array<Array<string>> = [
     ".",
     ".",
     ".",
-    ".",
+    "."
   ],
   [
     ".",
@@ -399,7 +399,7 @@ const board: Array<Array<string>> = [
     "H",
     "H",
     "H",
-    "H",
+    "H"
   ],
   [
     "U",
@@ -424,7 +424,7 @@ const board: Array<Array<string>> = [
     "H",
     "H",
     "H",
-    "H",
+    "H"
   ],
   [
     "U",
@@ -449,7 +449,7 @@ const board: Array<Array<string>> = [
     "H",
     "H",
     "H",
-    "H",
+    "H"
   ],
   [
     "U",
@@ -474,7 +474,7 @@ const board: Array<Array<string>> = [
     "H",
     "H",
     "H",
-    "H",
+    "H"
   ],
   [
     "U",
@@ -499,7 +499,7 @@ const board: Array<Array<string>> = [
     "H",
     "H",
     "H",
-    "H",
+    "H"
   ],
   [
     "U",
@@ -524,7 +524,7 @@ const board: Array<Array<string>> = [
     "H",
     "H",
     "H",
-    "H",
+    "H"
   ],
   [
     "U",
@@ -549,8 +549,8 @@ const board: Array<Array<string>> = [
     "H",
     "H",
     "H",
-    "H",
-  ],
+    "H"
+  ]
 ];
 
 export default board;

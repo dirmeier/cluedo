@@ -1,6 +1,5 @@
 "use strict";
 
-
 import * as d3 from "d3";
 import * as utl from "./util";
 import glb from "./global";
@@ -15,41 +14,51 @@ import Card from "./model/cards/card";
 import AI from "./ai";
 
 export default class View {
-  protected _athenaHeight: number = 400;
-  protected _athenaWidth: number = 200;
-  protected _helpWidth: number = 250;
-  protected _width: number = 600;
-  protected _height: number = 600;
+  protected _athenaHeight = 400;
+  protected _athenaWidth = 200;
+  protected _helpWidth = 250;
+  protected _width = 600;
+  protected _height = 600;
 
-  protected _accuseButtonId: string = "accuse_button";
-  protected _athenaDiv: string = "athena_div";
-  protected _boardDiv: string = "board_div";
-  protected _buttonsId: string = "buttons";
-  protected _castButtonId: string = "cast_die_button";
-  protected _finishMoveButtonId: string = "finish_move_button";
-  protected _infoDiv: string = "info_div";
-  protected _infoHeader: string = "info_header";
-  protected _infoText: string = "info_text";
-  protected _legendDiv: string = "legend_div";
-  protected _legendNextButton: string = "legend_next_button";
-  protected _legendIntroHelp: string = "legend_intro_help";
-  protected _placesSelectDiv: string = "places_select_div";
-  protected _placeSelectList: string = "places_select_list";
-  protected _playerCardsList: string = "player_card_list";
-  protected _revealCardButton: string = "show_revealed_card_button";
-  protected _revealCardParagraph: string = "show_revealed_card_paragraph";
-  protected _sectionLegend: string = "section_legend";
-  protected _showCardsButton: string = "show_cards_button";
-  protected _suggestButtonId: string = "suggest_button";
-  protected _selectListsId: string = "card_list";
-  protected _selectSuggestButtonId: string = "select_suggest_button";
-  protected _selectAccuseButtonId: string = "select_accuse_button";
-  protected _suspectsSelectDiv: string = "suspects_select_div";
-  protected _suspectsSelectList: string = "suspects_select_list";
-  protected _weaponsSelectDiv: string = "weapons_select_div";
-  protected _weaponsSelectList: string = "weapons_select_list";
-  protected _sectionLegendMarginRight: Array<string> = ["-75px", "-75px", "-75px", "-75px"];
-  protected _sectionLegendMarginTop: Array<string> = ["0px", "0px", "-25px", "-25px"];
+  protected _accuseButtonId = "accuse_button";
+  protected _athenaDiv = "athena_div";
+  protected _boardDiv = "board_div";
+  protected _buttonsId = "buttons";
+  protected _castButtonId = "cast_die_button";
+  protected _finishMoveButtonId = "finish_move_button";
+  protected _infoDiv = "info_div";
+  protected _infoHeader = "info_header";
+  protected _infoText = "info_text";
+  protected _legendDiv = "legend_div";
+  protected _legendNextButton = "legend_next_button";
+  protected _legendIntroHelp = "legend_intro_help";
+  protected _placesSelectDiv = "places_select_div";
+  protected _placeSelectList = "places_select_list";
+  protected _playerCardsList = "player_card_list";
+  protected _revealCardButton = "show_revealed_card_button";
+  protected _revealCardParagraph = "show_revealed_card_paragraph";
+  protected _sectionLegend = "section_legend";
+  protected _showCardsButton = "show_cards_button";
+  protected _suggestButtonId = "suggest_button";
+  protected _selectListsId = "card_list";
+  protected _selectSuggestButtonId = "select_suggest_button";
+  protected _selectAccuseButtonId = "select_accuse_button";
+  protected _suspectsSelectDiv = "suspects_select_div";
+  protected _suspectsSelectList = "suspects_select_list";
+  protected _weaponsSelectDiv = "weapons_select_div";
+  protected _weaponsSelectList = "weapons_select_list";
+  protected _sectionLegendMarginRight: Array<string> = [
+    "-75px",
+    "-75px",
+    "-75px",
+    "-75px"
+  ];
+  protected _sectionLegendMarginTop: Array<string> = [
+    "0px",
+    "0px",
+    "-25px",
+    "-25px"
+  ];
 
   protected _model: Model;
   protected _board: Board;
@@ -57,43 +66,41 @@ export default class View {
   protected _suspectPieces: Array<Suspect>;
   protected _weaponPieces: Array<Weapon>;
   protected _playerPiecesNames: Array<string>;
-  protected _introTextIndex: number = 0;
+  protected _introTextIndex = 0;
   protected _introTexts: Array<string>;
   protected _paintedTiles: Tile[] = [];
 
   constructor(model: Model) {
-
     this._model = model;
     this._board = this._model.board;
     this._adj = this._board.adjacency;
     this._suspectPieces = this._board.suspects;
     this._weaponPieces = this._board.weapons;
-    this._playerPiecesNames = this._model.players.map(
-      (i) => i.suspect.name);
+    this._playerPiecesNames = this._model.players.map((i) => i.suspect.name);
     this._introTexts = [
       "Welcome. I am the goddess Athena, patron of the city of Athens, " +
-      "and I come with bad news. One of my favorite disciples, Socrates, " +
-      "has been murdered.",
+        "and I come with bad news. One of my favorite disciples, Socrates, " +
+        "has been murdered.",
 
       "To not let this crime go unpunished, I instructed some of his acquaintances," +
-      this._playerPiecesNames.slice(0, -1).join(", ") +
-      " and " +
-      this._playerPiecesNames.pop() +
-      " (one for each player), to expose his murderer.",
+        this._playerPiecesNames.slice(0, -1).join(", ") +
+        " and " +
+        this._playerPiecesNames.pop() +
+        " (one for each player), to expose his murderer.",
 
       "The crime has been committed by 1 of " +
-      this._suspectPieces.length +
-      " suspects with 1 of " +
-      this._weaponPieces.length +
-      " weapons which are distributed in different places in Athens. " +
-      "I assume the murder has been committed in one of these places.",
+        this._suspectPieces.length +
+        " suspects with 1 of " +
+        this._weaponPieces.length +
+        " weapons which are distributed in different places in Athens. " +
+        "I assume the murder has been committed in one of these places.",
 
       "Each round a player can 'cast a die' to move between places, make a " +
-      "'suggestion' to get information about suspects/weapons/places and " +
-      "'accuse' someone to end the game. Now, please help me and expose the " +
-      "murder and save the open society.",
+        "'suggestion' to get information about suspects/weapons/places and " +
+        "'accuse' someone to end the game. Now, please help me and expose the " +
+        "murder and save the open society.",
 
-      "null",
+      "null"
     ];
 
     this._buildElements();
@@ -104,7 +111,7 @@ export default class View {
     this._intro();
   }
 
-  _buildElements() {
+  _buildElements(): void {
     const app = d3
       .select("#app")
       .append("div")
@@ -142,9 +149,9 @@ export default class View {
       .style("display", "none");
   }
 
-  _initAthena() {
-    let s = d3.select("#" + this._athenaDiv);
-    let section = s.append("section").attr("class", "message-list");
+  _initAthena(): void {
+    const s = d3.select("#" + this._athenaDiv);
+    const section = s.append("section").attr("class", "message-list");
 
     const bl = section
       .append("section")
@@ -163,7 +170,7 @@ export default class View {
       .append("p")
       .text(
         "Unfortunately your display is too small to play." +
-        " Save the open society another time."
+          " Save the open society another time."
       )
       .style("font-size", "10px");
 
@@ -184,7 +191,7 @@ export default class View {
     ).attr("class", "nes-btn hide-when-small");
   }
 
-  _intro = () => {
+  _intro = (): number => {
     const idx = this._introTextIndex;
     d3.select("#" + this._sectionLegend)
       .style("margin-right", this._sectionLegendMarginRight[idx])
@@ -203,11 +210,11 @@ export default class View {
     return this._introTextIndex;
   };
 
-  _showText(id: string, text: string) {
+  _showText(id: string, text: string): void {
     d3.select("#" + id).text(text);
   }
 
-  _newButton(el: any, id: string, text: string) {
+  _newButton(el: any, id: string, text: string): any {
     return el
       .append("button")
       .attr("class", "nes-btn")
@@ -217,14 +224,14 @@ export default class View {
       .text(text);
   }
 
-  _initBoard() {
+  _initBoard(): void {
     this._initTiles();
     this._drawPieces("Suspects", this._board.suspects);
     this._drawPieces("Weapons", this._board.weapons);
     this._drawSocrates();
   }
 
-  _initTiles() {
+  _initTiles(): void {
     const main = d3
       .select("#" + this._boardDiv)
       .append("div")
@@ -244,7 +251,7 @@ export default class View {
     }
   }
 
-  _row(main: any, i: number) {
+  _row(main: any, i: number): any {
     return main
       .append("g")
       .attr("width", this._width + 5)
@@ -255,37 +262,39 @@ export default class View {
       .style("display", "flex");
   }
 
-  _g(svg: any, row: number, col: number) {
+  _g(svg: any, row: number, col: number): any {
     return svg.append("g").attr("id", "id_" + row + "_" + col);
   }
 
-  _initPlace(el: any, row: number, col: number, tile: Tile, place: Place) {
-    if (place.isDrawn || !place.isPlace)
-      return;
+  _initPlace(
+    el: any,
+    row: number,
+    col: number,
+    tile: Tile,
+    place: Place
+  ): void {
+    if (place.isDrawn || !place.isPlace) return;
     place.isDrawn = true;
 
     el.append("svg:image")
       .attr("x", (this._width / this._adj[row].length) * col)
-      .attr(
-        "height",
-        ((this._height - 1) / this._adj.length - 1) * place.nrow
-      )
+      .attr("height", ((this._height - 1) / this._adj.length - 1) * place.nrow)
       .attr("xlink:href", place.path);
   }
 
-  hideButtons() {
-    for (let id of [
+  hideButtons(): void {
+    for (const id of [
       this._castButtonId,
       this._accuseButtonId,
       this._suggestButtonId,
       this._finishMoveButtonId,
-      this._revealCardButton,
+      this._revealCardButton
     ]) {
       this._hide(id);
     }
   }
 
-  _rect(el: any, tile: Tile, row: number, col: number) {
+  _rect(el: any, tile: Tile, row: number, col: number): any {
     return el
       .append("rect")
       .attr("id", "id_r_" + row + "_" + col)
@@ -298,7 +307,7 @@ export default class View {
       .attr("col", col);
   }
 
-  _path(el: any, rect: any, tile: Tile) {
+  _path(el: any, rect: any, tile: Tile): void {
     const x = parseFloat(rect.attr("x"));
     const w = parseFloat(rect.attr("width"));
     const h = parseFloat(rect.attr("height"));
@@ -342,29 +351,25 @@ export default class View {
       );
   }
 
-  _drawPieces(piecesHeader: string, arr: Array<Item>) {
-    for (let piece of arr) this._drawPiece(piece.tile, piece);
+  _drawPieces(piecesHeader: string, arr: Array<Item>): void {
+    for (const piece of arr) this._drawPiece(piece.tile, piece);
   }
 
-  _drawSocrates() {
+  _drawSocrates(): void {
     const row = 7;
     const col = 9;
     const place = this._board.places.get("_");
     const g = d3.select("#id_" + row + "_" + col);
     g.append("svg:image")
       .attr("x", (this._width / this._adj[row].length) * col)
-      .attr(
-        "height",
-        ((this._height - 1) / this._adj.length - 1) * place.nrow
-      )
+      .attr("height", ((this._height - 1) / this._adj.length - 1) * place.nrow)
       .attr("xlink:href", place.path);
-    for (let tile of place.tiles) {
-      d3.select("#id_r_" + tile.x + "_" + tile.y)
-        .attr("fill", "transparent");
+    for (const tile of place.tiles) {
+      d3.select("#id_r_" + tile.x + "_" + tile.y).attr("fill", "transparent");
     }
   }
 
-  _drawPiece(tile: Tile, piece: Item) {
+  _drawPiece(tile: Tile, piece: Item): void {
     d3.select("#id_" + tile.x + "_" + tile.y)
       .append("svg:image")
       .attr("x", (this._width / this._adj[tile.x].length) * tile.y)
@@ -373,13 +378,13 @@ export default class View {
       .attr("xlink:href", piece.path);
   }
 
-  _removePiece(tile: Tile) {
+  _removePiece(tile: Tile): void {
     d3.select("#id_" + tile.x + "_" + tile.y)
       .selectAll("image")
       .remove();
   }
 
-  _initLegend() {
+  _initLegend(): void {
     this._initLegendForPieces(
       "Players",
       this._model.players.map(function (i) {
@@ -395,8 +400,8 @@ export default class View {
     this._initButtonDescription();
   }
 
-  _initLegendForPieces(piecesHeader: string, arr: Array<Item>) {
-    let div = d3
+  _initLegendForPieces(piecesHeader: string, arr: Array<Item>): void {
+    const div = d3
       .select("#" + this._legendDiv)
       .append("div")
       .attr("class", "small-column hide-when-small");
@@ -405,10 +410,10 @@ export default class View {
     this._initLegendPieceList("legend_" + piecesHeader, arr);
   }
 
-  _initLegendPieceList(id: string, arr: Array<Item>) {
+  _initLegendPieceList(id: string, arr: Array<Item>): void {
     const ul = d3.select("#" + id);
     ul.selectAll("li").remove();
-    for (let piece of arr) {
+    for (const piece of arr) {
       if (piece.name === "_") continue;
       ul.append("li")
         .append("span")
@@ -422,7 +427,7 @@ export default class View {
     }
   }
 
-  _initButtonDescription() {
+  _initButtonDescription(): void {
     const div = d3
       .select("#" + this._legendDiv)
       .append("div")
@@ -435,7 +440,7 @@ export default class View {
       "Cast die: throw two dice and move your figure on the board",
       "Suggest: ask your co-players for a suspect/place/weapon card",
       "Accuse: name a suspect/place/weapon and possibly end the game",
-      "Next player: finish move and start next player's turn",
+      "Next player: finish move and start next player's turn"
     ];
 
     ul.selectAll("li")
@@ -447,7 +452,7 @@ export default class View {
       });
   }
 
-  _initInfo() {
+  _initInfo(): void {
     const info = d3
       .select("#" + this._infoDiv)
       .style("width", this._helpWidth)
@@ -456,17 +461,14 @@ export default class View {
     info.append("h3").html("Info");
 
     let div = info.append("div");
-    let show = this.showCards;
+    const show = this.showCards;
     this._newButton(div, this._showCardsButton, "Show cards")
       .style("margin-bottom", "20px")
       .on("click", function () {
         show();
       });
 
-    div
-      .append("ul")
-      .attr("id", this._playerCardsList)
-      .style("display", "none");
+    div.append("ul").attr("id", this._playerCardsList).style("display", "none");
     div = info.append("div").attr("id", this._infoHeader);
     div
       .append("div")
@@ -476,7 +478,7 @@ export default class View {
     this.showInfo("You have the following options:");
 
     div = d3.select("#" + this._infoHeader).append("div");
-    let showw = this.showRevealCard;
+    const showw = this.showRevealCard;
     let button = this._newButton(div, this._revealCardButton, "Reveal card");
     button.style("display", "none").on("click", function () {
       showw();
@@ -493,11 +495,7 @@ export default class View {
     this._newButton(div.append("div"), this._castButtonId, "Cast die");
     this._newButton(div.append("div"), this._suggestButtonId, "Suggest");
     this._newButton(div.append("div"), this._accuseButtonId, "Accuse");
-    this._newButton(
-      div.append("div"),
-      this._finishMoveButtonId,
-      "Next player"
-    );
+    this._newButton(div.append("div"), this._finishMoveButtonId, "Next player");
 
     d3.select("#" + this._infoHeader)
       .append("div")
@@ -532,7 +530,12 @@ export default class View {
     button.style("display", "none");
   }
 
-  _initSelectLists(text: string, divID: string, listID: string, cards: Array<Card>) {
+  _initSelectLists(
+    text: string,
+    divID: string,
+    listID: string,
+    cards: Array<Card>
+  ): void {
     const div = d3
       .select("#" + this._selectListsId)
       .append("div")
@@ -558,7 +561,7 @@ export default class View {
       });
   }
 
-  _printPlayer() {
+  _printPlayer(): void {
     d3.select("#" + this._sectionLegend)
       .style("margin-right", "-75px")
       .style("margin-top", "50px");
@@ -571,12 +574,12 @@ export default class View {
       .remove();
 
     const ul = d3.select("#" + this._playerCardsList);
-    for (let card of this._model.currentPlayer.cards.sort()) {
+    for (const card of this._model.currentPlayer.cards.sort()) {
       ul.append("li").append("span").text(card.name);
     }
   }
 
-  drawExit() {
+  drawExit(): void {
     d3.select("#" + this._infoDiv)
       .selectAll("div")
       .remove();
@@ -584,55 +587,52 @@ export default class View {
       .append("div")
       .text(
         "You all lost. Good job. " +
-        "Reload the page if you want to give it another try.\n"
+          "Reload the page if you want to give it another try.\n"
       );
   }
 
-  drawTiles(tiles: Array<Tile>, pips: number, isAI: boolean) {
+  drawTiles(tiles: Array<Tile>, pips: number, isAI: boolean): void {
     if (isAI)
       this.appendInfo(`${this._model.currentPlayer.name} cast: ${pips}.\n`);
-    else
-      this.showInfo(`${this._model.currentPlayer.name} cast: ${pips}.\n`);
+    else this.showInfo(`${this._model.currentPlayer.name} cast: ${pips}.\n`);
 
-    for (let tile of this._paintedTiles) {
+    for (const tile of this._paintedTiles) {
       this._paintTile(tile.x, tile.y, "lightgray");
     }
-    for (let tile of tiles) {
+    for (const tile of tiles) {
       this._paintTile(tile.x, tile.y, "#C79999");
     }
 
     this._paintedTiles = tiles;
   }
 
-  _paintTile(row: number, col: number, color: string) {
-    return d3
-      .select("#id_r_" + row + "_" + col)
-      .style("fill", color);
+  _paintTile(row: number, col: number, color: string): any {
+    return d3.select("#id_r_" + row + "_" + col).style("fill", color);
   }
 
-  showInline(id: string) {
+  showInline(id: string): void {
     d3.select("#" + id).style("display", "inline");
   }
 
-  _hide(id: string) {
+  _hide(id: string): void {
     d3.select("#" + id).style("display", "none");
   }
 
-  async wait(ms: number) {
+  async wait(ms: number): Promise<void> {
     await utl.sleep(ms);
   }
 
-  _getCheckedOption(id: string) {
+  _getCheckedOption(id: string): any {
     return d3
       .select("#" + id)
       .select("option:checked")
       .text();
   }
 
-  async makeMove(oldTile: Tile, tile: Tile, path: Array<Tile>) {
-    for (let tile of this._paintedTiles) {
+  async makeMove(oldTile: Tile, tile: Tile, path: Array<Tile>): Promise<void> {
+    for (const tile of this._paintedTiles) {
       const ind = path.filter(function (i) {
-        return (i.x === tile.x) && (i.y === tile.y);
+        return i.x === tile.x && i.y === tile.y;
       });
       if (!ind.length) {
         this._paintTile(tile.x, tile.y, "lightgray");
@@ -640,7 +640,7 @@ export default class View {
     }
     await this.wait(500);
     let lastTile = oldTile;
-    for (let mv of path) {
+    for (const mv of path) {
       await this._drawPiece(mv, this._model.currentPlayer.suspect);
       await this._removePiece(lastTile);
       lastTile = mv;
@@ -649,16 +649,16 @@ export default class View {
     }
   }
 
-  appendInfo(text: string) {
+  appendInfo(text: string): void {
     const app = d3.select("#" + this._infoText).text() + " " + text;
     this.showInfo(app);
   }
 
-  showInfo(text: string) {
+  showInfo(text: string): void {
     d3.select("#" + this._infoText).text(text);
   }
 
-  showCards = () => {
+  showCards = (): void => {
     const cardsButton = d3.select("#" + this._showCardsButton);
     const list = d3.select("#" + this._playerCardsList);
     if (list.style("display") === "none") {
@@ -670,7 +670,7 @@ export default class View {
     }
   };
 
-  showRevealCard = () => {
+  showRevealCard = (): void => {
     const revealButton = d3.select("#" + this._revealCardButton);
     const par = d3.select("#" + this._revealCardParagraph);
     if (par.style("display") === "none") {
@@ -682,14 +682,14 @@ export default class View {
     }
   };
 
-  showSuggestions(isAI: boolean) {
+  showSuggestions(isAI: boolean): void {
     if (!isAI) this.showInfo("Select a suspect and a weapon:");
     d3.select("#" + this._suspectsSelectDiv).style("display", "block");
     d3.select("#" + this._weaponsSelectDiv).style("display", "block");
     d3.select("#" + this._selectSuggestButtonId).style("display", "inline");
   }
 
-  showAccusations(isAI: boolean) {
+  showAccusations(isAI: boolean): void {
     if (!isAI) this.showInfo("Select a suspect, weapon and place:");
     d3.select("#" + this._suspectsSelectDiv).style("display", "block");
     d3.select("#" + this._weaponsSelectDiv).style("display", "block");
@@ -697,7 +697,7 @@ export default class View {
     d3.select("#" + this._selectAccuseButtonId).style("display", "inline");
   }
 
-  async showHolds(holds: any, isAI: boolean) {
+  async showHolds(holds: any, isAI: boolean): Promise<void> {
     this._hide(this._suspectsSelectDiv);
     this._hide(this._weaponsSelectDiv);
     this._hide(this._selectSuggestButtonId);
@@ -716,12 +716,12 @@ export default class View {
     if (isAI) await this.wait(2000);
   }
 
-  updatePiece(oldTile: Tile, newTile: Tile) {
+  updatePiece(oldTile: Tile, newTile: Tile): void {
     this._drawPiece(newTile, newTile.occupant);
     this._removePiece(oldTile);
   }
 
-  makeAccusation(isSolved: boolean) {
+  makeAccusation(isSolved: boolean): void {
     this._hide(this._suspectsSelectDiv);
     this._hide(this._weaponsSelectDiv);
     this._hide(this._placesSelectDiv);
@@ -730,15 +730,15 @@ export default class View {
     if (isSolved)
       this.showInfo(
         "Congrats! You won!" +
-        " You saved the open society against its opponents." +
-        " Restart the game by reloading the page."
+          " You saved the open society against its opponents." +
+          " Restart the game by reloading the page."
       );
     else {
       this.showInfo("Boo! You are out!");
     }
   }
 
-  removePlayerFromLegend() {
+  removePlayerFromLegend(): void {
     this._initLegendPieceList(
       "legend_Players",
       this._model.players.map(function (i) {
@@ -747,13 +747,12 @@ export default class View {
     );
   }
 
-  nextPlayer() {
+  nextPlayer(): void {
     this._printPlayer();
     this.showInfo("You have the following options:");
     let func = this._hide;
 
-    if (this._model.nPlayers > 1)
-      func = this.showInline;
+    if (this._model.nPlayers > 1) func = this.showInline;
 
     func(this._castButtonId);
     func(this._suggestButtonId);
@@ -761,33 +760,33 @@ export default class View {
     this.showInline(this._accuseButtonId);
   }
 
-  showSuggestButton() {
+  showSuggestButton(): void {
     if (this._model.currentPlayer.isInPlace)
       this.showInline(this._suggestButtonId);
   }
 
-  showAccuseButton() {
+  showAccuseButton(): void {
     this.showInline(this._accuseButtonId);
   }
 
-  showFinishButton() {
+  showFinishButton(): void {
     this.showInline(this._finishMoveButtonId);
   }
 
-  async aiFinishMove() {
+  async aiFinishMove(): Promise<void> {
     await this.appendInfo(
       `${this._model.currentPlayer.name} finishes his turn'.`
     );
     await this.showFinishButton();
   }
 
-  async aiMove(player: AI) {
+  async aiMove(player: AI): Promise<void> {
     this.hideButtons();
     this.showInfo(player.name + " is firing some neurons.");
     await this.wait(2000);
   }
 
-  async aiCast(player: AI) {
+  async aiCast(player: AI): Promise<void> {
     await this.appendInfo(player.name + " wants to cast a die.");
     await this.wait(2000);
     this.appendInfo(
@@ -796,7 +795,7 @@ export default class View {
     await this.wait(2000);
   }
 
-  async aiAccuse(player: AI, acc: any) {
+  async aiAccuse(player: AI, acc: any): Promise<void> {
     this.appendInfo(`${player.name} wants to make am accusation.`);
     await this.wait(2000);
     this.appendInfo(
@@ -806,7 +805,7 @@ export default class View {
     await this.wait(2000);
   }
 
-  async aiSuggest(player: AI, sugg: any) {
+  async aiSuggest(player: AI, sugg: any): Promise<void> {
     this.appendInfo(`${player.name} wants to make a suggestion.`);
     await this.wait(2000);
     this.appendInfo(
@@ -817,26 +816,25 @@ export default class View {
     await this.wait(2000);
   }
 
-  bindCast(handler: any) {
+  bindCast(handler: any): void {
     d3.select("#" + this._castButtonId).on("click", handler);
   }
 
-  bindMove(handler: any) {
-    d3.selectAll("rect")
-      .on("click", function () {
+  bindMove(handler: any): void {
+    d3.selectAll("rect").on("click", function () {
       handler(d3.select(this).attr("row"), d3.select(this).attr("col"));
     });
   }
 
-  bindShowCards(handler: any) {
+  bindShowCards(handler: any): void {
     d3.select("#" + this._showCardsButton).on("click", handler);
   }
 
-  bindSuggest(handler: any) {
+  bindSuggest(handler: any): void {
     d3.select("#" + this._suggestButtonId).on("click", handler);
   }
 
-  bindMakeSuggestion(handler: any) {
+  bindMakeSuggestion(handler: any): void {
     const sl = this._suspectsSelectList;
     const wl = this._weaponsSelectList;
     const get = this._getCheckedOption;
@@ -845,11 +843,11 @@ export default class View {
     });
   }
 
-  bindAccuse(handler: any) {
+  bindAccuse(handler: any): void {
     d3.select("#" + this._accuseButtonId).on("click", handler);
   }
 
-  bindMakeAccusation(handler: any) {
+  bindMakeAccusation(handler: any): void {
     const sl = this._suspectsSelectList;
     const wl = this._weaponsSelectList;
     const pl = this._placeSelectList;
@@ -859,11 +857,11 @@ export default class View {
     });
   }
 
-  bindNextPlayer(handler: any) {
+  bindNextPlayer(handler: any): void {
     d3.select("#" + this._finishMoveButtonId).on("click", handler);
   }
 
-  bindStartGame(handler: any) {
+  bindStartGame(handler: any): void {
     const init = this._intro;
     const text = this._introTexts;
     d3.select("#" + this._legendNextButton).on("click", function () {

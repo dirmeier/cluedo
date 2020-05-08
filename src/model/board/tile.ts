@@ -11,10 +11,16 @@ export default class Tile {
   protected _gate: string | null;
   protected _direction: any;
   protected _isOccupied: boolean;
-  protected _occupant: any;
+  protected _occupant: Item;
   protected _neighbors: Map<string, Tile | null>;
 
-  constructor(name: string, place: Place | undefined, x: number, y: number, gate: string | null) {
+  constructor(
+    name: string,
+    place: Place | undefined,
+    x: number,
+    y: number,
+    gate: string | null
+  ) {
     this._name = name;
     this._place = place;
     this._x = x;
@@ -23,16 +29,18 @@ export default class Tile {
       ">": false,
       "<": false,
       "^": false,
-      v: false,
+      v: false
     };
     this._gate = gate;
-    if (this._gate !== null)
-      this._direction[this._gate] = true;
+    if (this._gate !== null) this._direction[this._gate] = true;
     this._isOccupied = false;
     this._occupant = null;
-    this._neighbors = new Map<string, Tile | null>(
-      [["up", null], ["down", null], ["left", null], ["right", null]]
-    );
+    this._neighbors = new Map<string, Tile | null>([
+      ["up", null],
+      ["down", null],
+      ["left", null],
+      ["right", null]
+    ]);
   }
 
   get gate(): string | null {
@@ -47,12 +55,16 @@ export default class Tile {
     return this._neighbors;
   }
 
-  get occupant(): any {
+  get occupant(): Item {
     return this._occupant;
   }
 
   get occupied(): boolean {
     return this._isOccupied;
+  }
+
+  set occupied(occupied) {
+    this._isOccupied = occupied;
   }
 
   get place(): Place | undefined {
@@ -67,51 +79,47 @@ export default class Tile {
     return this._y;
   }
 
-  set occupied(occupied) {
-    this._isOccupied = occupied;
-  }
-
   // Todo: is it a bug not to 'release' old item item?
-  occupyWith(item: Item) {
+  occupyWith(item: Item): void {
     this._occupant = item;
     this._isOccupied = true;
   }
 
   // Todo: is it a bug not to 'release' occupant's tile?
-  deoccupy() {
+  deoccupy(): void {
     this._occupant = null;
     this._isOccupied = false;
   }
 
-  isOtherRoomAndNoGate(neighbor: Tile) {
+  isOtherRoomAndNoGate(neighbor: Tile): boolean {
     return this.isOtherRoom(neighbor) && this.isNoGate(neighbor);
   }
 
-  isOtherRoomAndNoNeighborVerticalGate(neighbor: Tile) {
+  isOtherRoomAndNoNeighborVerticalGate(neighbor: Tile): boolean {
     return this.isOtherRoom(neighbor) && neighbor.isVerticalGate();
   }
 
-  isOtherRoom(neighbor: Tile) {
+  isOtherRoom(neighbor: Tile): boolean {
     return neighbor !== null && neighbor.name !== this.name;
   }
 
-  isGate() {
+  isGate(): boolean {
     return this.gate !== null;
   }
 
-  isVerticalGate() {
+  isVerticalGate(): boolean {
     return this.isGateRight() || this.isGateLeft();
   }
 
-  isGateRight() {
+  isGateRight(): boolean {
     return this._direction[">"];
   }
 
-  isGateLeft() {
+  isGateLeft(): boolean {
     return this._direction["<"];
   }
 
-  isNoGate(neighbor: Tile) {
+  isNoGate(neighbor: Tile): boolean {
     return neighbor !== null && this.gate === null && neighbor.gate === null;
   }
 
@@ -126,7 +134,7 @@ export default class Tile {
     const k = String(this.x) + "/" + String(this.y);
     let hash = 0;
     for (let i = 0; i < k.length; i++) {
-      let chr = k.charCodeAt(i);
+      const chr = k.charCodeAt(i);
       hash = (hash << 5) - hash + chr;
       hash |= 0;
     }

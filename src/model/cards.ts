@@ -15,7 +15,7 @@ const suspects: Array<Suspect> = [
   new Suspect(glb.critias.name, glb.critias.path),
   new Suspect(glb.heraclitus.name, glb.heraclitus.path),
   new Suspect(glb.lysander.name, glb.lysander.path),
-  new Suspect(glb.plato.name, glb.plato.path),
+  new Suspect(glb.plato.name, glb.plato.path)
 ];
 
 const weapons: Array<Weapon> = [
@@ -24,7 +24,7 @@ const weapons: Array<Weapon> = [
   new Weapon(glb.poison.name, glb.poison.path),
   new Weapon(glb.rope.name, glb.rope.path),
   new Weapon(glb.sickle.name, glb.sickle.path),
-  new Weapon(glb.treachery.name, glb.treachery.path),
+  new Weapon(glb.treachery.name, glb.treachery.path)
 ];
 
 const places: Array<Place> = [
@@ -36,7 +36,7 @@ const places: Array<Place> = [
   new Place(glb.parthenon.name, glb.parthenon.path),
   new Place(glb.temple.name, glb.temple.path),
   new Place(glb.theater.name, glb.theater.path),
-  new Place(glb.tree.name, glb.tree.path),
+  new Place(glb.tree.name, glb.tree.path)
 ];
 
 class Cards {
@@ -45,7 +45,6 @@ class Cards {
   protected _place: Place;
   protected _victim: Suspect;
   protected _availableCards: Array<Card>;
-
 
   constructor() {
     this._murderer = utl.randomElement(suspects);
@@ -56,7 +55,7 @@ class Cards {
     this._availableCards = [
       ...this._availableWeapons(),
       ...this._availableSuspects(),
-      ...this._availablePlaces(),
+      ...this._availablePlaces()
     ];
   }
 
@@ -80,12 +79,17 @@ class Cards {
     this._availableCards = cards;
   }
 
-  murderCase() {
+  murderCase(): {
+    victim: Suspect;
+    murderer: Suspect;
+    place: Place;
+    weapon: Weapon;
+  } {
     return {
       victim: this._victim,
       murderer: this._murderer,
       place: this._place,
-      weapon: this._weapon,
+      weapon: this._weapon
     };
   }
 
@@ -110,9 +114,4 @@ class Cards {
   }
 }
 
-export {
-  Cards,
-  suspects,
-  weapons,
-  places,
-};
+export { Cards, suspects, weapons, places };

@@ -10,7 +10,12 @@ export default class Place {
   protected _tiles: Array<Tile>;
   protected _isDrawn: boolean;
 
-  constructor(name: string, abbreviation: string, type: string, path: string | null) {
+  constructor(
+    name: string,
+    abbreviation: string,
+    type: string,
+    path: string | null
+  ) {
     this._name = name;
     this._abbreviation = abbreviation;
     this._path = path;
@@ -21,6 +26,10 @@ export default class Place {
 
   get isDrawn(): boolean {
     return this._isDrawn;
+  }
+
+  set isDrawn(drawn) {
+    this._isDrawn = drawn;
   }
 
   get isPlace(): boolean {
@@ -49,16 +58,12 @@ export default class Place {
     return new Set(rows).size;
   }
 
-  get path(): string  | null{
+  get path(): string | null {
     return this._path;
   }
 
   get tiles(): Array<Tile> {
     return this._tiles;
-  }
-
-  set isDrawn(drawn) {
-    this._isDrawn = drawn;
   }
 
   add(tile: Tile): void {

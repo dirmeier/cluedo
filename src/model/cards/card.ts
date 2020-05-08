@@ -19,5 +19,5 @@ export default class Card {
 
   toString = (): string => {
     return `[Card ${this._name}]`;
-  }
+  };
 }

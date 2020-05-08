@@ -39,8 +39,16 @@ export default class Player {
     return this._next;
   }
 
+  set next(next) {
+    this._next = next;
+  }
+
   get prev(): Player {
     return this._prev;
+  }
+
+  set prev(prev) {
+    this._prev = prev;
   }
 
   get suspect(): Suspect {
@@ -51,27 +59,23 @@ export default class Player {
     return this._suspect.tile;
   }
 
-  set prev(prev) {
-    this._prev = prev;
-  }
-
-  set next(next) {
-    this._next = next;
-  }
-
   addCard(card: Card): void {
     this._cards.push(card);
   }
 
-  ask(murderer: string, place: string, weapon: string) {
+  ask(
+    murderer: string,
+    place: string,
+    weapon: string
+  ): { player: string; card: Card } {
     let player = this._next;
     while (player !== this) {
-      for (let el of [murderer, place, weapon]) {
-        let hold = player.holds(el);
+      for (const el of [murderer, place, weapon]) {
+        const hold = player.holds(el);
         if (hold.length > 0) {
           return {
             player: player.suspect.name,
-            card: hold[0],
+            card: hold[0]
           };
         }
       }
@@ -90,4 +94,3 @@ export default class Player {
     return `[Player ${this.suspect.name} \n\t${crds}\n]`;
   }
 }
-

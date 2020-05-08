@@ -23,6 +23,7 @@ module.exports = {
     "prettier/prettier": "error",
     "semi": ["error", "always"],
     "quotes": ["error", "double"],
-    "array-element-newline": ["error", "consistent"]
+    "array-element-newline": ["error", "consistent"],
+    "@typescript-eslint/no-explicit-any": "off"
   }
 }

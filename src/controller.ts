@@ -4,10 +4,9 @@ import Model from "./model";
 import View from "./view";
 import AI from "./ai";
 import Tile from "./model/board/tile";
-import * as d3 from "d3";
+import Card from "./model/cards/card";
 
 export default class Controller {
-
   protected _model: Model;
   protected _view: View;
   protected _isMove: boolean;
@@ -34,19 +33,19 @@ export default class Controller {
     this._log();
   }
 
-  ai_turn = async () => {
+  ai_turn = async (): Promise<void> => {
     if (this._model.currentPlayerIsAI) await this._ai();
   };
 
-  _ai_think = async () => {
-    const player = await <AI>this._model.currentPlayer;
+  _ai_think = async (): Promise<boolean> => {
+    const player = await (this._model.currentPlayer as AI);
     await this._view.aiMove(player);
     const cast = await player.wantToCast();
     return cast;
   };
 
-  _ai_cast = async () => {
-    const player = await <AI>this._model.currentPlayer;
+  _ai_cast = async (): Promise<void> => {
+    const player = await (this._model.currentPlayer as AI);
     const pips = await this.castDie();
     const path = await player.computeDestination(pips);
     await this._view.aiCast(player);
@@ -57,8 +56,8 @@ export default class Controller {
     );
   };
 
-  _ai_suggest = async () => {
-    const player = await <AI>this._model.currentPlayer;
+  _ai_suggest = async (): Promise<void> => {
+    const player = await (this._model.currentPlayer as AI);
     const sugg = await player.suggest();
     await this._view.aiSuggest(player, sugg);
     const holds = await this.makeSuggestion(sugg.suspect, sugg.weapon);
@@ -66,14 +65,14 @@ export default class Controller {
     if (holds !== null) await player.addSeenCard(holds.card);
   };
 
-  _ai_accuse = async () => {
-    const player = await <AI>this._model.currentPlayer;
+  _ai_accuse = async (): Promise<void> => {
+    const player = await (this._model.currentPlayer as AI);
     const acc = await player.accuse();
     await this._view.aiAccuse(player, acc);
     await this.makeAccusation(acc.suspect, acc.weapon, acc.place);
   };
 
-  _ai = async () => {
+  _ai = async (): Promise<void> => {
     if (await this._ai_think()) {
       await this._ai_cast();
     }
@@ -82,39 +81,47 @@ export default class Controller {
       await this._ai_suggest();
     }
 
-    if ((<AI>this._model.currentPlayer).wantsToAccuse()) {
+    if ((this._model.currentPlayer as AI).wantsToAccuse()) {
       await this._ai_accuse();
     }
 
     await this._view.aiFinishMove();
   };
 
-  castDie = () => {
+  castDie = (): number => {
     this._isMove = true;
     this._pips = this._model.cast();
     const tiles = this._model.tilesInRangeOfCurrPlayer(this._pips);
 
     this._view.drawTiles(tiles, this._pips, this._model.currentPlayer.isAI);
     this._view.hideButtons();
+
     return this._pips;
   };
 
-  move = async (row: number, col: number) => {
-
+  move = async (row: number, col: number): Promise<void> => {
     if (!this._isMove) return;
+
+    console.log(row + " " + col);
 
     const oldTile = await this._model.getPlayerTile();
     const tile = await this._model.getTile(row, col);
     const path = await this._model.computePath(oldTile, tile);
 
+    console.log(row + " " + col);
     if (path.length > this._pips) {
       this._view.appendInfo("You cannot walk that far.");
     } else {
       await this._makeMove(oldTile, tile, path);
     }
+    console.log(row + " " + col);
   };
 
-  _makeMove = async (oldTile: Tile, tile: Tile, path: Array<Tile>) => {
+  _makeMove = async (
+    oldTile: Tile,
+    tile: Tile,
+    path: Array<Tile>
+  ): Promise<void> => {
     await this._view.makeMove(oldTile, tile, path);
 
     await this._model.putCurrPlayerSuspectPieceOn(tile);
@@ -127,15 +134,18 @@ export default class Controller {
     }
   };
 
-  suggest = () => {
+  suggest = (): void => {
     this._view.hideButtons();
     this._view.showSuggestions(this._model.currentPlayerIsAI);
   };
 
-  makeSuggestion = async (suspect: string, weapon: string) => {
-    let holds = await this._model.ask(suspect, weapon);
+  makeSuggestion = async (
+    suspect: string,
+    weapon: string
+  ): Promise<{ player: string; card: Card }> => {
+    const holds = await this._model.ask(suspect, weapon);
 
-    for (let itemName of [suspect, weapon]) {
+    for (const itemName of [suspect, weapon]) {
       const tiles = await this._model.moveToPlayerPlace(itemName);
       await this._view.updatePiece(tiles.oldTile, tiles.newTile);
     }
@@ -149,13 +159,17 @@ export default class Controller {
     return holds;
   };
 
-  accuse = () => {
+  accuse = (): void => {
     this._view.hideButtons();
     this._view.showAccusations(this._model.currentPlayerIsAI);
   };
 
-  makeAccusation = async (suspect: string, weapon: string, place: string) => {
-    let isSolved = await this._model.isSolved(suspect, place, weapon);
+  makeAccusation = async (
+    suspect: string,
+    weapon: string,
+    place: string
+  ): Promise<void> => {
+    const isSolved = await this._model.isSolved(suspect, place, weapon);
     await this._view.makeAccusation(isSolved);
 
     if (!isSolved) {
@@ -169,20 +183,20 @@ export default class Controller {
     this._checkExit();
   };
 
-  nextPlayer = async () => {
+  nextPlayer = async (): Promise<void> => {
     await this._model.nextPlayer();
     await this._view.nextPlayer();
     await this._log();
     await this.ai_turn();
   };
 
-  _checkExit = () => {
+  _checkExit = (): void => {
     if (this._model.players.length === 0) {
       this._view.drawExit();
     }
   };
 
-  _log = () => {
+  _log = (): void => {
     for (let i = 0; i < this._model.players.length; i++)
       console.log(this._model.players[i].toString());
     console.log(this._model.murderCase());

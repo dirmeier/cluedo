@@ -1,10 +1,13 @@
 "use strict";
 
-
 import Tile from "./model/board/tile";
 
-function dijkstra(src: Tile, target: Tile, matrix: Tile[][]) {
-  let Q = [];
+function dijkstra(
+  src: Tile,
+  target: Tile,
+  matrix: Tile[][]
+): { previous: Map<number, Tile | null>; distance: Map<number, number> } {
+  let Q: Array<Tile> = [];
   const distances = new Map<number, number>();
   const previous = new Map<number, Tile | null>();
 
@@ -28,11 +31,11 @@ function dijkstra(src: Tile, target: Tile, matrix: Tile[][]) {
     if (u === target) {
       return {
         previous: previous,
-        distance: distances,
+        distance: distances
       };
     }
 
-    for (let v of u.neighbors.values()) {
+    for (const v of u.neighbors.values()) {
       if (v !== null && !v.occupied && u.canReach(v)) {
         const alt = distances.get(u.hashCode()) + 1;
 
@@ -46,12 +49,16 @@ function dijkstra(src: Tile, target: Tile, matrix: Tile[][]) {
 
   return {
     previous: previous,
-    distance: distances,
+    distance: distances
   };
 }
 
-function computeNeighbors(pips: number, src: Tile, matrix: Tile[][]) {
-  let neis = [];
+function computeNeighbors(
+  pips: number,
+  src: Tile,
+  matrix: Tile[][]
+): Array<Tile> {
+  const neis: Array<Tile> = [];
   const distances = new Map<number, number>();
   const visited = new Map<number, boolean>();
   distances.set(src.hashCode(), 0);
@@ -62,11 +69,11 @@ function computeNeighbors(pips: number, src: Tile, matrix: Tile[][]) {
     }
   }
 
-  let stack = [src];
+  const stack = [src];
   while (stack.length) {
-    let node = stack.shift();
+    const node = stack.shift();
     neis.push(node);
-    for (let nei of node.neighbors.values()) {
+    for (const nei of node.neighbors.values()) {
       if (
         nei !== null &&
         !nei.occupied &&
@@ -75,8 +82,7 @@ function computeNeighbors(pips: number, src: Tile, matrix: Tile[][]) {
       ) {
         distances.set(nei.hashCode(), distances.get(node.hashCode()) + 1);
         visited.set(nei.hashCode(), true);
-        if (distances.get(nei.hashCode()) <= pips)
-          stack.push(nei);
+        if (distances.get(nei.hashCode()) <= pips) stack.push(nei);
       }
     }
   }
@@ -84,8 +90,4 @@ function computeNeighbors(pips: number, src: Tile, matrix: Tile[][]) {
   return neis;
 }
 
-export {
-  computeNeighbors,
-  dijkstra,
-};
-
+export { computeNeighbors, dijkstra };

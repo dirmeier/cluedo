@@ -1,8 +1,8 @@
 "use strict";
 
-import * as $ from 'lodash';
+import * as $ from "lodash";
 import * as utl from "./util";
-import {Cards} from "./model/cards";
+import { Cards } from "./model/cards";
 import Tile from "./model/board/tile";
 import Player from "./player";
 import Board from "./model/board";
@@ -36,29 +36,27 @@ export default class AI extends Player {
     this._target = null;
   }
 
-  get isAI() {
+  get isAI(): boolean {
     return true;
   }
 
-  get name() {
+  get name(): string {
     return this._suspect.name + " (AI)";
   }
 
-  get target() {
+  get target(): Place {
     return this._target;
   }
 
-  addCard(card: Card) {
+  addCard(card: Card): void {
     super.addCard(card);
     this.addSeenCard(card);
   }
 
-  addSeenCard(card: Card) {
+  addSeenCard(card: Card): void {
     const cons = card.constructor.name;
-    if (cons === "Suspect")
-      this._hasSeenSuspects.push(card.name);
-    else if (cons === "Weapon")
-      this._hasSeenWeapons.push(card.name);
+    if (cons === "Suspect") this._hasSeenSuspects.push(card.name);
+    else if (cons === "Weapon") this._hasSeenWeapons.push(card.name);
     else this._hasSeenPlaces.push(card.name);
   }
 
@@ -79,9 +77,9 @@ export default class AI extends Player {
       );
       const randomPlaceString = utl.randomElement(hasNotSeenPlaces);
       const randomPlace = $.filter(
-          [...this._board.places.values()],
-          (i) => i.name === randomPlaceString
-        );
+        [...this._board.places.values()],
+        (i) => i.name === randomPlaceString
+      );
       this._target = randomPlace[0];
     }
 
@@ -93,7 +91,7 @@ export default class AI extends Player {
     return moveablePath;
   }
 
-  suggest() {
+  suggest(): { weapon: string; suspect: string } {
     const weaps = utl.randomElement(
       utl.distinct(this._allWeapons, this._hasSeenWeapons)
     );
@@ -103,7 +101,7 @@ export default class AI extends Player {
 
     return {
       weapon: weaps,
-      suspect: susps,
+      suspect: susps
     };
   }
 
@@ -115,7 +113,7 @@ export default class AI extends Player {
     return can;
   }
 
-  accuse() {
+  accuse(): { weapon: string; suspect: string; place: string } {
     const weapon = utl.distinct(this._allWeapons, this._hasSeenWeapons);
     const suspect = utl.distinct(this._allSuspects, this._hasSeenSuspects);
     const place = utl.distinct(this._allPlaces, this._hasSeenPlaces);
@@ -123,7 +121,7 @@ export default class AI extends Player {
     return {
       weapon: weapon[0],
       suspect: suspect[0],
-      place: place[0],
+      place: place[0]
     };
   }
 
@@ -132,11 +130,11 @@ export default class AI extends Player {
     const seenCrds = [
       ...this._hasSeenWeapons,
       ...this._hasSeenSuspects,
-      ...this._hasSeenPlaces,
-    ].sort()
+      ...this._hasSeenPlaces
+    ]
+      .sort()
       .join(", ");
 
     return `[AI ${this.suspect.name} \n\t${crds}\n\t[Seen ${seenCrds}]\n]`;
   }
 }
-

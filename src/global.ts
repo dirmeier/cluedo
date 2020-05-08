@@ -5,123 +5,123 @@ const globals = {
     legend: "A",
     name: "Agora",
     path: "assets/agora.jpeg",
-    type: "place",
+    type: "place"
   },
   alcibiades: {
     name: "Alcibiades",
-    path: "assets/alcibiades.jpeg",
+    path: "assets/alcibiades.jpeg"
   },
   athena: {
     name: "Athena",
-    path: "assets/athena.jpeg",
+    path: "assets/athena.jpeg"
   },
   barrel: {
     legend: "D",
     name: "Diogenes' barrel",
     path: "assets/barrel.jpeg",
-    type: "place",
+    type: "place"
   },
   bouleuterion: {
     legend: "B",
     name: "Bouleuterion",
     path: "assets/bouleuterion.jpeg",
-    type: "place",
+    type: "place"
   },
   bow: {
     name: "Bow",
-    path: "assets/bow.png",
+    path: "assets/bow.png"
   },
   charmides: {
     name: "Charmides",
-    path: "assets/charmides.jpeg",
+    path: "assets/charmides.jpeg"
   },
   critias: {
     name: "Critias",
-    path: "assets/critias.jpeg",
+    path: "assets/critias.jpeg"
   },
   dagger: {
     name: "Dagger",
-    path: "assets/dagger.png",
+    path: "assets/dagger.png"
   },
   heraclitus: {
     name: "Heraclitus",
-    path: "assets/heraclitus.jpeg",
+    path: "assets/heraclitus.jpeg"
   },
   hill: {
     legend: "H",
     name: "Hill of the Muses",
     path: "assets/hill.jpeg",
-    type: "place",
+    type: "place"
   },
   library: {
     legend: "L",
     name: "Library",
     path: "assets/library.jpeg",
-    type: "place",
+    type: "place"
   },
   lysander: {
     name: "Lysander",
-    path: "assets/lysander.jpeg",
+    path: "assets/lysander.jpeg"
   },
   parthenon: {
     legend: "P",
     name: "Parthenon",
     path: "assets/parthenon.jpeg",
-    type: "place",
+    type: "place"
   },
   plato: {
     name: "Plato",
-    path: "assets/plato.jpeg",
+    path: "assets/plato.jpeg"
   },
   poison: {
     name: "Cup of poison",
-    path: "assets/poison.jpeg",
+    path: "assets/poison.jpeg"
   },
   rope: {
     name: "Rope",
-    path: "assets/rope.jpeg",
+    path: "assets/rope.jpeg"
   },
   sickle: {
     name: "Sickle",
-    path: "assets/sickle.jpeg",
+    path: "assets/sickle.jpeg"
   },
   socrates: {
     name: "Socrates",
-    path: "assets/socrates.jpeg",
+    path: "assets/socrates.jpeg"
   },
   temple: {
     legend: "U",
     name: "Temple of Athena",
     path: "assets/temple.jpeg",
-    type: "place",
+    type: "place"
   },
   theater: {
     legend: "T",
     name: "Theater",
     path: "assets/theater.jpeg",
-    type: "place",
+    type: "place"
   },
   treachery: {
     name: "Treachery",
-    path: "assets/treachery.png",
+    path: "assets/treachery.png"
   },
   tree: {
     legend: "S",
     name: "Socrates' favourite olive tree",
     path: "assets/tree.jpeg",
-    type: "place",
+    type: "place"
   },
   emtpySpace: {
     name: "_",
     legend: "_",
     path: "assets/socrates.jpeg",
-    type: "other",
+    type: "other"
   },
   path: {
     name: "_",
     legend: ".",
-    type: "path",
-  },
+    type: "path"
+  }
 };
 
 export default globals;

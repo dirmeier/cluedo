@@ -4,12 +4,15 @@ import * as utl from "./util";
 import Player from "./player";
 import Board from "./model/board";
 import Dice from "./model/dice";
-import {Cards} from "./model/cards";
+import { Cards } from "./model/cards";
 import AI from "./ai";
 import Tile from "./model/board/tile";
+import Card from "./model/cards/card";
+import Suspect from "./model/cards/suspect";
+import Place from "./model/cards/place";
+import Weapon from "./model/cards/weapon";
 
 export default class Model {
-
   protected _board: Board;
   protected _dice: Dice;
   protected _cards: Cards;
@@ -24,44 +27,43 @@ export default class Model {
     this._players = this._initPlayers(nPlayers, nAI);
     this._currentPlayer = this._players[0];
     this._dealCards();
-
   }
 
-  get currentPlayerIsAI() {
+  get currentPlayerIsAI(): boolean {
     return this._currentPlayer.isAI;
   }
 
-  get dice() {
+  get dice(): Dice {
     return this._dice;
   }
 
-  get cards() {
+  get cards(): Cards {
     return this._cards;
   }
 
-  get board() {
+  get board(): Board {
     return this._board;
   }
 
-  get currentPlayer() {
+  get currentPlayer(): Player {
     return this._currentPlayer;
   }
 
-  get players() {
+  get players(): Array<Player> {
     return this._players;
   }
 
-  get nPlayers() {
+  get nPlayers(): number {
     return this._players.length;
   }
 
-  _initPlayers(nPlayers: number, nAI: number) {
+  _initPlayers(nPlayers: number, nAI: number): Array<Player> {
     const n = nPlayers + nAI;
-    let players = [];
+    const players = [];
     const randomSuspects = utl.randomElements(this._board.suspects, n);
-    let constructors = utl.shuffle([
+    const constructors = utl.shuffle([
       ...Array(nPlayers).fill(Player),
-      ...Array(nAI).fill(AI),
+      ...Array(nAI).fill(AI)
     ]);
 
     for (let i = 0; i < n; i++) {
@@ -77,10 +79,11 @@ export default class Model {
         players[0].prev = players[i];
       }
     }
+
     return players;
   }
 
-  _dealCards() {
+  _dealCards(): void {
     while (this._players.length) {
       for (let i = 0; i < this._players.length; i++) {
         if (this._cards.availableCards.length) {
@@ -92,7 +95,7 @@ export default class Model {
     }
   }
 
-  ask(murderer: string, weapon: string) {
+  ask(murderer: string, weapon: string): { player: string; card: Card } {
     return this._currentPlayer.ask(
       murderer,
       this._currentPlayer.tile.place.name,
@@ -100,24 +103,24 @@ export default class Model {
     );
   }
 
-  cast() {
+  cast(): number {
     return this._dice.cast();
   }
 
-  computePath(oldTile: Tile, tile: Tile) {
+  computePath(oldTile: Tile, tile: Tile): Array<Tile> {
     return this._board.computePath(oldTile, tile);
   }
 
-  getTile(row: number, col: number) {
+  getTile(row: number, col: number): Tile {
     const tile = this._board.adjacency[row][col];
     return tile;
   }
 
-  getPlayerTile() {
+  getPlayerTile(): Tile {
     return this._currentPlayer.tile;
   }
 
-  isSolved(murderer: string, place: string, weapon: string) {
+  isSolved(murderer: string, place: string, weapon: string): boolean {
     const cs = this._cards.murderCase();
     return (
       cs.murderer.name === murderer &&
@@ -126,7 +129,7 @@ export default class Model {
     );
   }
 
-  moveToPlayerPlace(pieceName: string) {
+  moveToPlayerPlace(pieceName: string): { oldTile: Tile; newTile: Tile } {
     const piece = this._board.getPiece(pieceName);
     const oldTile = piece.tile;
 
@@ -137,24 +140,29 @@ export default class Model {
 
     return {
       oldTile: oldTile,
-      newTile: newTile,
+      newTile: newTile
     };
   }
 
-  murderCase() {
+  murderCase(): {
+    victim: Suspect;
+    murderer: Suspect;
+    place: Place;
+    weapon: Weapon;
+  } {
     return this._cards.murderCase();
   }
 
-  nextPlayer() {
+  nextPlayer(): void {
     if (this.nPlayers === 0) return;
     this._currentPlayer = this._currentPlayer.next;
   }
 
-  putCurrPlayerSuspectPieceOn(tile: Tile) {
+  putCurrPlayerSuspectPieceOn(tile: Tile): void {
     this._currentPlayer.suspect.putOn(tile);
   }
 
-  removeCurrentPlayer() {
+  removeCurrentPlayer(): void {
     if (this._players.length === 0) {
       return;
     }
@@ -174,9 +182,8 @@ export default class Model {
     this._dealCards();
   }
 
-  tilesInRangeOfCurrPlayer(distance: number) {
+  tilesInRangeOfCurrPlayer(distance: number): Array<Tile> {
     const tile = this.currentPlayer.suspect.tile;
     return this._board.computeNeighbors(distance, tile);
   }
 }
-
