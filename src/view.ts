@@ -393,14 +393,15 @@ export default class View {
     );
     this._initLegendForPieces("Suspects", this._board.suspects.sort());
     this._initLegendForPieces("Weapons", this._board.weapons.sort());
+    // @ts-ignore
     this._initLegendForPieces(
       "Places",
-      Object.values(this._board.places).sort()
+      [...this._board.places.values()].sort()
     );
     this._initButtonDescription();
   }
 
-  _initLegendForPieces(piecesHeader: string, arr: Array<Item>): void {
+  _initLegendForPieces(piecesHeader: string, arr: Array<any>): void {
     const div = d3
       .select("#" + this._legendDiv)
       .append("div")
@@ -410,7 +411,7 @@ export default class View {
     this._initLegendPieceList("legend_" + piecesHeader, arr);
   }
 
-  _initLegendPieceList(id: string, arr: Array<Item>): void {
+  _initLegendPieceList(id: string, arr: Array<any>): void {
     const ul = d3.select("#" + id);
     ul.selectAll("li").remove();
     for (const piece of arr) {
