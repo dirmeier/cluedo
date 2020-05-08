@@ -22,10 +22,19 @@ module.exports = {
   resolve: {
     extensions: [".tsx", ".ts", ".js"],
   },
-  // optimization: {
-  //   minimize: true,
-  //   minimizer: [new Terser()],
-  // },
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new Terser({
+        terserOptions: {
+          output: {
+            comments: false,
+          },
+        },
+        extractComments: false,
+      }),
+    ],
+  },
   output: {
     filename: "bundle.js",
     path: path.resolve(__dirname, "dist"),

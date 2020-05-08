@@ -6,10 +6,10 @@ function dijkstra(
   src: Tile,
   target: Tile,
   matrix: Tile[][]
-): { previous: Map<number, Tile | null>; distance: Map<number, number> } {
+): { previous: Map<number, Tile >; distance: Map<number, number> } {
   let Q: Array<Tile> = [];
+  const previous = new Map<number, Tile >();
   const distances = new Map<number, number>();
-  const previous = new Map<number, Tile | null>();
 
   for (let i = 0; i < matrix.length; i++) {
     for (let j = 0; j < matrix[i].length; j++) {
@@ -22,7 +22,7 @@ function dijkstra(
 
   while (Q.length) {
     const u: Tile = Q.reduce(function (i, j) {
-      return distances.get(i.hashCode()) < distances.get(i.hashCode()) ? i : j;
+      return distances.get(i.hashCode()) < distances.get(j.hashCode()) ? i : j;
     });
     Q = Q.filter(function (i) {
       return u.x !== i.x || i.y !== u.y;

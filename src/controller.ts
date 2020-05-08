@@ -102,19 +102,15 @@ export default class Controller {
   move = async (row: number, col: number): Promise<void> => {
     if (!this._isMove) return;
 
-    console.log(row + " " + col);
-
     const oldTile = await this._model.getPlayerTile();
     const tile = await this._model.getTile(row, col);
     const path = await this._model.computePath(oldTile, tile);
 
-    console.log(row + " " + col);
     if (path.length > this._pips) {
       this._view.appendInfo("You cannot walk that far.");
     } else {
       await this._makeMove(oldTile, tile, path);
     }
-    console.log(row + " " + col);
   };
 
   _makeMove = async (
