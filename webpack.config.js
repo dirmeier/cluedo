@@ -1,21 +1,9 @@
-// const gulp = require("gulp"),
-//   uglify = require("gulp-uglify"),
-//   babel = require("gulp-babel"),
-//   src = "app/",
-//   build = "dist/"
-//
-// gulp.task("default", () =>
-//   gulp.src(["app.js", src + "view.js"])
-//   .pipe(babel())
-//   .pipe(uglify())
-//   .pipe(concat())
-//   .pipe(gulp.dest("dist"))
-
 const path = require("path")
-const Uglify = require("uglifyjs-webpack-plugin")
+// const Uglify = require("uglifyjs-webpack-plugin")
 
 module.exports = {
   entry: "./src/main.ts",
+  devtool: "inline-source-map",
   mode: "development",
   module: {
     rules: [
@@ -24,6 +12,11 @@ module.exports = {
         use: "ts-loader",
         exclude: /node_modules/,
       },
+      {
+        test: /\.js$/,
+        loader: "source-map-loader",
+        enforce: "pre"
+      }
     ],
   },
   resolve: {
@@ -32,8 +25,9 @@ module.exports = {
   output: {
     filename: "bundle.js",
     path: path.resolve(__dirname, "dist"),
-  }, plugins: [
-    new Uglify()
-  ]
+   }
+    // ,
+  // plugins: [
+  //   new Uglify()
+  // ]
 }
-

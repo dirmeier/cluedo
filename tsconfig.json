@@ -10,6 +10,15 @@
     "noImplicitAny": true,
     "strict": true,
     "strictNullChecks": false,
-    "target": "es2015"
-  }
+    "sourceMap": true,
+    "target": "es2015",
+    "moduleResolution": "node"
+  },
+  "exclude": [
+    "node_modules",
+    "webpack.*.js"
+  ]
 }
+
+
+

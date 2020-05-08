@@ -40,7 +40,7 @@ export default class AI extends Player {
   }
 
   get name() {
-    return super.name + " (AI)";
+    return this._suspect.name + " (AI)";
   }
 
   get target() {

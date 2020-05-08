@@ -12,18 +12,20 @@ const _parse = (id: string) => {
   const nmb = d3.select("#" + id).property("value");
   try {
     if (nmb !== "" && !isNaN(nmb)) {
-      if (nmb > 5 || nmb < 0) throw null;
-      else return parseInt(nmb);
+      if (nmb > 5 || nmb < 0)
+        throw null;
+      else
+        return parseInt(nmb);
     } else {
       throw null;
     }
   } catch (err) {
     d3.select("#intro_span")
-      .text("Enter integers only!")
+      .text("Enter integers in range [1, 6] only!")
       .style("color", "darkred");
   }
   return null;
-}
+};
 
 const _run = (nPlayers: number, nAI: number) => {
   d3.select("#landing_page").style("display", "none");

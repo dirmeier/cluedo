@@ -2,8 +2,8 @@
 
 
 import * as d3 from "d3";
-import * as utl from "util";
-import glb from "global";
+import * as utl from "./util";
+import glb from "./global";
 import Model from "./model";
 import Board from "./model/board";
 import Tile from "./model/board/tile";
@@ -70,22 +70,21 @@ export default class View {
     this._weaponPieces = this._board.weapons;
     this._playerPiecesNames = this._model.players.map(
       (i) => i.suspect.name);
-
     this._introTexts = [
       "Welcome. I am the goddess Athena, patron of the city of Athens, " +
       "and I come with bad news. One of my favorite disciples, Socrates, " +
       "has been murdered.",
 
       "To not let this crime go unpunished, I instructed some of his acquaintances," +
-      this._playerPiecesNames.slice(0, -1).join(", ") +
+      // this._playerPiecesNames.slice(0, -1).join(", ") +
       " and " +
-      this._playerPiecesNames.pop() +
+      // this._playerPiecesNames.pop() +
       " (one for each player), to expose his murderer.",
 
       "The crime has been committed by 1 of " +
-      this._suspectPieces.length +
+      // this._suspectPieces.length +
       " suspects with 1 of " +
-      this._weaponPieces.length +
+      // this._weaponPieces.length +
       " weapons which are distributed in different places in Athens. " +
       "I assume the murder has been committed in one of these places.",
 
