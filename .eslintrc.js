@@ -1,5 +1,5 @@
 module.exports = {
-  parser: "babel-eslint",
+  parser: "@typescript-eslint/parser",
   env: {
     browser: true,
     es6: true,
@@ -7,13 +7,18 @@ module.exports = {
   },
   parserOptions: {
     sourceType: "module",
+    ecmaVersion: 2020,
     ecmaFeatures: {
       "jsx": true,
       "modules": true
     }
   },
   plugins: ["prettier"],
-  extends: ["eslint:recommended", "plugin:prettier/recommended"],
+  extends: [
+    "plugin:@typescript-eslint/recommended",
+    "prettier/@typescript-eslint",
+    "plugin:prettier/recommended"
+  ],
   rules: {
     "prettier/prettier": "error",
     "semi": ["error", "always"],
@@ -21,5 +26,3 @@ module.exports = {
     "array-element-newline": ["error", "consistent"]
   }
 }
-
-

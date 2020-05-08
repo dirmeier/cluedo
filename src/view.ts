@@ -76,15 +76,15 @@ export default class View {
       "has been murdered.",
 
       "To not let this crime go unpunished, I instructed some of his acquaintances," +
-      // this._playerPiecesNames.slice(0, -1).join(", ") +
+      this._playerPiecesNames.slice(0, -1).join(", ") +
       " and " +
-      // this._playerPiecesNames.pop() +
+      this._playerPiecesNames.pop() +
       " (one for each player), to expose his murderer.",
 
       "The crime has been committed by 1 of " +
-      // this._suspectPieces.length +
+      this._suspectPieces.length +
       " suspects with 1 of " +
-      // this._weaponPieces.length +
+      this._weaponPieces.length +
       " weapons which are distributed in different places in Athens. " +
       "I assume the murder has been committed in one of these places.",
 
@@ -591,15 +591,23 @@ export default class View {
   drawTiles(tiles: Array<Tile>, pips: number, isAI: boolean) {
     if (isAI)
       this.appendInfo(`${this._model.currentPlayer.name} cast: ${pips}.\n`);
-    else this.showInfo(`${this._model.currentPlayer.name} cast: ${pips}.\n`);
-    for (let tile of this._paintedTiles)
+    else
+      this.showInfo(`${this._model.currentPlayer.name} cast: ${pips}.\n`);
+
+    for (let tile of this._paintedTiles) {
       this._paintTile(tile.x, tile.y, "lightgray");
-    for (let tile of tiles) this._paintTile(tile.x, tile.y, "#C79999");
+    }
+    for (let tile of tiles) {
+      this._paintTile(tile.x, tile.y, "#C79999");
+    }
+
     this._paintedTiles = tiles;
   }
 
   _paintTile(row: number, col: number, color: string) {
-    return d3.select("#id_r_" + row + "_" + col).style("fill", color);
+    return d3
+      .select("#id_r_" + row + "_" + col)
+      .style("fill", color);
   }
 
   showInline(id: string) {
@@ -744,7 +752,8 @@ export default class View {
     this.showInfo("You have the following options:");
     let func = this._hide;
 
-    if (this._model.nPlayers > 1) func = this.showInline;
+    if (this._model.nPlayers > 1)
+      func = this.showInline;
 
     func(this._castButtonId);
     func(this._suggestButtonId);
@@ -813,7 +822,8 @@ export default class View {
   }
 
   bindMove(handler: any) {
-    d3.selectAll("rect").on("click", function () {
+    d3.selectAll("rect")
+      .on("click", function () {
       handler(d3.select(this).attr("row"), d3.select(this).attr("col"));
     });
   }

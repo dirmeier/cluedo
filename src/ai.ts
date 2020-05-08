@@ -1,5 +1,6 @@
 "use strict";
 
+import * as $ from 'lodash';
 import * as utl from "./util";
 import {Cards} from "./model/cards";
 import Tile from "./model/board/tile";
@@ -77,9 +78,10 @@ export default class AI extends Player {
         this._hasSeenPlaces
       );
       const randomPlaceString = utl.randomElement(hasNotSeenPlaces);
-      const randomPlace = Object.values(this._board.places).filter(
-        (i) => i.name === randomPlaceString
-      );
+      const randomPlace = $.filter(
+          [...this._board.places.values()],
+          (i) => i.name === randomPlaceString
+        );
       this._target = randomPlace[0];
     }
 

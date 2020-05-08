@@ -27,11 +27,11 @@ const _parse = (id: string) => {
   return null;
 };
 
-const _run = (nPlayers: number, nAI: number) => {
+const _run = async (nPlayers: number, nAI: number) => {
   d3.select("#landing_page").style("display", "none");
-  const model = new Model(nPlayers, nAI);
-  const view = new View(model);
-  new Controller(nPlayers + nAI, model, view);
+  const model = await new Model(nPlayers, nAI);
+  const view = await new View(model);
+  await new Controller(nPlayers + nAI, model, view);
 };
 
 (function () {
@@ -105,5 +105,4 @@ const _run = (nPlayers: number, nAI: number) => {
     .style("margin-top", "10px")
     .append("span")
     .attr("id", "intro_span");
-
 })();

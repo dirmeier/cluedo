@@ -11,7 +11,8 @@ function shuffle(array: Array<any>) {
 }
 
 function randomElements(array: Array<any>, cnt: number) {
-  if (cnt > array.length) throw "array length < sample count";
+  if (cnt > array.length)
+    throw "array length < sample count";
   const shuffled = shuffle(array);
   return shuffled.slice(0, cnt);
 }

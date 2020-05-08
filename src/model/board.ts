@@ -1,5 +1,6 @@
 "use strict";
 
+import * as $ from 'lodash';
 import * as utl from "../util";
 import * as alg from "../algorithm";
 import glb from "../global";
@@ -127,9 +128,10 @@ export default class Board {
   }
 
   _getPlaces() {
-    return Object
-      .values(this._places)
-      .filter((v) => v.type === "place");
+    const els = $.filter(
+      [ ...this._places.values()],
+      (i) => i.isPlace);
+    return els;
   }
 
   putOnRandomTile(piece: Item, place: Place) {

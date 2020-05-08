@@ -4,6 +4,7 @@ import Model from "./model";
 import View from "./view";
 import AI from "./ai";
 import Tile from "./model/board/tile";
+import * as d3 from "d3";
 
 export default class Controller {
 
@@ -95,11 +96,11 @@ export default class Controller {
 
     this._view.drawTiles(tiles, this._pips, this._model.currentPlayer.isAI);
     this._view.hideButtons();
-
     return this._pips;
   };
 
   move = async (row: number, col: number) => {
+
     if (!this._isMove) return;
 
     const oldTile = await this._model.getPlayerTile();

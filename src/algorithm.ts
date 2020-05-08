@@ -18,10 +18,12 @@ function dijkstra(src: Tile, target: Tile, matrix: Tile[][]) {
   distances.set(src.hashCode(), 0);
 
   while (Q.length) {
-    const u : Tile= Q.reduce(function (i, j) {
+    const u: Tile = Q.reduce(function (i, j) {
       return distances.get(i.hashCode()) < distances.get(i.hashCode()) ? i : j;
     });
-    Q = Q.filter(function (i) { return u.x !== i.x || i.y !== u.y; });
+    Q = Q.filter(function (i) {
+      return u.x !== i.x || i.y !== u.y;
+    });
 
     if (u === target) {
       return {
@@ -30,7 +32,7 @@ function dijkstra(src: Tile, target: Tile, matrix: Tile[][]) {
       };
     }
 
-    for (let v of Object.values(u.neighbors)) {
+    for (let v of u.neighbors.values()) {
       if (v !== null && !v.occupied && u.canReach(v)) {
         const alt = distances.get(u.hashCode()) + 1;
 
@@ -51,7 +53,7 @@ function dijkstra(src: Tile, target: Tile, matrix: Tile[][]) {
 function computeNeighbors(pips: number, src: Tile, matrix: Tile[][]) {
   let neis = [];
   const distances = new Map<number, number>();
-  const visited =  new Map<number, boolean>();
+  const visited = new Map<number, boolean>();
   distances.set(src.hashCode(), 0);
 
   for (let i = 0; i < matrix.length; i++) {
@@ -64,7 +66,7 @@ function computeNeighbors(pips: number, src: Tile, matrix: Tile[][]) {
   while (stack.length) {
     let node = stack.shift();
     neis.push(node);
-    for (let nei of Object.values(node.neighbors)) {
+    for (let nei of node.neighbors.values()) {
       if (
         nei !== null &&
         !nei.occupied &&

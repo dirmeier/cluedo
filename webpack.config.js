@@ -1,5 +1,5 @@
 const path = require("path")
-// const Uglify = require("uglifyjs-webpack-plugin")
+const Terser = require("terser-webpack-plugin")
 
 module.exports = {
   entry: "./src/main.ts",
@@ -22,12 +22,13 @@ module.exports = {
   resolve: {
     extensions: [".tsx", ".ts", ".js"],
   },
+  optimization: {
+    minimize: true,
+    minimizer: [new Terser()],
+  },
   output: {
     filename: "bundle.js",
     path: path.resolve(__dirname, "dist"),
-   }
-    // ,
-  // plugins: [
-  //   new Uglify()
-  // ]
+  }
 }
+

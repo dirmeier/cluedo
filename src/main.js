@@ -88,7 +88,7 @@ const _run = (nPlayers, nAI) => {
               d3.select("#landing_page").style("display", "none");
               // const model = new Model(nPlayers, nAI);
               const view = new View(model);
-              // new Controller(nPlayers + nAI, model, view);
+              new Controller(nPlayers + nAI, null, view);
             }
         }
     })
