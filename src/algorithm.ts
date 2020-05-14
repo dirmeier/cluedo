@@ -6,9 +6,9 @@ function dijkstra(
   src: Tile,
   target: Tile,
   matrix: Tile[][]
-): { previous: Map<number, Tile >; distance: Map<number, number> } {
+): { previous: Map<number, Tile>; distance: Map<number, number> } {
   let Q: Array<Tile> = [];
-  const previous = new Map<number, Tile >();
+  const previous = new Map<number, Tile>();
   const distances = new Map<number, number>();
 
   for (let i = 0; i < matrix.length; i++) {

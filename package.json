@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "npx eslint '*/**/*.{ts,tsx}'",
-    "lint:f": "npx eslint '*/**/*.{ts,tsx}' --fix",
+    "lint": "npx eslint 'src/**/*.{ts,tsx}'",
+    "lint:f": "npx eslint 'src/**/*.{ts,tsx}' --fix",
     "build": "npx webpack --config webpack.config.js"
   },
   "keywords": [],

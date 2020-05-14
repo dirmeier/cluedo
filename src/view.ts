@@ -393,7 +393,7 @@ export default class View {
     );
     this._initLegendForPieces("Suspects", this._board.suspects.sort());
     this._initLegendForPieces("Weapons", this._board.weapons.sort());
-    // @ts-ignore
+
     this._initLegendForPieces(
       "Places",
       [...this._board.places.values()].sort()
